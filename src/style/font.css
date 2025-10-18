@@ -344,7 +344,17 @@
   font-weight: 500;
   font-size: 14px;
 }
-
+/* Doctorprofilebasicdetails */
+.service_text {
+  color: #8a8d93;
+  font-size: 14px;
+  font-weight: 600;
+}
+/* clinic card */
+.clinic_card_title {
+  font-size: 16px;
+  font-weight: 600;
+}
 /* Media Query: Tablets (991px and below) */
 @media (max-width: 991px) {
   .maiacare-input-field-label {

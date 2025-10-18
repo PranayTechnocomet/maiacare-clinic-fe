@@ -249,9 +249,9 @@ input[type=number] {
 .custom-modal-width {
     max-width: 510px;
 }
-.maiacare-button.default-layout {
+/* .maiacare-button.default-layout {
     border: none !important;
-}
+} */
 
 .content-layout {
     padding: 22px;

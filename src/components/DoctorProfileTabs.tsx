@@ -8,6 +8,7 @@ import CustomTabs from "./ui/CustomTabs";
 import Profile from "./Profile";
 import ContentContainer from "./ui/ContentContainer";
 import DoctorDetailPageComponent from "./DoctorDetailPageComponent";
+import DoctorBasicDetails from "./form/Doctor-Basic-Details";
 
 const ProfileTabes = () => {
   const [activeTab, setActiveTab] = useState<string>("basic");
@@ -16,7 +17,11 @@ const ProfileTabes = () => {
     {
       key: "basic",
       label: "Basic Details",
-      content: <>{/* <ProfileBasicDetails /> */}</>,
+      content: (
+        <>
+          <DoctorBasicDetails />
+        </>
+      ),
     },
     {
       key: "leaves",
@@ -34,7 +39,7 @@ const ProfileTabes = () => {
         </>
       ),
     },
-     {
+    {
       key: "appointments",
       label: "Appointments",
       content: <>{/* <ProfileManageLeave /> */}</>,
@@ -51,19 +56,15 @@ const ProfileTabes = () => {
           tabOptions={tabOptions}
         />
 
-        {/* {activeTab === 'basic' && (
-          <div>
+        {activeTab === "basic" && <div></div>}
 
-          </div>
-        )}
-
-        {activeTab === 'leaves' && (
+        {/* {activeTab === 'leaves' && (
           <div>
             
           </div>
-        )}
+        )} */}
 
-        {activeTab === 'Reviews' && (
+        {/* {activeTab === 'Reviews' && (
           <div>Reviews Content</div>
         )} */}
       </div>

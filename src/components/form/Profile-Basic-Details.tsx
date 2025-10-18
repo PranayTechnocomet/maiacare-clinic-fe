@@ -222,7 +222,7 @@ const ProfileBasicDetails = () => {
       <Row>
         {/* =====LEFT COLUMN PART ======== */}
 
-        <Col lg={7}>
+        <Col lg={7} xxl={8}>
           {/* address*/}
           <div>
             <ContentContainer className="mt-4">
@@ -329,7 +329,7 @@ const ProfileBasicDetails = () => {
         {/* ======RIGHT COLUMN =========== */}
         {/* About */}
 
-        <Col lg={5}>
+        <Col lg={5} xxl={4}>
           <div>
             <ContentContainer className="mt-4">
               <h5 className="profile-card-main-titile">
