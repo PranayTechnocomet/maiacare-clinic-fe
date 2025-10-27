@@ -9,6 +9,7 @@ import Profile from "./Profile";
 import ContentContainer from "./ui/ContentContainer";
 import DoctorDetailPageComponent from "./DoctorDetailPageComponent";
 import DoctorBasicDetails from "./form/Doctor-Basic-Details";
+import DoctorManageLeave from "./form/Doctor-Manage-Leave";
 
 const ProfileTabes = () => {
   const [activeTab, setActiveTab] = useState<string>("basic");
@@ -26,7 +27,7 @@ const ProfileTabes = () => {
     {
       key: "leaves",
       label: "Manage Leaves",
-      content: <>{/* <ProfileManageLeave /> */}</>,
+      content: <>{<DoctorManageLeave />}</>,
     },
     {
       key: "assignedpatients",

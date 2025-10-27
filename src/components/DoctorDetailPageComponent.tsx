@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Col, Dropdown, Row } from "react-bootstrap";
+import React, { ChangeEvent, useState } from "react";
+import { Button, Col, Dropdown, Form, Row } from "react-bootstrap";
 import Profiledoctor from "../assets/images/Profile-doctor.png";
 import Stethoscope from "../assets/images/Stethoscope.png";
 import Expirence from "../assets/images/Expirence.png";
@@ -23,10 +23,26 @@ import email from "../assets/images/Email.png";
 import sthetoscope from "../assets/images/Stethoscope.png";
 import patient from "../assets/images/patient.png";
 import { RadioButtonGroup } from "../components/ui/RadioField";
-
+import { InputFieldGroup } from "./ui/InputField";
+import activation from "../assets/images/activation.png";
+import deactivation from "../assets/images/deactivation.png";
 const DoctorDetailPageComponent = () => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
+  type FormData = {
+    gender: string; // default will be "female"
+  };
+
+  const initialFormData: FormData = {
+    gender: "activate", // default value
+  };
+  interface FormError {
+    [key: string]: string;
+  }
+  const initialFormError: FormError = {};
+
+  const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [formError, setFormError] = useState<FormError>(initialFormError);
 
   const doctorData = {
     name: "Dr. Riya Dharang",
@@ -43,6 +59,56 @@ const DoctorDetailPageComponent = () => {
 
   const handleActive = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormError((prev: any) => ({ ...prev, [name]: "" }));
+  };
+  type Reason = {
+    id: number;
+    reason: string;
+  };
+  const reason: Reason[] = [
+    {
+      id: 1,
+      reason: "Resignation/Termination",
+    },
+    {
+      id: 2,
+      reason: "Retirement",
+    },
+    {
+      id: 3,
+      reason: "Decseased",
+    },
+    {
+      id: 4,
+      reason: "Change in specialisation",
+    },
+  ];
+  const [isOpen, setIsOpen] = useState(false);
+  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleCancel = () => {
+    setShowModal(false);
+  };
+
+  const [showResultModal, setShowResultModal] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowModal(false);
+    setShowResultModal(true);
+  };
+  const handleresultclose = () => {
+    setShowResultModal(false);
+  };
 
   const DoctorProfileCard: React.FC<{ doctor: typeof doctorData }> = ({
     doctor,
@@ -80,7 +146,7 @@ const DoctorDetailPageComponent = () => {
                       alt="Specialization"
                       width={18}
                       height={18}
-                    />{" "}
+                    />
                     {doctor.specialization}
                   </span>
                   <span>
@@ -89,29 +155,29 @@ const DoctorDetailPageComponent = () => {
                       alt="experience"
                       width={16}
                       height={15}
-                    />{" "}
+                    />
                     {doctor.experience}
                   </span>
                 </div>
 
                 <div className="profile-sub-title">
                   <span>
-                    <Image src={Bithdate} alt="dob" width={18} height={18} />{" "}
+                    <Image src={Bithdate} alt="dob" width={18} height={18} />
                     {doctor.dob}
                   </span>
                   <span>
-                    <Image src={Gender} alt="gender" width={18} height={18} />{" "}
+                    <Image src={Gender} alt="gender" width={18} height={18} />
                     {doctor.gender}
                   </span>
                 </div>
 
                 <div className="detail-row profile-sub-title">
                   <span>
-                    <Image src={Phone} alt="phone" width={18} height={18} />{" "}
+                    <Image src={Phone} alt="phone" width={18} height={18} />
                     {doctor.phone}
                   </span>
                   <span>
-                    <Image src={Email} alt="email" width={18} height={18} />{" "}
+                    <Image src={Email} alt="email" width={18} height={18} />
                     {doctor.email}
                   </span>
                 </div>
@@ -139,7 +205,7 @@ const DoctorDetailPageComponent = () => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="dropdown-menu-end">
-              <Dropdown.Item onClick={() => router.push(`/editDoctor`)}>
+              <Dropdown.Item onClick={() => router.push("/editDoctor")}>
                 <Image
                   src={EditProfile}
                   alt="edit"
@@ -149,7 +215,6 @@ const DoctorDetailPageComponent = () => {
                 />
                 Edit Profile
               </Dropdown.Item>
-
               <Dropdown.Item className="text-danger" onClick={handleActive}>
                 <Image
                   src={power}
@@ -236,14 +301,117 @@ const DoctorDetailPageComponent = () => {
           <Col md={6} className="mt-3 ">
             <RadioButtonGroup
               label="Select Action"
-              name="selectaction"
+              name="gender"
+              value={formData.gender}
+              onChange={handleRadioChange} // ✅ now the correct type
+              error={formError.gender}
               required
               options={[
-                { label: "Activate", value: "Activate" },
-                { label: "Deactivate", value: "Deactivate" },
+                { label: "Activate", value: "activate" },
+                { label: "Deactivate", value: "deactivate" },
               ]}
             />
           </Col>
+        </div>
+        <div className="mt-3">
+          <label className="maiacare-input-field-label">Reason</label>
+          <Form.Select defaultValue="" className="radio_options form-select">
+            <option value="" disabled>
+              Select
+            </option>
+            {reason.map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.reason}
+              </option>
+            ))}
+          </Form.Select>
+        </div>
+        <div className="mt-3">
+          <Form.Check
+            type="checkbox"
+            label="Notify admin via email"
+            className="text-nowrap check-box input "
+            style={{ fontSize: "13px", color: "#3E4A57" }}
+          />
+        </div>
+        <div>
+          <InputFieldGroup
+            label=" Any additional note"
+            name=" Any additional note"
+            type="text"
+            // value={formData.Name}
+            // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            //   setFormData({ ...formData, Name: e.target.value });
+            //   if (formError.Name) {
+            //     // typing in hide error
+            //     setFormError({ ...formError, Name: "" });
+            //   }
+            // }}
+            onBlur={(e: React.FocusEvent<HTMLInputElement>) => {}}
+            placeholder="Placeholder Text"
+            required={true}
+            disabled={false}
+            readOnly={false}
+            // error={formError.Name}
+            className="position-relative "
+          ></InputFieldGroup>
+        </div>
+        <div className="mt-3">
+          <Row>
+            <Col md={6} className="pe-0">
+              <Button
+                variant="outline"
+                className="edit-profile-btn w-100 fw-semibold"
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            </Col>
+            <Col md={6}>
+              <Button
+                variant="dark"
+                className="maiacare-button common-btn-blue w-100 fw-semibold"
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      </Modal>
+
+      {/* --- Result Modal (After Submit) --- */}
+      <Modal
+        show={showResultModal}
+        onHide={handleresultclose}
+        centered
+        className="activateModal"
+      >
+        <div className="text-center ">
+          <Image
+            src={formData.gender === "activate" ? activation : deactivation}
+            alt="Result Image"
+            width={200}
+            height={150}
+          />
+          <h6 className="mt-3 modal-custom-header">
+            {formData.gender === "activate"
+              ? "Activation Request Sent!"
+              : "Deactivation Request Sent!"}
+          </h6>
+          <p  style={{ fontSize: "14px", color: "#3E4A57" }}>
+            The Admin will be informed about your request and will react out to
+            you for confirmation.
+          </p>
+          <Button
+            className="maiacare-button common-btn-blue w-100"
+            onClick={() => {
+              setShowResultModal(false);
+              setShowModal(false);
+            }}
+          >
+            Done
+          </Button>
         </div>
       </Modal>
     </ContentContainer>

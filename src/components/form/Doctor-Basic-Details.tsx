@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Container, Row, Col, Form, Table, Accordion } from "react-bootstrap";
 
 import Delete from "../../assets/images/Delete.png";
@@ -290,7 +290,13 @@ const DoctorBasicDetails = () => {
     },
   ];
   const [editIndex, setEditIndex] = useState<number | null>(null); // track current editing row
-
+  const [navigateToEditClinic, setNavigateToEditClinic] = useState(false);
+  useEffect(() => {
+    if (navigateToEditClinic) {
+      router.push("/editDoctor?tab=Clinic"); // ✅ inner route path
+      setNavigateToEditClinic(false); // reset state after navigation
+    }
+  }, [navigateToEditClinic, router]);
   return (
     // <Container fluid className="mt-3">
     <div>
@@ -313,7 +319,7 @@ const DoctorBasicDetails = () => {
                     <span className="clinic_card_title">Sunrise Fertility</span>
                     <Button
                       className="maiacare-button-large  default-layout profile-card-boeder  bg-transparent btn btn-primary"
-                      onClick={() => router.push("/editDoctor")}
+                      onClick={() => setNavigateToEditClinic(true)}
                     >
                       <Image
                         src={editprofile}

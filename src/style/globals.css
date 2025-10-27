@@ -1024,6 +1024,16 @@ body {
   font-size: 14px;
   font-weight: 400;
 }
+
+/* leave modal */
+.leavemodal_info {
+  background-color: #f5f7fa;
+  border-radius: 12px;
+  padding: 13px;
+}
+.leave_modal {
+  max-width: 575px !important;
+}
 /* kyc modal */
 .kycmodal_info {
   background-color: #f5f7fa;
@@ -1043,9 +1053,61 @@ body {
   font-size: 15px;
   display: flex;
   align-items: center;
-  gap:1.5rem ;
+  gap: 1.5rem;
 }
-/* Responsive adjustment for smaller screens */
+.radio_options {
+  color: #3e4a57;
+  font-size: 14px;
+}
+/* select reason option  */
+.form-select {
+  /* Default Bootstrap look */
+  background-image: var(--bs-form-select-bg-img);
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  transition: transform 0.3s ease, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+  padding-right: 2.25rem;
+  appearance: none;
+  position: relative;
+}
+
+/* Add a custom arrow pseudo-element */
+.form-select::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #343a40;
+  border-bottom: 2px solid #343a40;
+  transform: translateY(-50%) rotate(45deg);
+  transform-origin: center;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+
+/* When menu is open (select focused) — flip arrow up */
+.form-select:focus::after {
+  transform: translateY(-50%) rotate(-135deg);
+}
+
+/* Optional: restore arrow down when menu closes */
+.form-select:not(:focus)::after {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.activateModal .modal-lg,
+.modal-xl {
+  --bs-modal-width: 455px !important;
+}
+.leave_modal .modal-custom-header {
+  font-size: 21px;
+  font-weight: 700;
+  color: black !important;
+}
 @media (max-width: 525px) {
   .notification-title,
   .notification-description {
