@@ -124,7 +124,6 @@ const DoctorManageLeave = () => {
     return errors;
   };
 
-  // ✅ handleSubmit with formatted date + padded ID
   const handleSubmit = () => {
     const errors = validateForm(formData);
     setFormError(errors);
@@ -136,12 +135,13 @@ const DoctorManageLeave = () => {
           : 1;
 
       const nextId = nextNumericId.toString().padStart(2, "0");
-
+      const dayLabel =
+        formData.days === "1" ? "1 day" : `${formData.days} days`;
       const newLeave: LeaveEntry = {
         id: nextId,
         startDate: formatDate(formData.startDate),
         endDate: formatDate(formData.endDate),
-        days: formData.days,
+        days: dayLabel,
         type: formData.type,
       };
 
@@ -156,7 +156,7 @@ const DoctorManageLeave = () => {
 
   const [editLeave, setEditLeave] = useState<LeaveEntry | null>(null);
 
-  // ✅ handle edit
+  //  handle edit
   const handleEdit = (leave: LeaveEntry) => {
     setEditLeave(leave);
     setFormData({
@@ -175,7 +175,7 @@ const DoctorManageLeave = () => {
     setLeaveData(updated);
   };
 
-  // ✅ handle update with formatted date
+  //  handle update with formatted date
   const handleUpdate = () => {
     if (!editLeave) return;
 
@@ -190,6 +190,7 @@ const DoctorManageLeave = () => {
               ...formData,
               startDate: formatDate(formData.startDate),
               endDate: formatDate(formData.endDate),
+              days: formData.days === "1" ? "1 day" : `${formData.days} days`,
             }
           : leave
       );

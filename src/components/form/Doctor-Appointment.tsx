@@ -25,6 +25,7 @@ import appointmentcalander from "../../assets/images/bookappoin.png";
 import { LuTrash2 } from "react-icons/lu";
 import Modal from "../ui/Modal";
 import { InputFieldGroup } from "../ui/InputField";
+import { AppointmentData } from "../../utlis/types/interfaces";
 import {
   BookAppointment,
   SuccessModalBookAppointment,
@@ -243,7 +244,11 @@ export default function DoctorAppointment() {
   const handleClose = () => {
     setShowModal(false);
   };
+  const [appointments, setAppointments] = useState<AppointmentData[]>([]);
 
+ const handleAddAppointment = (newAppointment: AppointmentData) => {
+  setAppointments((prev) => [...prev, newAppointment]); 
+};
   return (
     <div className="mt-4">
       {/* list */}
@@ -358,6 +363,7 @@ export default function DoctorAppointment() {
           <BookAppointment
             setBookAppointmentModal={setBookAppointmentModal}
             setShowSuccessModalBook={setShowSuccessModalBook}
+            onAddAppointment={handleAddAppointment}
             editData={editData}
             onSave={(updatedData) => {
               setFilteredData((prev) =>

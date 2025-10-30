@@ -34,14 +34,14 @@ interface DoctorData {
     SS?: string;
     Time?: string;
     Timer?: string;
-    imageclinic?:string | StaticImageData;
+    imageclinic?: string | StaticImageData;
   }[];
   kyc?: {
     pan?: string;
-    panFile?:string | StaticImageData;
+    panFile?: string | StaticImageData;
     aadhaar?: string;
-    aadhaarFile?:string| StaticImageData;
-    licenseFile?:string| StaticImageData;
+    aadhaarFile?: string | StaticImageData;
+    licenseFile?: string | StaticImageData;
     license?: string;
   }[];
   image?: string | StaticImageData;

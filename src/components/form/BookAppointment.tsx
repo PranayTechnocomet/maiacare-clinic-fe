@@ -23,7 +23,10 @@ import { TimePickerFieldGroup } from "../ui/CustomTimePicker";
 import Textarea from "../ui/Textarea";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Button from "../ui/Button";
-import { BookAppointmentForm } from "../../utlis/types/interfaces";
+import {
+  AppointmentData,
+  BookAppointmentForm,
+} from "../../utlis/types/interfaces";
 import { PhoneNumberInput } from "../ui/PhoneNumberInput";
 import { RadioButtonGroup } from "../ui/RadioField";
 import Image from "next/image";
@@ -38,6 +41,7 @@ interface BookAppointmentProps {
   setShowSuccessModalBook: React.Dispatch<React.SetStateAction<boolean>>;
   editData?: any;
   onSave?: (updatedData: any) => void;
+   onAddAppointment?: (data: AppointmentData) => void;
 }
 
 type FormError = Partial<Record<keyof BookAppointmentForm, string>>;
@@ -66,8 +70,9 @@ export function BookAppointment({
   setShowSuccessModalBook,
   editData,
   onSave,
+  onAddAppointment,
 }: BookAppointmentProps) {
-  // ✅ initialize form data with editData if provided
+  //  initialize form data with editData if provided
   const [formData, setFormData] = useState<BookAppointmentForm>(
     editData ? { ...initialFormData, ...editData } : initialFormData
   );
@@ -82,7 +87,11 @@ export function BookAppointment({
 
   const patientData = PatientsDetails;
 
-  // ✅ Refill form when new editData is passed
+  const [appointmentData, setAppointmentData] = useState<AppointmentData[]>([]);
+  const handleAddAppointment = (data: AppointmentData) => {
+    setAppointmentData((prev) => [...prev, data]);
+  };
+  //  Refill form when new editData is passed
   useEffect(() => {
     if (editData) {
       setFormData({ ...initialFormData, ...editData });
@@ -133,6 +142,7 @@ export function BookAppointment({
   const handelNext = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errors = validateForm(formData);
+
     setFormError(errors);
     if (Object.keys(errors).length === 0) {
       setStep(2);
@@ -140,19 +150,60 @@ export function BookAppointment({
     }
   };
 
-  // ✅ handleSubmit updated to support edit mode
-  const handelSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const errors = validateForm2(formData);
+  //  handleSubmit updated to support edit mode
+  // this is use for add data
+  // const handelSubmit = (e: FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   const errors = validateForm2(formData);
+  //   setFormError(errors);
+
+  //   if (Object.keys(errors).length === 0) {
+  //     if (editData && onSave) {
+  //       onSave(formData);
+  //     } else {
+  //       setShowSuccessModalBook?.(true);
+  //       console.log("all", formData);
+  //     }
+  //     setBookAppointmentModal?.(false);
+  //   }
+  // };
+
+  const handelSubmit = (event: React.FormEvent) => {
+     event.preventDefault();
+    const errors = validateForm(formData);
     setFormError(errors);
 
     if (Object.keys(errors).length === 0) {
-      if (editData && onSave) {
-        onSave(formData); // send updated data back to parent
-      } else {
-        setShowSuccessModalBook?.(true); // normal booking flow
-      }
+      const nextNumericId =
+        appointmentData.length > 0
+          ? Math.max(...appointmentData.map((item) => Number(item.id))) + 1
+          : 1;
+
+      const nextId = nextNumericId.toString().padStart(2, "0");
+
+      const newAppointment: AppointmentData = {
+        id: nextId,
+        appointmentId: nextId,
+        type: formData.type,
+        reasonForVisit: formData.reasonForVisit,
+        appointmentDate: formData.appointmentDate,
+        appointmentTime: formData.appointmentTime,
+        forTime: formData.forTime,
+        additionalNote: formData.additionalNote,
+        patientName: formData.patientName,
+        phone: formData.phone,
+        email: formData.email,
+      };
+
+      setAppointmentData((prev) => [...prev, newAppointment]);
+     if (onAddAppointment) onAddAppointment(newAppointment);
+     
+      console.log(newAppointment);
+      // setFormData(initialFormData);
+      setShowSuccessModalBook?.(true);
       setBookAppointmentModal?.(false);
+    } else {
+      console.log("Form has errors:", { errors });
     }
   };
 

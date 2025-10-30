@@ -149,6 +149,8 @@ export default function AddDoctorClinicdetails({
     const errors = validateForm(formData);
     setFormError(errors);
     if (Object.keys(errors).length === 0) {
+      console.log("clinicdetails",formData);
+      
       onNext();
     } else {
       console.log("Form has errors:", errors);

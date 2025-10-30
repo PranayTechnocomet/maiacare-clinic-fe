@@ -58,7 +58,7 @@ const DoctorDetailPageComponent = () => {
     memberSince: "02 March 23",
     image: Profiledoctor,
     fees: "₹800",
-    service: "IVF",
+    service: ["IVF","ICSI","IUI","Egg Freezing"],
     about:
       "I'm Dr. Riya Dharang, a fertility specialist with over 12 years of experience in reproductive medicine. I specialize in IVF, IUI, and fertility preservation, providing personalized, compassionate care to help individuals and couples achieve their parenthood dreams. Your well-being and trust are my top priorities.",
     qualifications: [

@@ -19,8 +19,10 @@ import { PhoneNumberInput } from "../ui/PhoneNumberInput";
 import cross from "../../assets/images/crossedit.png";
 export default function AddDoctorBasicDetails({
   onNext,
+  onSaveDoctor,
 }: {
   onNext: () => void;
+  onSaveDoctor: (doctorData: any) => void;
 }) {
   // Personal Details
   interface FormError {
@@ -89,7 +91,15 @@ export default function AddDoctorBasicDetails({
     const errors = validateForm(formData); // single form errors All
     setFormError(errors);
     if (Object.keys(errors).length === 0) {
-      localStorage.setItem("doctorData", JSON.stringify(formData));
+      const newDoctor = {
+        name: formData.Name,
+        email: formData.Email,
+        specialization: formData.Speciality,
+        contact: formData.Contact,
+        image: selectedImage || "",
+      };
+      onSaveDoctor(newDoctor);
+      console.log(newDoctor);
 
       onNext();
     } else {

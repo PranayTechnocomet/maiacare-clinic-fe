@@ -38,7 +38,7 @@ const SiteLayout = ({ collapsed, setCollapsed, children }: Props) => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
 
   const navItems = [
-    { label: "Dashboard", href: "/profile", icon: <MdWindow size={22} /> },
+    { label: "Dashboard", href: "/dashboard", icon: <MdWindow size={22} /> },
 
     {
       label: "Doctors",

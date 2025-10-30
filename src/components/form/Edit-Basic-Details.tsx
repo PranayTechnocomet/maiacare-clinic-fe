@@ -2,7 +2,7 @@
 // import { useState } from "react";
 import { Form, Row, Col, Button, Card, Badge } from "react-bootstrap";
 import Simpleeditpro from "../../assets/images/Simpleeditpro.png";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import cameraicon from "../../assets/images/editlogobtn.png";
 import { InputFieldGroup } from "../ui/InputField";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
@@ -22,13 +22,14 @@ import photo4 from "../../assets/images/profilephoto4.png";
 import Download from "../../assets/images/Uploadimg.png";
 import { useDoctorData } from "@/utlis/hooks/DoctorData";
 import AddDoctor from "../AddDoctor";
+import { clinicProfileData } from "@/utlis/StaticData";
+
 export default function Editbasicdetails({ onNext }: { onNext: () => void }) {
   // Personal Details
   interface FormError {
     [key: string]: string;
   }
 
-  
   const initialFormError: FormError = {};
   const [showModal, setShowModal] = useState(false);
   const [formError, setFormError] = useState<FormError>(initialFormError);
@@ -61,7 +62,7 @@ export default function Editbasicdetails({ onNext }: { onNext: () => void }) {
     SecondaryNumber: "",
     Email: "",
   };
-
+  const clinicprofie = clinicProfileData;
   const [formData, setFormData] = useState<FormData>(initialFormData);
 
   // All Validatation
@@ -243,6 +244,32 @@ export default function Editbasicdetails({ onNext }: { onNext: () => void }) {
       setPreviewImage(selectedImage);
     }
   }, [showModal]);
+
+  // clinic data
+  useEffect(() => {
+    if (clinicprofie) {
+      setFormData({
+        Name: clinicprofie.name || "",
+        MapLink: clinicprofie.mapLink || "",
+        City: clinicprofie.city || "",
+        State: clinicprofie.state || "",
+        NumberofBeds: clinicprofie.numberOfBeds || "",
+        doctorsonboard: clinicprofie.doctorsOnboard || "",
+        Pincode: clinicprofie.pincode || "",
+        Address: clinicprofie.address || "",
+        Contact: clinicprofie.contact || "",
+        SecondaryNumber: clinicprofie.secondaryNumber || "",
+        Email: clinicprofie.email || "",
+      });
+      if (clinicprofie.image) {
+        const imageSrc =
+          typeof clinicprofie.image === "string"
+            ? clinicprofie.image
+            : clinicprofie.image.src;
+        setSelectedImage(imageSrc);
+      }
+    }
+  }, [clinicprofie]);
 
   //  servicess
   type Service = {

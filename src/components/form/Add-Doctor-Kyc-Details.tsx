@@ -118,7 +118,8 @@ export default function EditKycDetails({
 
       // Save flag before redirect
       localStorage.setItem("doctorAddedSuccess", "true");
-
+      console.log("KYC",formData);
+      
       router.push("/doctors");
     } else {
       console.log("❌ Form has errors:", errors);

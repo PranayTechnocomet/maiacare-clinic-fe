@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ContentContainer from "../ui/ContentContainer";
 import { InputFieldGroup } from "../ui/InputField";
 import { Col, Form, Row } from "react-bootstrap";
@@ -6,6 +6,7 @@ import Button from "../ui/Button";
 import { PhoneNumberInput } from "../ui/PhoneNumberInput";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { clinicConatctData } from "@/utlis/StaticData";
 
 export default function EditContactDetails({
   onNext,
@@ -81,6 +82,18 @@ export default function EditContactDetails({
       console.log(" Form has errors:", errors);
     }
   };
+  // contact data
+  const clinic = clinicConatctData;
+  useEffect(() => {
+    if (clinic) {
+      setFormData({
+        Name: clinic.name || "",
+        Contact: clinic.contact || "",
+        Adcard: clinic.adhaar || "",
+        Email: clinic.email || "",
+      });
+    }
+  }, [clinic]);
 
   return (
     <div>

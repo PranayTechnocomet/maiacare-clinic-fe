@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Profile from "../../components/Profile";
 
 import { setHeaderData } from "@/utlis/redux/slices/headerSlice";

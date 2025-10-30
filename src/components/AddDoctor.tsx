@@ -8,6 +8,9 @@ import AddDoctorClinicdetails from "./form/Add-Doctor-Clinic-details";
 const AddDoctor = () => {
   const [activeTab, setActiveTab] = useState<string>("basic");
 
+  const handlebasicNextClick = () => {
+    setActiveTab("Clinic");
+  };
   const handleNextClick = () => {
     setActiveTab("KYC");
   };
@@ -34,7 +37,12 @@ const AddDoctor = () => {
       content: <></>,
     },
   ];
-
+  const [doctors, setDoctors] = useState<any[]>([]);
+  const [currentStep, setCurrentStep] = useState("add"); // or 'list'
+  const handleAddDoctor = (newDoctor: any) => {
+    setDoctors((prev) => [...prev, newDoctor]);
+    setCurrentStep("list"); // go to list page after add
+  };
   return (
     <div>
       <CustomTabs
@@ -45,7 +53,10 @@ const AddDoctor = () => {
 
       {activeTab === "basic" && (
         <div>
-          <AddDoctorBasicDetails onNext={handleNextClick} />
+          <AddDoctorBasicDetails
+            onNext={handlebasicNextClick}
+            onSaveDoctor={handleAddDoctor}
+          />
         </div>
       )}
       {activeTab === "Clinic" && (

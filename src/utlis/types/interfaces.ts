@@ -30,6 +30,19 @@ export interface BookAppointmentForm {
   patientAge: string;
   gender: string;
 }
+export interface AppointmentData {
+  id: string;
+  appointmentId: string;
+  type: string;
+  reasonForVisit: any[];
+  appointmentDate: string;
+  appointmentTime: string;
+  forTime: string;
+  additionalNote: string;
+  patientName: any;
+  phone: string;
+  email: string;
+}
 export interface SelectPatientType {
   id: string;
   ProfilePhoto: StaticImageData;

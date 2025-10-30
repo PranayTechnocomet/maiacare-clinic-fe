@@ -104,6 +104,7 @@
 .default-layout {
   background-color: var(--color-brand);
   color: var(--color-white);
+  border: none;
 }
 
 .default-layout:hover {
@@ -204,7 +205,7 @@
 .profile-name-font {
   font-size: 20px;
   font-weight: 600;
-  line-height:18px;
+  line-height: 18px;
   color: var(--color-heading);
   font-family: var(--font-geist-sans1);
 }
@@ -598,6 +599,22 @@
   color: var(--color-brand);
   font-size: 14px;
 }
+/* setting css */
+.forgate-password {
+  color: var(--color-brand);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  text-decoration: none;
+}
+.accordion-title {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 26px;
+  font-style: "SemiBold";
+  color: var(--color-heading);
+}
 
 .setting-head {
   color: var(--color-heading);
@@ -647,4 +664,9 @@
   color: #292929;
   font-size: 17px;
   font-weight: 500;
+}
+@media screen and (max-width: 1024px) {
+  .accordion-title {
+    font-size: 20px;
+  }
 }

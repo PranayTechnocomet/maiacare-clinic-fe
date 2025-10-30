@@ -109,95 +109,74 @@ export default function EditDoctorClinicdetails({
   };
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
-useEffect(() => {
-  if (doctor && Array.isArray(doctor.clinic) && doctor.clinic.length > 0) {
-    const clinic = doctor.clinic[0];
-    console.log("Loaded clinic:", clinic);
+  useEffect(() => {
+    if (doctor && Array.isArray(doctor.clinic) && doctor.clinic.length > 0) {
+      const clinic = doctor.clinic[0];
+      console.log("Loaded clinic:", clinic);
 
-    setFormData((prev) => ({
-      ...prev,
-      Name: clinic.name || "",
-      Contact: clinic.contact || "",
-      Email: clinic.email || "",
-      MapLink: clinic.map || "",
-      Pincode: clinic.pin || "",
-      City: clinic.city || "",
-      State: clinic.state || "",
-      Address: clinic.address || "",
-      MF: clinic.MF || "",
-      SS: clinic.SS || "",
-      imageclinic: clinic.imageclinic || "",
-      Time: clinic.Time || "",
-      Timer: clinic.Timer || "",
-    }));
+      setFormData((prev) => ({
+        ...prev,
+        Name: clinic.name || "",
+        Contact: clinic.contact || "",
+        Email: clinic.email || "",
+        MapLink: clinic.map || "",
+        Pincode: clinic.pin || "",
+        City: clinic.city || "",
+        State: clinic.state || "",
+        Address: clinic.address || "",
+        MF: clinic.MF || "",
+        SS: clinic.SS || "",
+        imageclinic: clinic.imageclinic || "",
+        Time: clinic.Time || "",
+        Timer: clinic.Timer || "",
+      }));
 
-    if (clinic.imageclinic) {
-      const imageSrc =
-        typeof clinic.imageclinic === "string"
-          ? clinic.imageclinic
-          : clinic.imageclinic.src;
-      setSelectedImage(imageSrc);
+      if (clinic.imageclinic) {
+        const imageSrc =
+          typeof clinic.imageclinic === "string"
+            ? clinic.imageclinic
+            : clinic.imageclinic.src;
+        setSelectedImage(imageSrc);
+      }
+    } else {
+      // fallback for demo
+      const demoClinic = {
+        name: "Sunrise Fertility",
+        contact: "+91 8987656874",
+        email: "goodhealth@gmail.com",
+        map: "https://www.google.com/maps/place/Mumbai,+India",
+        pin: "380003",
+        city: "Mumbai",
+        state: "Maharashtra",
+        address: "2nd Floor, Lakeview Complex, Hiranandani Gardens, Powai",
+        MF: "10:00",
+        SS: "10:00",
+        Time: "17:00",
+        Timer: "15:00",
+        imageclinic: clinicimage,
+      };
+
+      setFormData((prev) => ({
+        ...prev,
+        Name: demoClinic.name,
+        Contact: demoClinic.contact,
+        Email: demoClinic.email,
+        MapLink: demoClinic.map,
+        Pincode: demoClinic.pin,
+        City: demoClinic.city,
+        State: demoClinic.state,
+        Address: demoClinic.address,
+        MF: demoClinic.MF,
+        SS: demoClinic.SS,
+        imageclinic: demoClinic.imageclinic,
+        Time: demoClinic.Time,
+        Timer: demoClinic.Timer,
+      }));
+
+      setSelectedImage(demoClinic.imageclinic.src);
     }
-  } else {
-    // fallback for demo
-    const demoClinic = {
-      name: "Sunrise Fertility",
-      contact: "+91 8987656874",
-      email: "goodhealth@gmail.com",
-      map: "https://www.google.com/maps/place/Mumbai,+India",
-      pin: "380003",
-      city: "Mumbai",
-      state: "Maharashtra",
-      address: "2nd Floor, Lakeview Complex, Hiranandani Gardens, Powai",
-      MF: "10:00",
-      SS: "10:00",
-      Time: "17:00",
-      Timer: "15:00",
-      imageclinic: clinicimage,
-    };
+  }, [doctor]);
 
-    setFormData((prev) => ({
-      ...prev,
-      Name: demoClinic.name,
-      Contact: demoClinic.contact,
-      Email: demoClinic.email,
-      MapLink: demoClinic.map,
-      Pincode: demoClinic.pin,
-      City: demoClinic.city,
-      State: demoClinic.state,
-      Address: demoClinic.address,
-      MF: demoClinic.MF,
-      SS: demoClinic.SS,
-      imageclinic: demoClinic.imageclinic,
-      Time: demoClinic.Time,
-      Timer: demoClinic.Timer,
-    }));
-
-    setSelectedImage(demoClinic.imageclinic.src);
-  }
-}, [doctor]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   const formatAadhaar = (value: string) => {
     return value
       .replace(/\D/g, "") // remove non-digits

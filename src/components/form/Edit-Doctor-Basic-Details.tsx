@@ -17,7 +17,10 @@ import ImageSquare from "../../assets/images/ImageSquare.png";
 import Camera from "../../assets/images/Camera.png";
 import { PhoneNumberInput } from "../ui/PhoneNumberInput";
 import cross from "../../assets/images/crossedit.png";
-import { InputSelect } from "../../components/ui/InputSelect";
+import {
+  InputSelect,
+  InputSelectMultiSelect,
+} from "../../components/ui/InputSelect";
 // import { useDoctorData } from "@/utlis/hooks/DoctorData";
 import { useDoctor } from "../DoctorContext";
 export default function EditDoctorBasicDetails({
@@ -46,7 +49,8 @@ export default function EditDoctorBasicDetails({
     Email: string;
     Fees: string;
     About: string;
-    service: string;
+
+    services: [];
 
     degree: string;
     field: string;
@@ -65,11 +69,12 @@ export default function EditDoctorBasicDetails({
     Email: "",
     Fees: "",
     About: "",
-    service: "",
+
     degree: "",
     field: "",
     university: "",
     startYear: "",
+    services: [],
     endYear: "",
   };
 
@@ -105,7 +110,7 @@ export default function EditDoctorBasicDetails({
         Fees: doctor.fees || "",
       }));
 
-      // ✅ Fix qualification prefill
+      //  Fix qualification prefill
       if (
         Array.isArray(doctor.qualifications) &&
         doctor.qualifications.length
@@ -282,62 +287,6 @@ export default function EditDoctorBasicDetails({
     }
   }, [showModal]);
 
-  //   services
-  type Service = {
-    id: number;
-    service: string;
-  };
-  const services: Service[] = [
-    {
-      id: 1,
-      service: "Fertility Support",
-    },
-    {
-      id: 2,
-      service: "IUI",
-    },
-    {
-      id: 3,
-      service: "IVF",
-    },
-    {
-      id: 4,
-      service: "Egg Freezing",
-    },
-    {
-      id: 5,
-      service: "ICSI",
-    },
-    {
-      id: 6,
-      service: "Sperm Freezing",
-    },
-    {
-      id: 7,
-      service: "Preimplantation Genetic Testing",
-    },
-    {
-      id: 8,
-      service: "Laparoscopy",
-    },
-    {
-      id: 9,
-      service: "Hysteroscopy",
-    },
-    {
-      id: 10,
-      service: "Tubal Surgery",
-    },
-    {
-      id: 11,
-      service: "Endometrial Biposy",
-    },
-    {
-      id: 12,
-      service: "Immunological Testing",
-    },
-  ];
-
   type Qualification = {
     degree: string;
     field: string;
@@ -354,18 +303,6 @@ export default function EditDoctorBasicDetails({
       endYear: !q.endYear ? "End Year is required " : "",
     }));
     return errors;
-  };
-  const [selectedServices, setSelectedServices] = useState<Service[]>([]);
-
-  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const serviceId = Number(e.target.value);
-    const service = services.find((s) => s.id === serviceId);
-    if (service && !selectedServices.some((s) => s.id === serviceId)) {
-      setSelectedServices([...selectedServices, service]);
-    }
-  };
-  const removeService = (id: number) => {
-    setSelectedServices(selectedServices.filter((s) => s.id !== id));
   };
 
   //   qualification
@@ -725,42 +662,35 @@ export default function EditDoctorBasicDetails({
       <ContentContainer className="mt-3">
         <div>
           <div>
-            <h5 className="profile-card-main-titile">Services Offered</h5>
-            <Form.Select
-              onChange={handleSelect}
-              // defaultValue=""
-              value={formData.service}
-            >
-              <option value="" disabled>
-                Select Services
-              </option>
-              {services.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.service}
-                </option>
-              ))}
-            </Form.Select>
-            {selectedServices.length > 0 && (
-              <div
-                className="mt-2 mb-3  "
-                style={{ color: "rgba(138, 141, 147, 1)", fontSize: "14px" }}
-              >
-                {selectedServices.length} Services selected
-              </div>
-            )}
-            <div className="mt-2 d-flex flex-wrap">
-              {selectedServices.map((s) => (
-                <div
-                  key={s.id}
-                  className="me-2 mb-2 servicename d-flex align-items-center"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => removeService(s.id)}
-                >
-                  {s.service}
-                  <Image src={cross} alt="cross" className="editcross" />
-                </div>
-              ))}
-            </div>
+            <h5 className="profile-card-main-titile mb-3">Services Offered</h5>
+
+            <InputSelectMultiSelect
+              name="services"
+              values={formData.services}
+              onChange={(values) => {
+                setFormData((prev: any) => ({
+                  ...prev,
+                  services: values,
+                }));
+                setFormError((prev) => ({ ...prev, services: "" }));
+              }}
+              options={[
+                {
+                  id: "1",
+                  value: "Fertility Support",
+                  label: "Fertility Support",
+                },
+                { id: "2", value: "IUI", label: "IUI" },
+                { id: "3", value: "IVF", label: "IVF" },
+                { id: "4", value: "ICSI", label: "ICSI" },
+                { id: "5", value: "Other", label: "Other" },
+              ]}
+              placeholder="Select Services"
+              addPlaceholder="Select Services"
+              required={true}
+              dropdownHandle={false} // open close arrow icon show hide
+              error={formError.services}
+            />
           </div>
           <div>
             <InputFieldGroup
@@ -781,7 +711,7 @@ export default function EditDoctorBasicDetails({
               disabled={false}
               readOnly={false}
               error={formError.Fees}
-              className="position-relative"
+              className="position-relative mt-3"
             ></InputFieldGroup>
           </div>
         </div>

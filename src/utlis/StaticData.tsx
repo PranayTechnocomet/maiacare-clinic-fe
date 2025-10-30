@@ -14,6 +14,7 @@ import patient3 from "../assets/images/patient3.png";
 import patient4 from "../assets/images/patient4.png";
 import patient5 from "../assets/images/patient5.png";
 import patient6 from "../assets/images/patient6.png";
+import clinicimg from "../assets/images/clinic logo.png";
 
 export interface DoctorEntry {
   id: number; // <-- ADD ID
@@ -431,6 +432,33 @@ export const PatientsDetails: SelectPatientType[] = [
   { id: "3", ProfilePhoto: patient3, name: "Anjali Rao" },
   { id: "4", ProfilePhoto: patient4, name: "Priya Desai" },
 ];
+
+// src/utlis/StaticData.ts
+// src/utlis/StaticClinicData.ts
+
+export const clinicProfileData = {
+  id: 1,
+  name: "Sunshine Fertility Center",
+  mapLink: "https://maps.google.com/?q=Sunshine+Fertility+Center",
+  city: "Mumbai",
+  state: "Maharashtra",
+  numberOfBeds: "25",
+  doctorsOnboard: "12",
+  pincode: "400001",
+  address: "123 Palm Street, Andheri West, Mumbai",
+  contact: "+91 9876543210",
+  secondaryNumber: "+91 9988776655",
+  email: "info@sunshinefertility.com",
+  image: clinicimg,
+  services: ["IVF", "IUI", "Laparoscopy"],
+};
+
+export const clinicConatctData = {
+  name: "Priya Shah",
+  contact: "+91 1234567890",
+  email: "priyashah@gmail.com",
+  adhaar: "345974684586",
+};
 
 // export const doctorsData: Doctor[] = [
 //   {
