@@ -53,6 +53,18 @@ body {
   font-family: var(--font-popins) !important;
 }
 
+
+
+.view-container{
+  
+    color: #2B4360;
+    font-size: 25px;
+}
+.view-container:hover{
+  
+    color: #2B4360 !important;
+    font-size: 25px !important;
+}
 /* =====| Login-css |===== */
 
 .maia-care-image {

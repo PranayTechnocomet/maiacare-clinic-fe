@@ -460,6 +460,121 @@ export const clinicConatctData = {
   adhaar: "345974684586",
 };
 
+// invoice component
+export interface invoice {
+  // status: string;
+  id: number;
+  Invoice: string;
+  Doctor: string;
+  PatientName: string;
+  Amount: string;
+  Date: string;
+  image: string | StaticImageData;
+  Service: string;
+}
+export const invoice: invoice[] = [
+  {
+    id: 1,
+    Invoice: "12345678",
+    Doctor: "Rani Desai",
+    PatientName: "Rani Desai",
+    image: patient1,
+    Amount: "₹120",
+    Date: "8 Jul, 2024",
+    Service: "IVF Treatment",
+  },
+  {
+    id: 2,
+    Invoice: "12345678",
+    Doctor: "Rani Desai",
+    PatientName: "Rani Desai",
+    image: patient1,
+    Amount: "₹120",
+    Date: "8 Jul, 2024",
+    Service: "IVF Treatment",
+  },
+  {
+    id: 3,
+    Invoice: "12345678",
+    Doctor: "Rani Desai",
+    PatientName: "Rani Desai",
+    image: patient1,
+    Amount: "₹120",
+    Date: "8 Jul, 2024",
+    Service: "IVF Treatment",
+  },
+  {
+    id: 4,
+    Invoice: "12345678",
+    Doctor: "Rani Desai",
+    PatientName: "Rani Desai",
+    image: patient1,
+    Amount: "₹120",
+    Date: "8 Jul, 2024",
+    Service: "IVF Treatment",
+  },
+  {
+    id: 5,
+    Invoice: "12345678",
+    Doctor: "Rani Desai",
+    PatientName: "Rani Desai",
+    Amount: "₹120",
+    image: patient1,
+    Date: "8 Jul, 2024",
+    Service: "IVF Treatment",
+  },
+  {
+    id: 6,
+    Invoice: "12345678",
+    Doctor: "Rani Desai",
+    PatientName: "Rani Desai",
+    image: patient1,
+    Amount: "₹120",
+    Date: "8 Jul, 2024",
+    Service: "IVF Treatment",
+  },
+  {
+    id: 7,
+    Invoice: "12345678",
+    Doctor: "Rani Desai",
+    PatientName: "Rani Desai",
+    image: patient1,
+    Amount: "₹120",
+    Date: "8 Jul, 2024",
+    Service: "IVF Treatment",
+  },
+  {
+    id: 8,
+    Invoice: "12345678",
+    Doctor: "Rani Desai",
+    PatientName: "Rani Desai",
+    image: patient1,
+    Amount: "₹120",
+    Date: "8 Jul, 2024",
+    Service: "IVF Treatment",
+  },
+  {
+    id: 9,
+    Invoice: "12345678",
+    Doctor: "Rani Desai",
+    PatientName: "Rani Desai",
+    image: patient1,
+    Amount: "₹120",
+    Date: "8 Jul, 2024",
+    Service: "IVF Treatment",
+  },
+  {
+    id: 10,
+    Invoice: "12345678",
+    Doctor: "Rani Desai",
+    PatientName: "Rani Desai",
+    image: patient1,
+    Amount: "₹120",
+    Date: "8 Jul, 2024",
+    Service: "IVF Treatment",
+  },
+];
+
 // export const doctorsData: Doctor[] = [
 //   {
 //     id: 1,
