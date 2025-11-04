@@ -170,7 +170,7 @@ export default function DoctorAppointment() {
         const id = info.row.original.id;
         return (
           <Link
-            href={`/doctors/${id}`}
+            href={`/invoice/${id}`}
             className="text-decoration-none text-dark"
           >
             <div className="d-flex align-items-center gap-2">
@@ -225,7 +225,6 @@ export default function DoctorAppointment() {
               className="d-flex bg-white justify-content-center view-container   align-items-center border profile-card-boeder rounded Download-border me-2"
               onClick={() => {
                 setEditData(info.row.original); // store row data
-                
               }}
             >
               <IoEyeOutline />
@@ -291,7 +290,11 @@ export default function DoctorAppointment() {
               <option>This Week</option>
               <option>This Month</option>
             </Form.Select>
-            <Button variant="light" className="border custom-filter-button" style={{paddingLeft:"15px"}}>
+            <Button
+              variant="light"
+              className="border custom-filter-button"
+              style={{ paddingLeft: "15px" }}
+            >
               <PiSlidersDuotone />
             </Button>
           </div>
