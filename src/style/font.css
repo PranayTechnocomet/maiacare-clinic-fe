@@ -927,7 +927,7 @@
 }
 .dashboard-treatment-success-title {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 10px;
   font-style: SemiBold;
   color: var(--color-radio-lable);
@@ -961,11 +961,12 @@
   width: fit-content;
   padding: 1px 7px;
   border-radius: 5px;
+  cursor: pointer;
 }
 .eyecon {
   border: 1.5px solid #dde1e8;
   border-radius: 5px;
-
+  cursor: pointer;
   width: -moz-fit-content;
   width: fit-content;
   height: -moz-fit-content;
@@ -974,6 +975,47 @@
 }
 .notification_card {
   font-size: 17px;
+}
+.declinecon {
+  border: 1.5px solid #e85966;
+  padding: 4px;
+  width: 50%;
+  color: #e85966;
+  border-radius: 9px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.confirmcon {
+  border: 1.5px solid #2ecf98;
+  padding: 4px;
+  font-weight: 600;
+  margin-left: 1rem;
+  border-radius: 9px;
+  color: #2ecf98;
+  gap: 5px;
+  cursor: pointer;
+}
+.doctor_card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.patient-journey-charts {
+  width: 5px !important;
+}
+.patient-journey-chart-details {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--color-sidebar-icon);
+}
+.dashboard-chart-canvas {
+  width: 315.9px !important;
+  height: 340px !important;
+}
+.ageDistribution {
+  color: #8a8d93;
+  font-size: 15px;
 }
 @media screen and (max-width: 1024px) {
   .accordion-title {

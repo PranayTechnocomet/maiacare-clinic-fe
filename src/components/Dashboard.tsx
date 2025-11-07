@@ -4,7 +4,6 @@ import { Card, Row, Col } from "react-bootstrap";
 import { Line, Bar, Doughnut } from "react-chartjs-2";
 import Appointments from "../assets/images/Appointments.png";
 import ActivePatients from "../assets/images/Active Patients.png";
-import NewPatients from "../assets/images/Active Patients.png";
 import NoShowRate from "../assets/images/No Show Rate.png";
 import Doctors from "../assets/images/Doctors.png";
 import rating from "../assets/images/rating.png";
@@ -13,21 +12,30 @@ import arrow from "../assets/images/ArrowUpRight.png";
 import eye from "../assets/images/eyenotification.png";
 import notificationdoctor from "../assets/images/patient2.png";
 import emerygencydoctor from "../assets/images/patient1.png";
+import { IoClose } from "react-icons/io5";
+import { FaCheck } from "react-icons/fa6";
+import doctor1 from "../assets/images/dashboard_doctor.png";
+import doctor2 from "../assets/images/Profile-doctor.png";
+import doctor3 from "../assets/images/doctor5.png";
+import star from "../assets/images/ratingstart.png";
+import { GoDotFill } from "react-icons/go";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  LineController,
   Title,
   Tooltip,
   Legend,
   Filler,
   BarElement,
   ArcElement,
-  ChartOptions,
   ChartData,
+  ChartOptions,
 } from "chart.js";
+
 import Image, { StaticImageData } from "next/image";
 import { InputSelect } from "./ui/InputSelect";
 
@@ -51,6 +59,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  LineController,
   Title,
   Tooltip,
   Legend,
@@ -96,22 +105,15 @@ interface WaveChartProps {
 const handleChange = (
   e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
 ) => {};
-
-// ---------- WaveChart Component ----------
-const WaveChart: React.FC<WaveChartProps> = ({ width = 800, height = 400 }) => {
+//----- Appoitment Wavechart Component -----
+const AppoitmentWaveChart: React.FC<WaveChartProps> = ({
+  width = 800,
+  height = 400,
+}) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<ChartJS | null>(null);
 
-  const ivfStages = [
-    "Fertility  Assessment",
-    "Stimulation",
-    "Egg Retrieval",
-    "Fertilisation",
-    "IVF",
-    "Embryo Culture",
-    "Embryo Transfer",
-    "Pregnancy Test",
-  ];
+  const age = ["Jan", "Feb", "Mar", "Apr", "May", "June"];
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -120,83 +122,47 @@ const WaveChart: React.FC<WaveChartProps> = ({ width = 800, height = 400 }) => {
 
     if (chartInstanceRef.current) chartInstanceRef.current.destroy();
 
-    // Generate wave-like values
-    const generateWaveData = (): number[] => {
-      const points = [];
-      const numPoints = 200; // smooth line mate vadhu points
-
-      for (let i = 0; i < numPoints; i++) {
-        const x = (i / (numPoints - 1)) * 8 * Math.PI; // 8 stage mate
-
-        // Fertility Assessment → Stimulation
-        const wave1 = 20 * Math.sin(x * 0.5) + 20;
-
-        // Stimulation → Egg Retrieval
-        const wave2 = 30 * Math.sin(x * 0.6 + 1) + 30;
-
-        // Egg Retrieval → Fertilisation
-        const wave3 = 40 * Math.sin(x * 0.7 + 2) + 40;
-
-        // Fertilisation → IVF
-        const wave4 = 25 * Math.sin(x * 0.9 + 2) + 20;
-
-        // IVF → Embryo Culture
-        const wave5 = 35 * Math.sin(x * 0.8 + 3) + 30;
-
-        // Embryo Culture → Embryo Transfer
-        const wave6 = 30 * Math.sin(x * 0.7 + 4) + 25;
-
-        // Embryo Transfer → Pregnancy Test
-        const wave7 = 20 * Math.sin(x * 0.5 + 5) + 20;
-
-        points.push(
-          Math.max(
-            0,
-            (wave1 + wave2 + wave3 + wave4 + wave5 + wave6 + wave7) / 7
-          )
-        );
-      }
-
-      console.log(points);
-
-      return points;
-    };
-
-    const waveData = generateWaveData();
-    const labels = Array.from({ length: waveData.length }, () => "");
+    const Month = [20, 58, 39, 70, 37, 65, 55];
 
     const chartData: ChartData<"line"> = {
+      labels: age,
       datasets: [
         {
-          label: "IVF Process Journey",
-          data: waveData,
-          borderColor: "#2c3e50",
-          backgroundColor: "rgba(174, 204, 237, 0.6)",
-          borderWidth: 3,
+          label: "Month",
+          data: Month,
+          borderColor: "#3E5A91",
+        
+          backgroundColor: "transparent",
+          borderWidth: 2,
           fill: true,
-          tension: 0.4,
+          tension: 0.5,
           pointRadius: 0,
           pointHoverRadius: 0,
         },
       ],
-      labels,
     };
 
     const chartOptions: ChartOptions<"line"> = {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: true },
+      },
       scales: {
-        x: { display: false, grid: { display: false } }, // hide axis, use bottom labels
+        x: {
+          grid: { display: false },
+          ticks: { color: "#6c757d", font: { size: 13 } },
+        },
         y: {
           beginAtZero: true,
-          max: 140,
-          ticks: { stepSize: 20, color: "#6c757d", font: { size: 12 } },
-          grid: { color: "rgba(0,0,0,0.1)", lineWidth: 1 },
-          border: { display: false },
+          min:20,
+          max: 80,
+          ticks: { stepSize: 10, color: "#6c757d", font: { size: 13 } },
+          grid: { color: "rgba(0,0,0,0.05)" },
         },
       },
-      animation: { duration: 2000, easing: "easeInOutQuart" },
+      animation: { duration: 1800, easing: "easeInOutQuart" },
     };
 
     chartInstanceRef.current = new ChartJS(ctx, {
@@ -206,10 +172,8 @@ const WaveChart: React.FC<WaveChartProps> = ({ width = 800, height = 400 }) => {
     });
 
     return () => {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-        chartInstanceRef.current = null;
-      }
+      chartInstanceRef.current?.destroy();
+      chartInstanceRef.current = null;
     };
   }, [width, height]);
 
@@ -218,43 +182,162 @@ const WaveChart: React.FC<WaveChartProps> = ({ width = 800, height = 400 }) => {
       <div className="px-3 pt-3 text-center">
         <div className="d-flex align-items-center justify-content-between px-2">
           <h6 className="mb-0 d-flex align-items-start justify-content-start dashboard-chart-heading">
-            Patient Dropout Rate
+            Appointment Overview
           </h6>
+          <div className="patient-journey-up-icon1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="25"
+              height="25"
+              viewBox="0 0 25 25"
+              fill="none"
+            >
+              <path
+                d="M18.914 6.33984V16.0898C18.914 16.2888 18.835 16.4795 18.6943 16.6202C18.5537 16.7608 18.3629 16.8398 18.164 16.8398C17.9651 16.8398 17.7743 16.7608 17.6337 16.6202C17.493 16.4795 17.414 16.2888 17.414 16.0898V8.15016L6.69462 18.8705C6.55389 19.0112 6.36301 19.0903 6.16399 19.0903C5.96497 19.0903 5.7741 19.0112 5.63337 18.8705C5.49264 18.7297 5.41357 18.5389 5.41357 18.3398C5.41357 18.1408 5.49264 17.9499 5.63337 17.8092L16.3537 7.08984H8.41399C8.21508 7.08984 8.02431 7.01083 7.88366 6.87017C7.74301 6.72952 7.66399 6.53876 7.66399 6.33984C7.66399 6.14093 7.74301 5.95017 7.88366 5.80951C8.02431 5.66886 8.21508 5.58984 8.41399 5.58984H18.164C18.3629 5.58984 18.5537 5.66886 18.6943 5.80951C18.835 5.95017 18.914 6.14093 18.914 6.33984Z"
+                fill="#2B4360"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
 
-          <InputSelect
-            className="dashboard-chart-dropdown1 p-0 "
-            name="ivf"
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-              handleChange(e);
-            }}
-            onBlur={(e: React.FocusEvent<HTMLSelectElement>) => {}}
-            required={false}
-            disabled={false}
-            placeholder="IVF"
-            options={[
-              { id: "1", value: "1", label: "IVF1" },
-              { id: "2", value: "2", label: "IVF2" },
-              { id: "3", value: "3", label: "IVF3" },
-            ]}
-          />
+      <div className="d-flex px-3 gap-2">
+        <div className="d-flex align-items-center">
+          <GoDotFill fontSize={22} color="#70AAA4" />
+          <span className="ageDistribution">Male</span>
+        </div>
+        <div className="d-flex align-items-center">
+          <GoDotFill fontSize={22} color="#E29578" />
+          <span className="ageDistribution">Female</span>
         </div>
       </div>
 
       <div className="card-body px-4">
         <div style={{ height: `${height}px`, width: "100%" }}>
-          <canvas ref={chartRef} className="dashboard-chart-canvas" />
+          <canvas ref={chartRef} />
         </div>
+      </div>
+    </div>
+  );
+};
 
-        {/* IVF Stages below chart */}
-        <div className="d-flex justify-content-between flex-wrap mt-3 patient-journey-chart-details">
-          {ivfStages.map((stage, idx) => (
-            <span
-              key={idx}
-              className="text-center flex-fill patient-journey-charts"
+// ---------- WaveChart Component ----------
+const WaveChart: React.FC<WaveChartProps> = ({ width = 800, height = 400 }) => {
+  const chartRef = useRef<HTMLCanvasElement>(null);
+  const chartInstanceRef = useRef<ChartJS | null>(null);
+
+  const age = ["25 - 29", "30 - 34", "35 - 39", "40 - 44", "45 - 49", "50+"];
+
+  useEffect(() => {
+    if (!chartRef.current) return;
+    const ctx = chartRef.current.getContext("2d");
+    if (!ctx) return;
+
+    if (chartInstanceRef.current) chartInstanceRef.current.destroy();
+
+    const maleData = [60, 5, 46, 32, 58, 46, 60];
+    const femaleData = [0, 35, 65, 20, 60, 35];
+
+    const chartData: ChartData<"line"> = {
+      labels: age,
+      datasets: [
+        {
+          label: "Male",
+          data: maleData,
+          borderColor: "#70AAA4",
+          backgroundColor: "rgba(112, 170, 164, 0.15)",
+          borderWidth: 2,
+          fill: true,
+          tension: 0.5,
+          pointRadius: 0,
+          pointHoverRadius: 0,
+        },
+        {
+          label: "Female",
+          data: femaleData,
+          borderColor: "#E29578",
+          backgroundColor: "rgba(226, 149, 120, 0.15)",
+          borderWidth: 2,
+          fill: true,
+          tension: 0.5,
+          pointRadius: 0,
+          pointHoverRadius: 0,
+        },
+      ],
+    };
+
+    const chartOptions: ChartOptions<"line"> = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: true },
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: "#6c757d", font: { size: 13 } },
+        },
+        y: {
+          beginAtZero: true,
+          max: 105,
+          ticks: { stepSize: 15, color: "#6c757d", font: { size: 13 } },
+          grid: { color: "rgba(0,0,0,0.05)" },
+        },
+      },
+      animation: { duration: 1800, easing: "easeInOutQuart" },
+    };
+
+    chartInstanceRef.current = new ChartJS(ctx, {
+      type: "line",
+      data: chartData,
+      options: chartOptions,
+    });
+
+    return () => {
+      chartInstanceRef.current?.destroy();
+      chartInstanceRef.current = null;
+    };
+  }, [width, height]);
+
+  return (
+    <div className="card shadow-sm">
+      <div className="px-3 pt-3 text-center">
+        <div className="d-flex align-items-center justify-content-between px-2">
+          <h6 className="mb-0 d-flex align-items-start justify-content-start dashboard-chart-heading">
+            Patient Age Distribution
+          </h6>
+          <div className="patient-journey-up-icon1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="25"
+              height="25"
+              viewBox="0 0 25 25"
+              fill="none"
             >
-              {stage}
-            </span>
-          ))}
+              <path
+                d="M18.914 6.33984V16.0898C18.914 16.2888 18.835 16.4795 18.6943 16.6202C18.5537 16.7608 18.3629 16.8398 18.164 16.8398C17.9651 16.8398 17.7743 16.7608 17.6337 16.6202C17.493 16.4795 17.414 16.2888 17.414 16.0898V8.15016L6.69462 18.8705C6.55389 19.0112 6.36301 19.0903 6.16399 19.0903C5.96497 19.0903 5.7741 19.0112 5.63337 18.8705C5.49264 18.7297 5.41357 18.5389 5.41357 18.3398C5.41357 18.1408 5.49264 17.9499 5.63337 17.8092L16.3537 7.08984H8.41399C8.21508 7.08984 8.02431 7.01083 7.88366 6.87017C7.74301 6.72952 7.66399 6.53876 7.66399 6.33984C7.66399 6.14093 7.74301 5.95017 7.88366 5.80951C8.02431 5.66886 8.21508 5.58984 8.41399 5.58984H18.164C18.3629 5.58984 18.5537 5.66886 18.6943 5.80951C18.835 5.95017 18.914 6.14093 18.914 6.33984Z"
+                fill="#2B4360"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div className="d-flex px-3 gap-2">
+        <div className="d-flex align-items-center">
+          <GoDotFill fontSize={22} color="#70AAA4" />
+          <span className="ageDistribution">Male</span>
+        </div>
+        <div className="d-flex align-items-center">
+          <GoDotFill fontSize={22} color="#E29578" />
+          <span className="ageDistribution">Female</span>
+        </div>
+      </div>
+
+      <div className="card-body px-4">
+        <div style={{ height: `${height}px`, width: "100%" }}>
+          <canvas ref={chartRef} />
         </div>
       </div>
     </div>
@@ -487,12 +570,42 @@ const Dashboard: React.FC = () => {
       eye: eye,
     },
   ];
+  type doctor = {
+    id: number;
+    img: string | StaticImageData;
+    name: string;
+    rating: string;
+    speciality: string;
+  };
+  const doctor: doctor[] = [
+    {
+      id: 1,
+      img: doctor1,
+      name: "Dr. Harpreet Bedi ",
+      rating: "4.6 / 5 (660 reviews)",
+      speciality: "Fertility Specialist",
+    },
+    {
+      id: 2,
+      img: doctor2,
+      name: "Dr. Sonia Advani ",
+      rating: "4.6 / 5 (660 reviews)",
+      speciality: "Fertility Specialist",
+    },
+    {
+      id: 3,
+      img: doctor3,
+      name: "Dr. Sushant Patil",
+      rating: "3.9 / 5 (228 reviews)",
+      speciality: "Embryologist",
+    },
+  ];
   return (
     <>
       <div className="py-2">
         {/* Top Stats */}
         <Row className="mb-3">
-          <Col md={3}>
+          <Col md={3} xxl={2}>
             <Card className="">
               <Card.Body>
                 <Card.Title className="phisical-assessment-accordion-title-showData">
@@ -514,7 +627,7 @@ const Dashboard: React.FC = () => {
               </Card.Body>
             </Card>
           </Col>
-          <Col md={3}>
+          <Col md={3} xxl={2}>
             <Card className="">
               <Card.Body>
                 <Card.Title className="phisical-assessment-accordion-title-showData">
@@ -534,7 +647,7 @@ const Dashboard: React.FC = () => {
               </Card.Body>
             </Card>
           </Col>
-          <Col md={3}>
+          <Col md={3} xxl={2}>
             <Card className="">
               <Card.Body>
                 <Card.Title className="phisical-assessment-accordion-title-showData">
@@ -554,7 +667,7 @@ const Dashboard: React.FC = () => {
               </Card.Body>
             </Card>
           </Col>
-          <Col md={3}>
+          <Col md={3} xxl={2}>
             <Card className="">
               <Card.Body>
                 <Card.Title className="phisical-assessment-accordion-title-showData">
@@ -574,8 +687,8 @@ const Dashboard: React.FC = () => {
               </Card.Body>
             </Card>
           </Col>
-          <Col md={3}>
-            <Card className="mt-4">
+          <Col md={3} xxl={2}>
+            <Card className="mt-lg-4 mt-xxl-0">
               <Card.Body>
                 <Card.Title className="phisical-assessment-accordion-title-showData">
                   <Image
@@ -751,7 +864,8 @@ const Dashboard: React.FC = () => {
                 </div>
               </Col>
               <Col lg={6}>
-                <Card>
+                <AppoitmentWaveChart height={330} />
+                {/* <Card>
                   <Card.Body>
                     <div className="">
                       <Card.Title className="dashboard-chart-heading">
@@ -762,17 +876,17 @@ const Dashboard: React.FC = () => {
                       <Bar data={appointmentChartData} options={options} />
                     </div>
                   </Card.Body>
-                </Card>
+                </Card> */}
               </Col>
             </Row>
-            {/* Charts */}
+            {/* Charts & doctors*/}
             <Row className="mb-4 mt-4">
               <Col lg={6}>
-                <Card className="h-100">
+                <Card className="">
                   <Card.Body>
                     <div className="d-flex justify-content-between align-items-center">
                       <Card.Title className="dashboard-chart-heading">
-                        Patient Overview
+                        Top Doctors
                       </Card.Title>
                       <div className="patient-journey-up-icon1">
                         <svg
@@ -790,10 +904,60 @@ const Dashboard: React.FC = () => {
                       </div>
                     </div>
                     <div>
-                      <DoughnutChart
+                      {doctor.map((card, id) => (
+                        <div
+                          key={id}
+                          className="contact_person_detail_cards mt-3"
+                        >
+                          <div className="doctor_card">
+                            <div className="d-flex align-items-center gap-3">
+                              <Image
+                                src={card.img}
+                                alt="Profile Image"
+                                width={50}
+                                height={50}
+                                className="rounded-circle"
+                              />
+                              <div>
+                                <div className=" fw-semibold notification_card">
+                                  {card.name}
+                                </div>
+                                <div
+                                  className="fw-medium "
+                                  style={{ color: "#3E4A57", fontSize: "14px" }}
+                                >
+                                  {card.speciality}
+                                </div>
+                                <div
+                                  className="fw-medium d-flex align-items-center gap-1"
+                                  style={{ color: "#3E4A57", fontSize: "14px" }}
+                                >
+                                  <Image
+                                    src={star}
+                                    alt="star"
+                                    width={13}
+                                    height={12}
+                                  />
+                                  {card.rating}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="requestarrow">
+                              <Image
+                                src={arrow}
+                                alt="arrow"
+                                width={11}
+                                height={11}
+                              />
+                            </div>
+                          </div>
+                          {/* <Image src={star} alt="star" width={12} height={12} /> */}
+                        </div>
+                      ))}
+                      {/* <DoughnutChart
                         data={patientChartData}
                         options={{ responsive: true }}
-                      />
+                      /> */}
                     </div>
                   </Card.Body>
                 </Card>
@@ -803,6 +967,7 @@ const Dashboard: React.FC = () => {
               </Col>
             </Row>
           </Col>
+          {/* notification */}
           <Col md={4}>
             <Card className="h-100">
               <Card.Body>
@@ -845,8 +1010,8 @@ const Dashboard: React.FC = () => {
                           <div className="fs-6 fw-medium">Emerygency</div>
                         </div>
                       ) : (
-                        <div className="d-flex align-items-center justify-content-between">
-                          <div className="fs-6 fw-medium mb-2">
+                        <div className="d-flex align-items-center mb-2 justify-content-between">
+                          <div className="fs-6 fw-medium ">
                             {card.AppointmentRequest}
                           </div>
                           <div className="requestarrow">
@@ -892,6 +1057,16 @@ const Dashboard: React.FC = () => {
                         )}
                       </div>
                       {/* decline & confirm  */}
+                      <div className="d-flex justify-content-evenly align-items-center mt-3">
+                        <div className="w-50 d-flex align-items-center declinecon justify-content-center">
+                          <IoClose fontSize={24} />
+                          Decline
+                        </div>
+                        <div className="w-50 d-flex align-items-center confirmcon justify-content-center">
+                          <FaCheck fontSize={18} />
+                          Confirm
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
