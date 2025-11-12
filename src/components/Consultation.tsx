@@ -18,6 +18,10 @@ import Button from "./ui/Button";
 import { useRouter } from "next/navigation";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import Delete from "../assets/images/Delete.png";
+import { AppDispatch } from "@/utlis/redux/store";
+import { useDispatch } from "react-redux";
+import { setHeaderData } from "@/utlis/redux/slices/headerSlice";
+import PatientAddedModal from "./PatientAddedModal";
 export type ConsultationStatus = "Active" | "Deactivated" | "Discontinued";
 export interface ConsultationInfo {
    id: number; // <-- ADD ID
@@ -30,6 +34,12 @@ export interface ConsultationInfo {
   date?: string; // ✅ optional date field
 }
 export default function Consultation() {
+    const dispatch: AppDispatch = useDispatch();
+  
+  
+    useEffect(() => {
+     dispatch(setHeaderData({ title: "Patients",subtitle: "Patients"  }));
+    }, []);
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter");
 
@@ -401,7 +411,7 @@ export default function Consultation() {
 
       {/* Table */}
       <CommonTable data={filteredData} columns={columns} />
-
+      <PatientAddedModal/>
       {/* Pagination */}
       {/* <div className="d-flex justify-content-between align-items-center mt-3 flex-wrap">
                 <small className="text-muted">Showing {filteredData.length} of {consultationData.length} results</small>

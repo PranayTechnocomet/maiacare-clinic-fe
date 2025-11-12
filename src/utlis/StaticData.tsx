@@ -828,3 +828,355 @@ export const tableResponse: Patient[] = [
   },
   // ...add more rows
 ];
+// patient report
+
+export const patientReport = [
+  {
+    reportName: "Ultrasound Report",
+    name: "Ultrasound_Ana.pdf",
+    size: "60 KB",
+    uploadedAt: 1739251200000,
+  },
+  {
+    reportName: "Ultrasound Report",
+    name: "Xray.jpg",
+    size: "60 KB",
+    uploadedAt: 1739251200000,
+  },
+  {
+    reportName: "Sonography",
+    name: "Sonography.jpg",
+    size: "60 KB",
+    progress: 100,
+    status: "completed",
+    uploadedAt: 1739251200000,
+  },
+  {
+    reportName: "Sonography Report",
+    name: "Sonography_Re.pdf",
+    size: "60 KB",
+    progress: 100,
+    status: "completed",
+    uploadedAt: 1739251200000,
+  },
+  {
+    reportName: "Xray",
+    name: "Xray.jpg",
+    size: "60 KB",
+    progress: 100,
+    status: "completed",
+    uploadedAt: 1739251200000,
+  },
+  {
+    reportName: "Xray Report",
+    name: "Xray_Ana.pdf",
+    size: "60 KB",
+    progress: 100,
+    status: "completed",
+    uploadedAt: 1739251200000,
+  },
+  {
+    reportName: "Blood Test",
+    name: "Blood_T.pdf",
+    size: "60 KB",
+    progress: 100,
+    status: "completed",
+    uploadedAt: 1739251200000,
+  },
+];
+export const journeyData: PatientJourneyItem[] = [
+  {
+    id: "1",
+    title: "Online Consultation",
+    date: "on 09 Jul 2024",
+    time: "12:11 PM",
+    status: "Success"
+  },
+  {
+    id: "2",
+    title: "Appointment Booked",
+    date: "on 09 Jul 2024",
+    time: "12:11 PM",
+    status: "Success"
+  },
+  {
+    id: "3",
+    title: "Clinic Visits",
+    date: "on 09 Jul 2024",
+    time: "12:11 PM",
+    status: "In Progress",
+  },
+  {
+    id: "4",
+    title: "Treatment Started",
+    date: "on 09 Jul 2024",
+    time: "10:30 AM",
+    status: "Pending"
+  },
+  {
+    id: "5",
+    title: "Pregnancy Confirmed",
+    date: "on 09 Jul 2024",
+    time: "12:11 PM",
+    status: "Pending"
+  },
+
+];
+export const MedicalHistoryData = {
+  id_medical_history: 1,
+  medical_medications: "true",
+  medical_surgeries: "false",
+  medical_medical_condition: ["PCOS", "Thyroid Disorder", "Peanut Allergy", "Lactose Intolerant"],
+  medical_family_medical_history: ["Mother had endometriosis", "Father had thyroid"],
+  medical_lifestyle: ["Non-smoker", "Occasional alcohol", "Vegetarian diet"],
+  medical_exercise: "never",
+  medical_stress_level: "low",
+
+}
+export const physicalAssessmentData: PhysicalAssessmentData[] = [
+  {
+    date: "Wed, 19 Feb 2024",
+    height: "5'4''(162cm)",
+    weight: "58 kg",
+    bmi: "22.1(Normal)",
+    bloodGroup: "O+",
+    bloodPressure: "120/80 mmHg",
+    heartRate: "72 bpm",
+  },
+  {
+    date: "Mon, 22 Feb 2024",
+    height: "5'4''(162cm)",
+    weight: "58 kg",
+    bmi: "22.1(Normal)",
+    bloodGroup: "O+",
+    bloodPressure: "120/80 mmHg",
+    heartRate: "72 bpm",
+  },
+];
+export const patientTreatmentData = [
+  {
+    title: "IVF Cycle 1",
+    status: "Ongoing",
+    startDate: "7 Feb 2025",
+    endDate: "1:30 PM",
+    fees: "₹12000",
+    amountStatus: "Half Paid"
+
+  },
+  {
+    title: "IVF Cycle 2",
+    status: "Ongoing",
+    startDate: "7 Feb 2025",
+    endDate: "1:30 PM",
+    fees: "₹12000",
+    amountStatus: "Half Paid"
+
+  },
+  {
+    title: "IUI",
+    status: "Completed",
+    startDate: "7 Feb 2025",
+    endDate: "1:30 PM",
+    fees: "₹12000",
+    amountStatus: "Paid"
+
+  },
+  {
+    title: "Egg Freezing",
+    status: "Completed",
+    startDate: "7 Feb 2025",
+    endDate: "1:30 PM",
+    fees: "₹12000",
+    amountStatus: "Paid"
+
+  }
+
+]
+
+export const TempTreatmentSteps = [
+  {
+    id: 1,
+    step: " Fertility Assessment",
+  },
+  {
+    id: 2,
+    step: " Ovarain Stimulation",
+  },
+  {
+    id: 3,
+    step: "Monitoring",
+  },
+  {
+    id: 4,
+    step: "Follow up (HCG trigger shot)",
+  },
+  {
+    id: 5,
+    step: "Egg Retrieval",
+  },
+  {
+    id: 6,
+    step: "Sperm Collection",
+  },
+  {
+    id: 7,
+    step: "Fertilisation",
+  },
+  {
+    id: 8,
+    step: "Embryo Culture",
+  },
+  {
+    id: 9,
+    step: "Embryo Transfer",
+  },
+  {
+    id: 10,
+    step: "Pregnancy Test",
+  },
+
+];
+export const PaymentHistoryData = [
+  {
+    transactionId: "TXN1234567890",
+    serviceType: "Treatment",
+    date: "11 Feb 2025",
+    time: "3 PM",
+    paymentMode: "UPI",
+    amount: "₹1,200",
+    status: "Pending",
+    actions: "View"
+  },
+  {
+    transactionId: "TXN1234567891",
+    serviceType: "Treatment",
+    date: "11 Feb 2025",
+    time: "3 PM",
+    paymentMode: "UPI",
+    amount: "₹1,200",
+    status: "Paid",
+    actions: "View"
+  },
+  {
+    transactionId: "TXN1234567892",
+    serviceType: "Lab Test",
+    date: "11 Feb 2025",
+    time: "3 PM",
+    paymentMode: "UPI",
+    amount: "₹1,200",
+    status: "Paid",
+    actions: "View"
+  },
+  {
+    transactionId: "TXN1234567893",
+    serviceType: "Consultation",
+    date: "11 Feb 2025",
+    time: "3 PM",
+    paymentMode: "UPI",
+    amount: "₹1,200",
+    status: "Refunded",
+    actions: "View"
+  },
+]
+export const partnerDetailData = {
+  profile: {
+    basic_detail_name: "Raj Desai",
+    basic_detail_gender: "Male",
+    basic_detail_age: "31",
+    basic_detail_phone: "12345 67890",
+    basic_detail_email: "riyadharang@miacare.com",
+
+  },
+  medicalHistory: {
+    medication: "yes",
+    medicationcontent: "This is Medical Condition",
+    surgeriesContent: "This is Medical Condition",
+    currentMedication: "CureAll 5000, HealMax Plus",
+    surgeries: "no",
+    MedicalconditionAllergies: ["PCOS", "Thyroid Disorder", "Peanut Allergy", "Lactose Intolerant"],
+    familyMedicalHistory: ["Mother had endometriosis", "Father had thyroid"],
+    lifestyle: ["Non-smoker", "Occasional alcohol", "Vegetarian diet"],
+    exercise: "rarely",
+    stress: "high",
+  },
+  PhysicalAssessmentData: [
+    // {
+    //   date: "Wed, 19 Feb 2024",
+    //   height: "5'4'",
+    //   weight: "58",
+    //   bmi: "22.1",
+    //   bloodGroup: "O+",
+    //   systolic: "120",
+    //   diastolic: "80",
+
+    //   heartRate: "72",
+    // },
+    // {
+    //   date: "Mon, 22 Feb 2024",
+    //   height: "5'4'",
+    //   weight: "58",
+    //   bmi: "22.1",
+    //   bloodGroup: "O+",
+    //   systolic: "120",
+    //   diastolic: "80",
+    //   heartRate: "72",
+    // },
+  ],
+  fertilityAssessment: {
+    semenAnalysis: "Yes | Healthy Semen",
+    semenAnalysisContent: "This Is Seema Analys Content",
+    fertilityIssues: "No",
+    fertilityIssuesContent: "This is Fertility Issue Content",
+    fertilityTreatment: "No",
+    fertilityTreatmentContent: "This Is fertilityTreatmentContent Contet",
+    surgeries: "No",
+    surgeriesContent: "This Is surgeriesContent Content"
+  }
+}
+export const AppointmentData = [
+  {
+    id: 1,
+    reason: "Ultrasound scan",
+    date: "11 Feb 2025",
+    time: "3 PM",
+    payment: "Pending",
+    status: "Upcoming",
+    prescription: "N/A",
+    invoice: "N/A",
+    actions: "View"
+  },
+  {
+    id: 2,
+    reason: "Blood Test Review",
+    date: "11 Feb 2025",
+    time: "3 PM",
+    payment: "Done",
+    status: "Completed",
+    prescription: "file",
+    invoice: "file",
+    actions: "View"
+  },
+  {
+    id: 3,
+    reason: "Physical Check-up",
+    date: "11 Feb 2025",
+    time: "3 PM",
+    payment: "Done",
+    status: "Completed",
+    prescription: "viewfile",
+    invoice: "viewfile",
+    actions: "View"
+  },
+  {
+    id: 4,
+    reason: "Initial Consultation",
+    date: "11 Feb 2025",
+    time: "3 PM",
+    payment: "Done",
+    status: "Completed",
+    prescription: "viewfile",
+    invoice: "viewfile",
+    actions: "View"
+  },
+
+];

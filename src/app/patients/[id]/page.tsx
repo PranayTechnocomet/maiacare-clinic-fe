@@ -10,6 +10,7 @@ import { useEffect, useMemo } from "react";
 import { setHeaderData } from "../../../utlis/redux/slices/headerSlice";
 
 import { DoctorData } from "../../../utlis/StaticData";
+import AddMedicalHistory from "@/components/AddMedicalHistory";
 
 export default function PatientDetailPage() {
   const params = useParams();
@@ -34,7 +35,7 @@ export default function PatientDetailPage() {
   return (
     <div>
       {/* Pass the data to the component */}
-      <PatientDetailPageComponent />
+      <AddMedicalHistory />
     </div>
   );
 }

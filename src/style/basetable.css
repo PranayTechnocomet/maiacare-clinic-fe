@@ -37,7 +37,8 @@
 
 .table tbody td {
   vertical-align: middle;
-  color: #3e4a57;
+  /* color: #3e4a57; */
+  color: #292929;
   border: none;
   border-bottom: 1px solid #dce2ff;
   padding: 14px 16px;

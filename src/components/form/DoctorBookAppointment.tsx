@@ -101,8 +101,7 @@ export default function DoctorBookAppointment() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter");
-  const [filteredData, setFilteredData] =
-    useState<AppointmentRow[]>(appointement);
+ const [filteredData, setFilteredData] = useState<AppointmentRow[]>(appointement as unknown as AppointmentRow[]);
   const [searchQuery, setSearchQuery] = useState("");
   const [timeFilter, setTimeFilter] = useState("All Time");
   const [BookAppointmentModal, setBookAppointmentModal] = useState(false);

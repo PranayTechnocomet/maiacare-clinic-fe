@@ -1030,6 +1030,550 @@
   color: #8a8d93;
   font-size: 15px;
 }
+
+/* patient_profile_css */
+
+.doctor-profile-heading {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--color-heading);
+  font-family: var(--font-geist-sans1);
+}
+.patient-journey-badge-InProgress {
+  background-color: var(--color-bg);
+  color: var(--border-box-blue);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  font-style: Medium;
+  border-radius: 8px;
+  height: -moz-fit-content;
+  height: fit-content;
+  padding: 4px 8px;
+}
+.doctor-profile-subheading {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+  font-style: Regular;
+  color: var(--font-subtitle);
+}
+.contact-details-heading {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 26px;
+  font-style: SemiBold;
+  color: var(--color-heading);
+}
+.contact-details-subheading {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+  font-style: Regular;
+  color: var(--color-radio-lable);
+}
+.contact-propfile-address {
+  width: 46% !important;
+}
+.contact-details-emergency {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 18px;
+
+  color: var(--font-subtitle);
+}
+.contact-details-emergency-subdetail {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--color-radio-lable);
+}
+.patient-journey-heading {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 26px;
+  font-style: bold;
+  color: var(--color-heading);
+}
+.patient-profile-dot {
+  border: 1px solid var(--google-icon-border);
+  border-radius: 8px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.patient-accordion-item {
+  border: none !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+.patient-journey-up-icon {
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-white);
+  border: 1px solid var(--google-icon-border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.patient-journey-box {
+  background-color: var(--color-white);
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.patient-journey-success-box {
+  border: 1px solid var(--border-status-success);
+  background-color: var(--background-color-staus-success);
+}
+
+.patient-journey-other-box {
+  border: 1px solid var(--color-icon-border);
+}
+
+.patient-journey-box-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.patient-journey-dot {
+  top: 25%;
+}
+
+.patient-journey-dot-add-steps {
+  top: 10%;
+}
+
+.patient-journey-box-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 33px;
+  left: 14px;
+  width: 1px;
+  height: 100%;
+  border-left: 2px dotted var(--color-icon-border);
+  z-index: 0;
+}
+
+.patient-journey-add-steps-box-wrapper::before {
+  content: "";
+  position: absolute;
+  top: -38px;
+  left: 14px;
+  width: 1px;
+  height: 45%;
+  border-left: 2px dotted var(--color-icon-border);
+  z-index: 0;
+}
+
+.phisical-assessment-accordion-item {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.phisical-assessment-accordion-item-edit {
+  border-bottom: 1px solid var(--color-brand);
+  cursor: pointer;
+}
+
+.phisical-assessment-accordion-showData-box {
+  border: 1px solid var(--google-icon-border);
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.patient-list-count-box {
+  height: fit-content;
+  border: 1px solid var(--google-icon-border);
+  padding: 8px;
+  border-radius: 8px;
+  background-color: var(--color-white);
+}
+
+.patient-report-box {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-icon-border);
+  border-radius: 12px;
+  padding: 16px;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  transition: all 0.3s ease !important;
+
+  /* min-height: 220px; */
+  /* overflow: hidden; */
+}
+
+.patient-report-img {
+  width: 90px;
+  height: 90px;
+  transition: all 0.3s ease;
+  object-fit: contain;
+}
+
+/* .patient-report-box:hover {
+    border: 1px solid var(--color-modal-heading);
+}
+
+.patient-report-box:hover .patient-report-img {
+    width: 50px;
+    height: 50px;
+}
+
+.patient-report-box .icons-wrapper {
+    display: none !important;
+}
+
+.patient-report-box:hover .icons-wrapper {
+    display: flex !important;
+} */
+
+.patient-treatment-box {
+  background-color: var(--color-white);
+  border: 1px solid #e29578;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.patient-treatment-status-completed-box {
+  background-color: transparent;
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.patient-treatment-box-dot-btn {
+  border: 1px solid var(--color-icon-border);
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.camera-icon {
+  right: -10%;
+  top: 60%;
+}
+
+.patient-profile-image {
+  border-radius: 8px;
+}
+
+.service-details-box {
+  border: 1px solid var(--color-icon-border);
+  border-radius: 16px;
+  overflow: hidden;
+  /* padding: 10px 14px; */
+}
+
+.service-details-box-header {
+  background-color: #f5f7fa;
+  /* padding: 10px 12px; */
+}
+
+.service-details-box-content {
+  padding: 18px;
+}
+
+.service-details-box-content-hr {
+  /* margin: 0 -23px;  */
+  border-top: 2px solid var(--color-icon-border);
+}
+
+.disabled-accordion-header {
+  cursor: not-allowed !important;
+}
+
+.disabled-accordion-header .accordion-button {
+  cursor: not-allowed !important;
+  background-color: #f8f9fa !important;
+  color: #6c757d !important;
+}
+
+.clinic-details-box-background {
+  background-color: var(--modal-profile-color);
+}
+
+.reviews-Happy-box {
+  border: 1px solid var(--color-modal-heading);
+  border-radius: 4px;
+  padding: 4px 8px;
+  background-color: var(--color-happy-box);
+}
+.patient-journey-box-title {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  font-style: Regular;
+  color: var(--color-heading);
+}
+.patient-journey-box-subtitle {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  font-style: Regular;
+  color: var(--color-sidebar-icon);
+}
+.patient-journey-badge-success {
+  color: #057a55;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  font-style: Medium;
+  background-color: #def7ec;
+  border-radius: 8px;
+  height: -moz-fit-content;
+  height: fit-content;
+  padding: 4px 8px;
+}
+.patient-journey-badge-pending {
+  color: var(--border-box);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  font-style: Medium;
+  background-color: #fff8f1;
+  border-radius: 8px;
+  height: -moz-fit-content;
+  height: fit-content;
+  padding: 4px 8px;
+}
+.patient-report-box-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 22px;
+  font-style: SemiBold;
+  color: var(--color-radio-lable);
+}
+.fertilitiy-assement-accodion-title {
+  color: var(--color-brand);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 22px;
+}
+.accordion-title-detail {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  font-style: SemiBold;
+  color: var(--color-radio-lable);
+}
+.select-profile-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  font-style: Regular;
+  color: var(--color-sidebar-icon);
+}
+.basic-detail-text,
+.maiacare-radio-label {
+  color: var(--color-radio-lable);
+  font-size: 18px;
+  font-weight: 500;
+}
+.upload-report-data {
+  border: 2px dotted #cbd5e1 !important;
+}
+.kyc-modal-subheading {
+  color: #94a3b8;
+}
+.kyc-edit-aadhar-photo {
+  display: none;
+}
+.patient-treatment-box-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+  font-style: SemiBold;
+  color: var(--color-radio-lable);
+}
+.patient-treatment-status-Ongoing {
+  color: #3f83f8;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  background-color: #ebf5ff;
+  border-radius: 8px;
+  height: fit-content;
+  padding: 4px 8px;
+}
+.patient-treatment-status-Completed {
+  color: #057a55;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+
+  background-color: #def7ec;
+  border-radius: 8px;
+
+  height: fit-content;
+  padding: 4px 8px;
+}
+.patient-treatment-box-subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 18px;
+  font-style: SemiBold;
+  color: var(--color-sidebar-icon);
+}
+.patient-treatment-box-subtitle-desc {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  font-style: Medium;
+  color: var(--color-radio-lable);
+}
+.patient-treatment-box-subtitle-desc-fees {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  font-style: SemiBold;
+  color: var(--color-modal-heading);
+}
+.patient-treatment-box-subtitle-desc-half-paid {
+  color: var(--border-box);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  font-style: Medium;
+  border: 1px solid #f4c47e;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+.patient-treatment-box-subtitle-desc-paid {
+  color: #057a55;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  font-style: Medium;
+  border: 1px solid #057a55;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+/* patient_invoice */
+.invoice-main-header {
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 40px;
+  font-style: Medium;
+  color: var(--color-modal-heading);
+}
+.invoice-no-title {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 22px;
+  font-style: Medium;
+  color: var(--color-invoice-no-title);
+}
+.invoice-no-title-subtitle {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 22px;
+  font-style: Medium;
+  color: var(--color-radio-lable);
+}
+.invoice-doctor-name {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 28px;
+  font-style: SemiBold;
+  color: var(--color-radio-lable);
+}
+.appointment-details-invoice-header {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 22px;
+  font-style: SemiBold;
+  color: var(--color-heading);
+}
+.appointment-details-invoice-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 18px;
+  font-style: SemiBold;
+  color: var(--color-sidebar-icon);
+}
+.appointment-details-invoice-subtitle {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 22px;
+  font-style: Medium;
+  color: var(--color-radio-lable);
+}
+.service-details-box-header-content {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 22px;
+  font-style: SemiBold;
+  color: var(--color-radio-lable);
+}
+.service-details-box-content-data {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+  font-style: SemiBold;
+  color: var(--color-radio-lable);
+}.service-details-box-content-data-total {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 28px;
+    font-style: Bold;
+    color: var(--color-brand);
+}
+.image-formate {
+    display: none;
+}
+.edit-basic-details-edit-input {
+    display: none;
+}
+@media screen and (max-width: 575px) {
+  .patient-profile-dot {
+    width: 45px;
+    height: 45px;
+  }
+
+  .patient-journey-up-icon {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .patient-profile-dot {
+    width: 40px;
+    height: 40px;
+  }
+
+  .patient-journey-up-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .patient-journey-box-item {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+}
 @media screen and (max-width: 1024px) {
   .accordion-title {
     font-size: 20px;
