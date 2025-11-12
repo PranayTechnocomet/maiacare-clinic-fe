@@ -356,9 +356,14 @@ export default function Doctor() {
   const handleresultclose = () => {
     setShowResultModal(false);
   };
+
   const handleCancel = () => {
+    /**
+     * Set the showModal state to false, which closes the modal.
+     */
     setShowModal(false);
   };
+/*******  bc85ea71-7c00-4922-909f-97b3908b38e1  *******/
   return (
     <div className="">
       {/* list */}
@@ -450,7 +455,7 @@ export default function Doctor() {
         </Pagination>
       </div>
 
-      {/* ✅ Modal placed outside Dropdown */}
+     
       <Modal
         show={showModal}
         onHide={handleClose}
@@ -604,7 +609,7 @@ export default function Doctor() {
         </div>
       </Modal>
 
-      {/* --- Result Modal (After Submit) --- */}
+      
       <Modal
         show={showResultModal}
         onHide={handleresultclose}
