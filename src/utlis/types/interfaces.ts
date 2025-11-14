@@ -14,18 +14,32 @@ export interface User {
   }
 
 // interfaces.ts
-export interface BookAppointmentForm {
-  reasonForVisit: string;
-  type: string;
-   id: number; // <-- ADD ID
-  name: string;
-  mobile: string;
-  status: string;
-  image: string | StaticImageData;
-  time: string;
-  date?: string;
-  visit?: string[];
+export interface PatientData {
+    id: string | number;
+    name: string;
+    ProfilePhoto?: {
+        src: string;
+    };
 }
+
+export interface BookAppointmentForm {
+    // Appointment Details
+    appointmentId: string;
+    type: string;
+    reasonForVisit: string[];      // multi-select = array
+    appointmentDate: string;
+    appointmentTime: string;
+    forTime: string;
+    additionalNote: string;
+
+    // Patient Details
+     patientName: PatientData | null; // object (NOT array)
+    phone: string;
+    email: string;
+    patientAge: string;
+    gender: string;
+}
+
 export interface AppointmentData {
   id: string;
   appointmentId: string;

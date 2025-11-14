@@ -29,10 +29,6 @@ import {
 } from "../utlis/StaticData";
 import { InputFieldGroup } from "./ui/InputField";
 import { InputSelect } from "./ui/InputSelect";
-// import {
-//   BookAppointment,
-//   SuccessModalBookAppointment,
-// } from "./form/BookAppointment";
 import ScheduleTimeOff from "./ScheduleTimeOff";
 import AppointmentsMonth from "./AppointmentsMonth";
 import dayjs, { Dayjs } from "dayjs";
@@ -46,6 +42,7 @@ import { SlArrowDown } from "react-icons/sl";
 
 import ListViews from "../components/ListViews";
 import { useSearchParams } from "next/navigation";
+import { BookAppointment, SuccessModalBookAppointment } from "./form/BookAppointment";
 
 // Multi-Select DatePicker Component
 const MultiSelectDatePicker: React.FC = () => {
@@ -1742,7 +1739,7 @@ export function CalendarView() {
       </Row>
 
       <>
-        {/* <Modal
+        <Modal
           show={BookAppointmentModal}
           onHide={() => setBookAppointmentModal(false)}
           header="Book Appointment"
@@ -1757,7 +1754,7 @@ export function CalendarView() {
         <SuccessModalBookAppointment
           showSuccessModalBook={showSuccessModalBook}
           setShowSuccessModalBook={setShowSuccessModalBook}
-        /> */}
+        />
 
         <Modal
           show={blockCalendarModal}

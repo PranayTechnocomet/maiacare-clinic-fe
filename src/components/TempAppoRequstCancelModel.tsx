@@ -5,7 +5,7 @@ import Button from "./ui/Button";
 import Modal from "./ui/Modal";
 import { RescheduleAppointment, SuccessModalReschedule } from "./form/RescheduleAppointment";
 import { CancelAppointment, SuccessModalCancel } from "./form/CancelAppointment";
-// import { BookAppointment, SuccessModalBookAppointment } from "./form/BookAppointment";
+import { BookAppointment, SuccessModalBookAppointment } from "./form/BookAppointment";
 import { Dropdown } from "react-bootstrap";
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 
@@ -140,7 +140,7 @@ export function BookAppointmentModal() {
         Book Appointment
       </Button>
 
-      {/* <Modal
+      <Modal
         show={BookAppointmentModal}
         onHide={() => setBookAppointmentModal(false)}
         header="Book Appointment"
@@ -155,7 +155,7 @@ export function BookAppointmentModal() {
       <SuccessModalBookAppointment
         showSuccessModalBook={showSuccessModalBook}
         setShowSuccessModalBook={setShowSuccessModalBook}
-      /> */}
+      />
 
     </>
   );

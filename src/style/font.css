@@ -246,7 +246,7 @@
   border: 1.5px solid #dde1e8 !important;
   border-radius: 6px;
   background-color: white !important;
-  padding: 5.2px 9px !important;
+  padding: 8px 10px !important;
   box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
 }
 /* ==================  Profile  / Edit Componet css  =============== */
@@ -1123,7 +1123,7 @@
   font-style: bold;
   color: var(--color-heading);
 }
-.patient-profile-dot {
+/* .patient-profile-dot {
   border: 1px solid var(--google-icon-border);
   border-radius: 8px;
   width: 56px;
@@ -1131,7 +1131,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
+} */
 
 .patient-accordion-item {
   border: none !important;
@@ -1572,11 +1572,17 @@
 }
 /* appointment_css */
 .appointment-reschedule-profile-box {
-  background-color: var(--color-bg);
+  border: 1px solid #dde1e8;
   border-radius: 8px;
   padding: 16px;
 }
 
+.appointment-reschedule-patient-box {
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #dde1e8;
+  background: #f5f7fa;
+}
 .appointment-reschedule-profile-icon-box {
   width: 36px;
   height: 36px;
@@ -1728,7 +1734,77 @@
   font-size: 12px;
   color: #96a0af;
 }
+.doctor-listing-modal-profile {
+  border: 1px solid var(--google-icon-border);
+  background-color: var(--modal-profile-color);
+  border-radius: 8px;
+  padding: 10px;
+}
+.doctor-listing-modal-profile-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  font-style: Medium;
+  color: var(--color-heading);
+}
+.doctor-listing-modal-profile-subtitle {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 12px;
+  font-style: Medium;
+  color: var(--modal-follw-btn-color);
+}
+.doctor-listing-modal-subtext {
+  font-size: 14px;
+  line-height: 18px;
+  font-style: medium;
+  color: #3e4a57;
+  font-weight: 600 !important;
+}
+.doctor-listing-modal-orange-box {
+  color: var(--border-box);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  font-style: Medium;
+  border: 1.5px solid #f4c47e;
+  border-radius: 8px;
+  padding: 4px 6px;
+}
+.doctor-listing-payment-unpaid {
+  background-color: #fdf2f2;
+  border-radius: 10px;
+  padding: 4px 8px;
+}
 
+.doctor-listing-payment-unpaid {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  font-style: Medium;
+  color: var(--border-box-red);
+}
+.doctor-listing-aditional-commit {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  font-style: Medium;
+  color: var(--color-radio-lable);
+}
+.doctor-listing-modal-id {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  font-style: medium;
+  color: var(--color-radio-lable);
+}
+.doctor-listing-modal-main-title {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  font-style: Medium;
+  color: var(--color-brand);
+}
 .aw-days-row {
   min-width: 100%;
 }
@@ -2784,6 +2860,20 @@
 .check_in_btn {
   padding: 9px 11px !important;
   font-size: 13px;
+}
+.appointment-reschedule-profile-name {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22px;
+  font-style: Medium;
+  color: var(--color-profile-name);
+}
+.appointment-reschedule-profile-detail {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  font-style: Regular;
+  color: var(--color-sidebar-icon);
 }
 @media screen and (max-width: 575px) {
   .patient-profile-dot {

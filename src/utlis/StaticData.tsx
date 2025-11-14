@@ -12,7 +12,7 @@ import doctor3 from "@/assets/images/doctor3.png";
 import doctor4 from "@/assets/images/doctor4.png";
 import doctor5 from "@/assets/images/doctor5.png";
 import { StaticImageData } from "next/image";
-import appointmentProfile from "@/assets/images/doctor1.png";
+import appointmentProfile from "@/assets/images/Profile-doctor.png";
 import RiyaSharma from "@/assets/images/doctor2.png";
 import NishaRao from "@/assets/images/doctor3.png";
 import AarushiPatel from "@/assets/images/doctor4.png";
@@ -24,6 +24,7 @@ import patient5 from "../assets/images/patient5.png";
 import patient6 from "../assets/images/patient6.png";
 import clinicimg from "../assets/images/clinic logo.png";
 import patient from "../assets/images/patient_com.png";
+import patientprofile from "../assets/images/patient_2.png";
 // export type ConsultationStatus = "Active" | "Inactive" | "On Leave";
 
 export interface AssignedPatients {
@@ -1190,13 +1191,17 @@ export const AppointmentData = [
 
 export const tempAppointmentProfileData = {
   profilePhoto: appointmentProfile,
-  name: "Radhika More",
+  name: "Dr. Riya Dharang",
   id: "PTS-874562",
   gender: "Female",
-  year: "31 Years",
+
   date: "15 Jun 2025",
   time: "3:15 PM",
   FertilityAssessment: "Fertility assessment",
+  patientName: "Radhika More",
+  patientId: "PTS-874562",
+  patientProfile: patientprofile,
+  patientyear: "31 Years",
 };
 
 export interface tempAppointmentProfileData {
@@ -1542,7 +1547,7 @@ export interface InventoryEntry {
   Time: string;
   status: string;
   image: string | StaticImageData;
-  date?: string;  // ✅ optional date field
+  date?: string; // ✅ optional date field
 }
 
 export const inventoryData: InventoryEntry[] = [
@@ -1555,7 +1560,7 @@ export const inventoryData: InventoryEntry[] = [
     Time: "2:30 PM",
     status: "Completed",
     image: RiyaSharma,
-    date: "2025-11-7"
+    date: "2025-11-7",
   },
   {
     id: 2,
@@ -1566,7 +1571,7 @@ export const inventoryData: InventoryEntry[] = [
     Time: "2:30 PM",
     status: "Pending",
     image: AarushiPatel,
-    date: "2025-09-15"
+    date: "2025-09-15",
   },
   {
     id: 3,
@@ -1577,7 +1582,7 @@ export const inventoryData: InventoryEntry[] = [
     Time: "2:30 PM",
     status: "",
     image: NishaRao,
-    date: "2025-09-15"
+    date: "2025-09-15",
   },
   {
     id: 4,
@@ -1588,7 +1593,7 @@ export const inventoryData: InventoryEntry[] = [
     Time: "2:30 PM",
     status: "No Response",
     image: RiyaSharma,
-    date: "2025-11-8"
+    date: "2025-11-8",
   },
   {
     id: 5,
@@ -1599,7 +1604,7 @@ export const inventoryData: InventoryEntry[] = [
     Time: "2:30 PM",
     status: "Cancelled",
     image: AarushiPatel,
-    date: "2025-10-15"
+    date: "2025-10-15",
   },
 
   {
@@ -1611,7 +1616,7 @@ export const inventoryData: InventoryEntry[] = [
     Time: "2:30 PM",
     status: "Scheduled",
     image: NishaRao,
-    date: "2025-09-15"
+    date: "2025-09-15",
   },
   {
     id: 7,
@@ -1622,7 +1627,7 @@ export const inventoryData: InventoryEntry[] = [
     Time: "2:30 PM",
     status: "No Response",
     image: RiyaSharma,
-    date: "2025-09-25"
+    date: "2025-09-25",
   },
   {
     id: 8,
@@ -1633,7 +1638,6 @@ export const inventoryData: InventoryEntry[] = [
     Time: "2:30 PM",
     status: "Cancelled",
     image: RiyaSharma,
-    date: "2025-10-15"
+    date: "2025-10-15",
   },
-
 ];

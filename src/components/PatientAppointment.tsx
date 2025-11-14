@@ -12,7 +12,7 @@ import { InputFieldGroup } from "./ui/InputField";
 import {InputSelect} from "./ui/InputSelect";
 import Button from "./ui/Button";
 import Modal from "./ui/Modal";
-// import { BookAppointment, SuccessModalBookAppointment } from "./form/BookAppointment";
+import { BookAppointment, SuccessModalBookAppointment } from "./form/BookAppointment";
 
 const columns: ColumnDef<Patient>[] = [
     {
@@ -122,7 +122,7 @@ const columns: ColumnDef<Patient>[] = [
             const Actions = info.getValue() as string;
             return (
                 <>
-                    {Actions === "View" && <Image src={dotsIcon} width={40} height={40} alt="ViewIcon" />}
+                    {Actions === "View" && <Image src={dotsIcon} width={35} height={35} className="patient-profile-dot " alt="ViewIcon" />}
                 </>
 
             );
@@ -299,7 +299,7 @@ const PatientAppointment = () => {
             </div>
 
             <>
-                {/* <Modal
+                <Modal
                     show={BookAppointmentModal}
                     onHide={() => setBookAppointmentModal(false)}
                     header="Book Appointment"
@@ -309,12 +309,12 @@ const PatientAppointment = () => {
                         setBookAppointmentModal={setBookAppointmentModal}
                         setShowSuccessModalBook={setShowSuccessModalBook}
                     />
-                </Modal> */}
+                </Modal> 
 
-                {/* <SuccessModalBookAppointment
+                <SuccessModalBookAppointment
                     showSuccessModalBook={showSuccessModalBook}
                     setShowSuccessModalBook={setShowSuccessModalBook}
-                /> */}
+                />
                 
             </>
 

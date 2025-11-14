@@ -13,6 +13,7 @@ import eye from "../assets/images/Eye.png";
 import active_deactive from "../assets/images/Poweractivate.png";
 import Reassign from "../assets/images/Reassigndoctor.png";
 import Link from "next/link";
+import calendar from "../assets/images/calendar.png";
 import Delete from "../assets/images/Delete.png";
 import Button from "./ui/Button";
 import Modal from "./ui/Modal";
@@ -31,7 +32,11 @@ import {
   SuccessModalReschedule,
 } from "./form/RescheduleAppointment";
 
-// import { BookAppointment, SuccessModalBookAppointment } from './form/BookAppointment';
+import {
+  BookAppointment,
+  SuccessModalBookAppointment,
+} from "./form/BookAppointment";
+import { useRouter } from "next/navigation";
 
 // const statusColor: Record<string, string> = {
 //     Completed: "success",
@@ -52,7 +57,7 @@ export type ConsultationStatus =
 export default function ListView() {
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter");
-
+  const router = useRouter();
   const [filteredData, setFilteredData] = useState(inventoryData);
   const [searchQuery, setSearchQuery] = useState("");
   const [timeFilter, setTimeFilter] = useState("All Time");
@@ -60,6 +65,7 @@ export default function ListView() {
   const [showActiveDeactiveModal, setShowActiveDeactiveModal] = useState(false);
   const [BookAppointmentModal, setBookAppointmentModal] = useState(false);
   const [showSuccessModalBook, setShowSuccessModalBook] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [showSuccessActivate, setShowSuccessActivate] = useState(false);
   const [showRescheduleAppointmentModal, setRescheduleAppointmentModal] =
     useState(false);
@@ -289,9 +295,7 @@ export default function ListView() {
                 </div>
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown-menu-end">
-                <Dropdown.Item
-                //   onClick={() => router.push(`/patients/${id}`)}
-                >
+                <Dropdown.Item onClick={() => router.push(`/appointments/${id}`)}>
                   <img
                     src={eye.src}
                     alt="eye"
@@ -359,23 +363,17 @@ export default function ListView() {
       <div className="d-flex justify-content-between align-items-center flex-wrap mb-3 searchbar-content">
         {/* Search Input */}
         <div className="d-flex align-items-center gap-2 mb-1 Consultations-image">
-          {/* Search Input */}
-          <InputGroup className="custom-search-group">
-            <Form.Control
-              placeholder="Search"
-              className="custom-search-input"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <InputGroup.Text className="custom-search-icon">
-              <IoSearch className="search-icon" />
-            </InputGroup.Text>
-          </InputGroup>
-
           <div className="border custom-filter-button p-2 consultations-image-summary-cards">
             {/* <Image src={woman} alt="Total" className="img-fluid women-image" /> */}
             <div className="consultations-image-book">
-              <div className="Consultations-book">98 Consultations</div>
+              <Image
+                src={calendar}
+                alt="calendar"
+                className="img-fluid women-image me-2"
+                width={30}
+                height={30}
+              />
+              <div className="Consultations-book">98 Appointment</div>
             </div>
           </div>
         </div>
@@ -428,21 +426,21 @@ export default function ListView() {
               Book Appointment
             </div>
           </Button>
-          {/* <Modal
-                        show={BookAppointmentModal}
-                        onHide={() => setBookAppointmentModal(false)}
-                        header="Book Appointment"
-                        closeButton={true}
-                    >
-                        <BookAppointment
-                            setBookAppointmentModal={setBookAppointmentModal}
-                            setShowSuccessModalBook={setShowSuccessModalBook}
-                        />
-                    </Modal>
-                    <SuccessModalBookAppointment
-                        showSuccessModalBook={showSuccessModalBook}
-                        setShowSuccessModalBook={setShowSuccessModalBook}
-                    /> */}
+          <Modal
+            show={BookAppointmentModal}
+            onHide={() => setBookAppointmentModal(false)}
+            header="Book Appointment"
+            closeButton={true}
+          >
+            <BookAppointment
+              setBookAppointmentModal={setBookAppointmentModal}
+              setShowSuccessModalBook={setShowModal}
+            />
+          </Modal>
+          <SuccessModalBookAppointment
+            showSuccessModalBook={showModal}
+            setShowSuccessModalBook={setShowModal}
+          />
         </div>
       </div>
 
@@ -477,6 +475,7 @@ export default function ListView() {
         show={showRescheduleAppointmentModal}
         onHide={() => setRescheduleAppointmentModal(false)}
         closeButton
+        header="Request to Reschedule Appointment"
       >
         <RescheduleAppointment
           // onClose={() => setRescheduleAppointmentModal(false)}

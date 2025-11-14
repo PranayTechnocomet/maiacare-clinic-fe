@@ -5,15 +5,9 @@ import Modal from './ui/Modal';
 import { FertilityAssessment, MedicalHistoryForm, PhysicalAssessment } from '../components/form/AddPartnerDetailsForm';
 import { Accordion, Col, Dropdown, Row } from 'react-bootstrap';
 import Image from 'next/image';
-import PartnerImage from "../assets/images/Profile_Images.png";
+
 import ContentContainer from './ui/ContentContainer';
-import ProfileGender from '../assets/images/Profile_Gender.png'
-import ProfileId from '../assets/images/Profile_Id.png'
-import ProfileAge from '../assets/images/Profile_Age.png'
-import ProfileDob from '../assets/images/Profile_Calendar.png'
-import Phone from '../assets/images/Phone.png'
-import Email from '../assets/images/Email.png'
-import EditIcon from '../assets/images/EditIcon.png'
+
 // import { PartnerData, partnerData } from '@/data/partnerData';
 import hiegthImg from '../assets/images/Physical-assement-hiegth-icons.png'
 import weightImg from '../assets/images/Physical-assement-weight-icons.png'
