@@ -55,10 +55,10 @@ export default function AppointmentDoctorProfileDetails() {
                     </svg>
                     <span
                       className="settings-accordion-subtitle m-0"
-                      // onClick={() => {
-                      //   setRescheduleModal(true);
-                      //   setDoctorListingModal(false);
-                      // }}
+                      onClick={() => {
+                        setRescheduleModal(true);
+                        setDoctorListingModal(false);
+                      }}
                     >
                       Reschedule
                     </span>

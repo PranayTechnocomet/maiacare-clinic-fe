@@ -12,6 +12,9 @@ import Button from "./ui/Button";
 import { useRouter } from "next/navigation";
 import AppointmentDoctorProfileDetails from "./form/AppointmentDoctorProfileDetails";
 import TreatmentPatientProfileDetails from "./form/TreatmentPatientProfileDetails";
+import PaymentPatientProfileDetails from "./form/PaymentPatientProfileDetails";
+import Medication_TestDetails from "./form/Medication_TestDetails";
+import ReportDetails from "./form/ReportDetails";
 export default function AppointmentPatientDetail() {
   const dispatch = useDispatch();
 
@@ -126,13 +129,23 @@ export default function AppointmentPatientDetail() {
         {/* appointment Doctor details */}
         <Row className="mt-4">
           <Col md={7}>
-            <AppointmentDoctorProfileDetails />
+            <div>
+              <AppointmentDoctorProfileDetails />
+            </div>
+            <div className="mt-4">
+              <TreatmentPatientProfileDetails />
+            </div>
           </Col>
-          <Col md={5}>hy</Col>
-        </Row>
-        <Row className="mt-4">
-          <Col md={7}>
-            <TreatmentPatientProfileDetails />
+          <Col md={5}>
+            <div>
+              <PaymentPatientProfileDetails />
+            </div>
+            <div className="mt-4">
+              <Medication_TestDetails />
+            </div>
+            <div className="mt-4">
+              <ReportDetails />
+            </div>
           </Col>
         </Row>
       </div>
