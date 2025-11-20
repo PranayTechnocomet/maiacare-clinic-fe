@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ProfileImage from "../assets/images/patient_profile.png";
 import { ProfileCard } from "./ui/custom/ProfileCard";
 import { useDispatch } from "react-redux";
@@ -15,6 +15,8 @@ import TreatmentPatientProfileDetails from "./form/TreatmentPatientProfileDetail
 import PaymentPatientProfileDetails from "./form/PaymentPatientProfileDetails";
 import Medication_TestDetails from "./form/Medication_TestDetails";
 import ReportDetails from "./form/ReportDetails";
+import Modal from "./ui/Modal";
+import { RescheduleAppointment } from "./form/RescheduleAppointment";
 export default function AppointmentPatientDetail() {
   const dispatch = useDispatch();
 
@@ -27,6 +29,7 @@ export default function AppointmentPatientDetail() {
     );
   }, [dispatch]);
   const router = useRouter();
+
   const patientdata = {
     name: "Rani desai",
     phone: "+91 1234567890",
@@ -149,6 +152,7 @@ export default function AppointmentPatientDetail() {
           </Col>
         </Row>
       </div>
+     
     </>
   );
 }

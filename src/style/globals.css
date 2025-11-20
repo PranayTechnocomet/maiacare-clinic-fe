@@ -1760,6 +1760,326 @@ body {
   padding-right: 1rem;
 }
 
+/* treatment_css */
+.custom-side-bar-box {
+  padding: 16px;
+  background-color: var(--color-white);
+  border-radius: 12px;
+}
+
+.treament-sidebar-item {
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-side-bar .nav-link {
+  background-color: var(--modal-profile-color) !important;
+  padding: 0 !important;
+}
+
+.custom-side-bar .nav-link.active {
+  background-color: var(--color-modal-heading) !important;
+  color: var(--color-white) !important;
+}
+
+.custom-side-bar .nav-link.active span {
+  color: var(--color-white) !important;
+}
+
+.progressUpdates-border-box {
+  border: 1px solid var(--color-icon-border);
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.progressUpdates-border-Partner-box {
+  border: 1px solid var(--color-icon-border);
+  padding: 12px;
+  border-radius: 8px;
+}
+/* patientprofilecss */
+.patient-profile-dot {
+  border: 1px solid var(--google-icon-border);
+  border-radius: 8px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.patient-accordion-item {
+  border: none !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+.patient-journey-up-icon {
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-white);
+  border: 1px solid var(--google-icon-border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.patient-journey-box {
+  background-color: var(--color-white);
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.patient-journey-success-box {
+  border: 1px solid var(--border-status-success);
+  background-color: var(--background-color-staus-success);
+}
+
+.patient-journey-other-box {
+  border: 1px solid var(--color-icon-border);
+}
+
+.patient-journey-box-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.patient-journey-dot {
+  top: 25%;
+}
+
+.patient-journey-dot-add-steps {
+  top: 10%;
+}
+
+.patient-journey-box-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 33px;
+  left: 14px;
+  width: 1px;
+  height: 100%;
+  border-left: 2px dotted var(--color-icon-border);
+  z-index: 0;
+}
+
+.patient-journey-add-steps-box-wrapper::before {
+  content: "";
+  position: absolute;
+  top: -38px;
+  left: 14px;
+  width: 1px;
+  height: 45%;
+  border-left: 2px dotted var(--color-icon-border);
+  z-index: 0;
+}
+
+.phisical-assessment-accordion-item {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.phisical-assessment-accordion-item-edit {
+  border-bottom: 1px solid var(--color-brand);
+  cursor: pointer;
+}
+
+.phisical-assessment-accordion-showData-box {
+  border: 1px solid var(--google-icon-border);
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.patient-list-count-box {
+  height: fit-content;
+  border: 1px solid var(--google-icon-border);
+  padding: 8px;
+  border-radius: 8px;
+  background-color: var(--color-white);
+}
+
+.patient-report-box {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-icon-border);
+  border-radius: 12px;
+  padding: 16px;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  transition: all 0.3s ease !important;
+
+  /* min-height: 220px; */
+  /* overflow: hidden; */
+}
+
+.patient-report-img {
+  width: 90px;
+  height: 90px;
+  transition: all 0.3s ease;
+  object-fit: contain;
+}
+
+/* .patient-report-box:hover {
+    border: 1px solid var(--color-modal-heading);
+}
+
+.patient-report-box:hover .patient-report-img {
+    width: 50px;
+    height: 50px;
+}
+
+.patient-report-box .icons-wrapper {
+    display: none !important;
+}
+
+.patient-report-box:hover .icons-wrapper {
+    display: flex !important;
+} */
+
+.patient-treatment-box {
+  background-color: var(--color-white);
+  border: 1px solid #e29578;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.patient-treatment-status-completed-box {
+  background-color: transparent;
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.patient-treatment-box-dot-btn {
+  border: 1px solid var(--color-icon-border);
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.camera-icon {
+  right: -10%;
+  top: 60%;
+}
+
+.patient-profile-image {
+  border-radius: 8px;
+}
+
+.service-details-box {
+  border: 1px solid var(--color-icon-border);
+  border-radius: 16px;
+  overflow: hidden;
+  /* padding: 10px 14px; */
+}
+
+.service-details-box-header {
+  background-color: #f5f7fa;
+  /* padding: 10px 12px; */
+}
+
+.service-details-box-content {
+  padding: 18px;
+}
+
+.service-details-box-content-hr {
+  /* margin: 0 -23px;  */
+  border-top: 2px solid var(--color-icon-border);
+}
+
+.disabled-accordion-header {
+  cursor: not-allowed !important;
+}
+
+.disabled-accordion-header .accordion-button {
+  cursor: not-allowed !important;
+  background-color: #f8f9fa !important;
+  color: #6c757d !important;
+}
+
+.clinic-details-box-background {
+  background-color: var(--modal-profile-color);
+}
+
+.reviews-Happy-box {
+  border: 1px solid var(--color-modal-heading);
+  border-radius: 4px;
+  padding: 4px 8px;
+  background-color: var(--color-happy-box);
+}
+/* fertility css */
+
+.fertilitiy-assement-accodion-item {
+  border: 1px solid var(--google-icon-border) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.custom-accordion-body {
+  padding: 0 16px 16px !important;
+}
+
+/* physical-assessment form accordion */
+
+.accordion-form-physical-assessment .input-custom-width {
+  width: 47.83% !important;
+}
+.input-custom-data {
+  margin-top: 30px !important;
+}
+.accordion-form-physical-assessment .or-custom-width {
+  width: 4.3% !important;
+  padding: 0 !important;
+}
+
+@media screen and (max-width: 575px) {
+  .patient-profile-dot {
+    width: 45px;
+    height: 45px;
+  }
+
+  .patient-journey-up-icon {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .patient-profile-dot {
+    width: 40px;
+    height: 40px;
+  }
+
+  .patient-journey-up-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .patient-journey-box-item {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+}
+
+/* Pagination css */
+
 /* 1440 > big screen apply */
 @media (min-width: 1640px) {
   .patient-header-search-width {

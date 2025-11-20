@@ -1641,3 +1641,213 @@ export const inventoryData: InventoryEntry[] = [
     date: "2025-10-15",
   },
 ];
+export interface TreatmentPlanEntry {
+  id: number;
+  treatmentPlan: string;
+  step: string;
+  date: string;
+  patientName: string;
+  partnerName: string;
+  status: string;
+  image: string | StaticImageData;
+}
+
+export const treatmentPlanData: TreatmentPlanEntry[] = [
+  {
+    id: 1,
+    treatmentPlan: "IVF",
+    step: "Fertility Assessment",
+    date: "7 Jan 2024",
+    patientName: "Meera Joshi",
+    partnerName: "Ravi Sharma",
+    status: "Success",
+    image: RiyaSharma,
+  },
+  {
+    id: 2,
+    treatmentPlan: "Egg Freezing",
+    step: "Ovarian Stimulation",
+    date: "7 Jan 2024",
+    patientName: "Ravi Sharma",
+    partnerName: "Ravi Sharma",
+    status: "Pending",
+    image: AarushiPatel,
+  },
+  {
+    id: 3,
+    treatmentPlan: "IUI",
+    step: "Fertilisation",
+    date: "7 Jan 2024",
+    patientName: "Priya Singh",
+    partnerName: "Rohan Singh",
+    status: "Cancelled",
+    image: RiyaSharma,
+  },
+  {
+    id: 4,
+    treatmentPlan: "Fertility Support",
+    step: "IVF",
+    date: "7 Jan 2024",
+    patientName: "Lakshmi Patel",
+    partnerName: "Arjun Patel",
+    status: "Success",
+    image: RiyaSharma,
+  },
+  {
+    id: 5,
+    treatmentPlan: "IVF",
+    step: "Embryo Culture",
+    date: "7 Jan 2024",
+    patientName: "Arjun Patel",
+    partnerName: "Arjun Patel",
+    status: "Upcoming",
+    image: AarushiPatel,
+  },
+  {
+    id: 6,
+    treatmentPlan: "Egg Freezing",
+    step: "Embryo Transfer",
+    date: "7 Jan 2024",
+    patientName: "Suresh Gupta",
+    partnerName: "Suresh Gupta",
+    status: "Cancelled",
+    image: AarushiPatel,
+  },
+  {
+    id: 7,
+    treatmentPlan: "Fertility Support",
+    step: "Pregnancy Test",
+    date: "7 Jan 2024",
+    patientName: "Ananya Sharma",
+    partnerName: "Vikram Sharma",
+    status: "Pending",
+    image: AarushiPatel,
+  },
+  {
+    id: 8,
+    treatmentPlan: "Fertility Support",
+    step: "Fertility Assessment",
+    date: "7 Jan 2024",
+    patientName: "Ananya Sharma",
+    partnerName: "Vikram Sharma",
+    status: "Success",
+    image: AarushiPatel,
+  },
+];
+export const EditTreatmentStaticData = {
+  treatmentplan: {
+    selectpatient: "partner",
+    treatment: "Embryo Transfer",
+    duration: "6 Months",
+  },
+  medicalPrescription: [
+    {
+      id: "1",
+      medicineName: "Progesterone",
+      type: "Tablet",
+      typeQuantity: "200 mg",
+      duration: "14",
+      quantity: 1,
+      timeslot: ["morning"],
+      meal: "After",
+      intake: "test",
+      description: "test description",
+    },
+    {
+      id: "2",
+      medicineName: "Follistim",
+      type: "Capsule",
+      typeQuantity: "50 mg",
+      duration: "14",
+      quantity: 1,
+      timeslot: ["morning"],
+      meal: "After",
+      intake: "test2",
+      description: "test description2",
+    },
+  ],
+  tests: [
+    { id: "1", value: "Blood Test", label: "Blood Test" },
+    { id: "2", value: "Sonography", label: "Sonography" },
+  ],
+  followUpAction: {
+    nextStep: "1 Ovarian Stimulation",
+    appointmentDate: "2025-10-16",
+    appointmentTime: "15:50",
+    forTime: "30minutes",
+    instructionsForPatient:
+      "1.Report any abdominal pain, spotting, or unusual symptoms immediately",
+  },
+};
+
+export const IVFProgressData = [
+  {
+    id: 1,
+    title: "Fertility Assessment",
+    date: "on 09 Jul 2024",
+    time: "12:11 PM",
+    Complete: "50",
+    status: "Success" as const,
+  },
+  {
+    id: 2,
+    title: "Ovarian Stimulation",
+    date: "on 09 Jul 2024",
+    time: "12:11 PM",
+    status: "In Progress" as const,
+  },
+  {
+    id: 3,
+    title: "Monitoring",
+    // date: 'on 09 Jul 2024',
+    // time: '12:11 PM',
+    // Complete: "50",
+    status: "Pending" as const,
+  },
+  {
+    id: 4,
+    title: "Follow up",
+    status: "Pending" as const,
+  },
+  {
+    id: 5,
+    title: "Egg Retrieval",
+    status: "Pending" as const,
+  },
+  {
+    id: 6,
+    title: "Sperm Collection",
+    status: "Pending" as const,
+  },
+];
+export const medicationPrescriptionData: MedicationPrescriptionType[] = [
+  {
+    id: "1",
+    medicineName: "Follistim",
+    type: "Capsule",
+    typeQuantity: "50",
+    duration: "12",
+    quantity: 1,
+    timeslot: ["morning", "evening"],
+    meal: "Before",
+    intake: "1",
+    description: "This is description",
+  },
+  {
+    id: "2",
+    medicineName: "Progesterone",
+    type: "Tablet",
+    typeQuantity: "200",
+    duration: "12",
+    quantity: 1,
+    timeslot: ["morning", "evening"],
+    meal: "Before",
+    intake: "1",
+    description: "This is description",
+  },
+];
+export const StatusAndUpdatesData = {
+  stepName: "Fertility Assessment",
+  status: "Success",
+  notes: "Cycle is normal, no fertility related issue",
+};

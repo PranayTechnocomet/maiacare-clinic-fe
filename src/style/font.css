@@ -462,14 +462,38 @@
   color: #3e4a57;
 }
 .appoiment-dots-open-danger {
-    color: var(--color-dander);
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 20px;
-}
-.appointment-doctor-profile-detail{
+  color: var(--color-dander);
   font-size: 14px;
   font-weight: 500;
+  line-height: 20px;
+}
+.appointment-doctor-profile-detail {
+  font-size: 14px;
+  font-weight: 500;
+}
+.amount .maiacare-input-field{
+  padding-left: 3.5rem !important;
+  
+}
+.custom-Rupee-icon {
+  width: 12%;
+ 
+  position: absolute;
+  top: 39%;
+     padding: 12px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 2px solid #dee2e6;
+}
+.Rupee-icon {
+  color: #2b4360;
+  width: 23px;
+  height: 24px;
+  font-weight: 500;
+  /* position: absolute; */
+}
+.amount-class {
+  /* position: relative; */
 }
 .support-faqs-desc {
   color: var(--color-heading);

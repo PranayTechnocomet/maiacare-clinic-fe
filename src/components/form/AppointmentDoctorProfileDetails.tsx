@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import ContentContainer from "../ui/ContentContainer";
 import Image from "next/image";
 import doctor from "../../assets/images/Profile-doctor.png";
@@ -9,7 +10,17 @@ import calender from "../../assets/images/CalendarDoctorAppoint.png";
 import clock from "../../assets/images/clock.png";
 import Button from "../ui/Button";
 import { AppointmentRequestCancelModel } from "../TempAppoRequstCancelModel";
+import Modal from "../ui/Modal";
+import { RescheduleAppointment } from "./RescheduleAppointment";
+import {
+  CancleAppointmentModal,
+  SuccessModalCancle,
+} from "./CancleAppointmentModal";
 export default function AppointmentDoctorProfileDetails() {
+  const [showRescheduleAppointmentModal, setRescheduleAppointmentModal] =
+    useState(false);
+  const [showCancleAppointment, setShowCancleAppointment] = useState(false);
+  const [showCancleSuccess, setShowCancleSuccess] = useState(false);
   return (
     <div>
       <ContentContainer>
@@ -56,8 +67,8 @@ export default function AppointmentDoctorProfileDetails() {
                     <span
                       className="settings-accordion-subtitle m-0"
                       onClick={() => {
-                        setRescheduleModal(true);
-                        setDoctorListingModal(false);
+                        setRescheduleAppointmentModal(true);
+                        // setDoctorListingModal(false);
                       }}
                     >
                       Reschedule
@@ -80,10 +91,10 @@ export default function AppointmentDoctorProfileDetails() {
                     </svg>
                     <span
                       className="appoiment-dots-open-danger m-0"
-                      // onClick={() => {
-                      //   setCancelModal(true);
-                      //   setDoctorListingModal(false);
-                      // }}
+                      onClick={() => {
+                        setShowCancleAppointment(true);
+                        // setDoctorListingModal(false);
+                      }}
                     >
                       Cancel Appointment
                     </span>
@@ -187,6 +198,35 @@ export default function AppointmentDoctorProfileDetails() {
           </Col>
         </Row>
       </ContentContainer>
+      <Modal
+        show={showRescheduleAppointmentModal}
+        onHide={() => setRescheduleAppointmentModal(false)}
+        closeButton
+        header="Request to Reschedule Appointment"
+      >
+        <RescheduleAppointment
+          // onClose={() => setRescheduleAppointmentModal(false)}
+          setRescheduleModal={setRescheduleAppointmentModal}
+        />
+      </Modal>
+      {/* CANCEL APPOINTMENT MODAL */}
+      <Modal
+        show={showCancleAppointment}
+        onHide={() => setShowCancleAppointment(false)}
+        closeButton
+        header="Request to Cancel Appointment"
+      >
+        <CancleAppointmentModal
+          setCancleModal={setShowCancleAppointment}
+          setShowSuccessModal={setShowCancleSuccess}
+        />
+      </Modal>
+
+      {/* SUCCESS MODAL */}
+      <SuccessModalCancle
+        showSuccessModal={showCancleSuccess}
+        setShowSuccessModal={setShowCancleSuccess}
+      />
     </div>
   );
 }

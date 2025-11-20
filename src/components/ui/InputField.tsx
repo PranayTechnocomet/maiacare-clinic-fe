@@ -50,7 +50,7 @@ export const InputFieldGroup = ({
 
 export const InputFieldLabel = ({label="", required=false, className=""}: {label?: string; required?: boolean, className?: string}) => {
     return (
-        <Form.Label className={`maiacare-input-field-label ${className}`}>{label} {required && <span className="text-danger">*</span>}</Form.Label>
+        <Form.Label className={`maiacare-input-field-label  ${className}`}>{label} {required && <span className="text-danger">*</span>}</Form.Label>
     )
 }
 
