@@ -13,14 +13,14 @@ import {
     PatientReportType,
     ProgressUpdatesType,
     TreatmentFertilityAssessmentFormType,
-} from "@/utils/types/interfaces";
+} from "../utlis/types/interfaces";
 import { MedicationPrescriptionForm } from "./form/TreatmentPlanForm";
 import {
     TerminationSuccessModal,
     TreatmentSuccessModal,
     TreatmentTerminate,
 } from "./form/TreatmentAllForm";
-import ProfileImage from "@/assets/images/Profile_Image.png";
+import ProfileImage from "@/assets/images/patient_profile.png";
 import { ProfileCard } from "./ui/custom/ProfileCard";
 import { Accordion, Col, Dropdown, Row } from "react-bootstrap";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
@@ -30,10 +30,10 @@ import {
     IVFProgressData,
     medicationPrescriptionData,
     StatusAndUpdatesData,
-} from "@/utils/StaticData";
+} from "../utlis/StaticData";
 import toast from "react-hot-toast";
 import { BsInfoCircle } from "react-icons/bs";
-import TreatmentFertilityAssessment from "./TreatmentFertilityAssessment";
+import TreatmentFertilityAssessment from "../components/TreatmentFertilityAssessment";
 import TreatmentEditForm from "./TreatmentEditForm";
 import { ProgressUpdatesEditForm } from "./ProgressUpdatesEditForm";
 import PatientCalenderForm from "./form/PatientCalenderForm";
@@ -41,9 +41,9 @@ import tempPatientImg from "@/assets/images/patient-img-1.png";
 import Image from "next/image";
 
 import Jpgimg from "@/assets/images/Jpgimg.png";
-import PDFAddhar from "@/assets/images/PDFAddhar.png";
+import PDFAddhar from "@/assets/images/Pdfimg.png";
 import pdfimg from "@/assets/images/Pdfimg.png";
-import uplodimg from "@/assets/images/Upload.png";
+import uplodimg from "@/assets/images/Uploadimg.png";
 import EditProfile from "@/assets/images/EditProfile.png";
 import GreenRight from "@/assets/images/GreenRight.png";
 import Trash from "@/assets/images/Trash.png";
@@ -56,10 +56,10 @@ import Completed from "@/assets/images/Completed.png";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 
-import '@/style/treatment.css'
-import '@/style/appointments.css'
-import '@/style/patientProfile.css';
-import '@/style/fertilityassessment.css'
+// import '@/style/treatment.css'
+// import '@/style/appointments.css'
+// import '@/style/patientProfile.css';
+// import '@/style/fertilityassessment.css'
 
 
 function TreatmentPatient() {

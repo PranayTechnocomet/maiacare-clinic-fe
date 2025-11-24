@@ -17,7 +17,7 @@ import temppatientImg1 from "../../assets/images/patient1.png";
 import doctor1 from "../../assets/images/doctor1.png";
 import doctor2 from "../../assets/images/doctor2.png";
 import doctor3 from "../../assets/images/doctor3.png";
-import doctor4 from "../../assets/images/doctor4.png";
+import doctor4 from "../../assets/images/doctor4.jpg";
 import doctor5 from "../../assets/images/doctor5.png";
 import { InputSelect } from "../ui/InputSelect";
 import Textarea from "../ui/Textarea";

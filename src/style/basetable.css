@@ -10,7 +10,16 @@
   border: 1px solid #dde1e8 !important;
   border-radius: 12px !important;
 }
+.table-responsive {
+  overflow-x: auto !important;
+  -ms-overflow-style: none !important; /* IE+Edge */
+  scrollbar-width: none !important; /* Firefox */
+}
 
+.table-responsive::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+}
 .table {
   border-collapse: separate;
   border-spacing: 0 0px;

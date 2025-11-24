@@ -10,13 +10,22 @@
     font-size: 14px;
     padding: 12px 16px;
   }
-  
+  .nav-tabs .nav-link.active {
+    color: var(--bs-nav-tabs-link-active-color);
+    background-color: transparent !important;
+    border-color: var(--bs-nav-tabs-link-active-border-color);
+}
   .custom-tabs .nav-item {
     flex: unset;
     text-align: center;
     text-wrap: nowrap;
   }
-  
+  .custom-tabs .nav-link.active {
+    background-color: rgba(0, 0, 0, 0);
+    font-weight: 600;
+    color: #2b4360 !important;
+    border-bottom: 2px solid #284b73 !important;
+}
   /* Active Tab */
   .custom-tabs .nav-link.active {
     color: #1E2A37; /* Dark text */

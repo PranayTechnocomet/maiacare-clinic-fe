@@ -1296,22 +1296,13 @@
   object-fit: contain;
 }
 
-/* .patient-report-box:hover {
-    border: 1px solid var(--color-modal-heading);
+.appointments-total-box-item {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 21px;
+    font-style: medium;
+    color: var(--color-heading);
 }
-
-.patient-report-box:hover .patient-report-img {
-    width: 50px;
-    height: 50px;
-}
-
-.patient-report-box .icons-wrapper {
-    display: none !important;
-}
-
-.patient-report-box:hover .icons-wrapper {
-    display: flex !important;
-} */
 
 .patient-treatment-box {
   background-color: var(--color-white);
@@ -2179,6 +2170,44 @@
 .aw-calendar-grid {
   scrollbar-width: thin;
   scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.setting-password-item-name {
+    color: var(--color-sidebar-icon);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+}
+.medication-prescription-accordion-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    font-style: Regular;
+    color: var(--color-radio);
+}
+.treatment-steps-box-item {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    font-style: Medium;
+    color: var(--color-heading);
+}.medication-prescription-accordion-item-main .accordion-button:after {
+    width: var(--bs-accordion-btn-icon-width) !important;
+    height: var(--bs-accordion-btn-icon-width) !important;
+    content: "" !important;
+     background-image: url("../assets/images/medication-accordion-arrow.png") !important;
+    background-repeat: no-repeat !important;
+    background-size: var(--bs-accordion-btn-icon-width) !important;
+    transition: var(--bs-accordion-btn-icon-transition) !important;
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+}
+.medication-prescription-accordion-item {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    font-style: Regular;
+    color: var(--color-radio-labl);
 }
 
 /* Responsive Design */

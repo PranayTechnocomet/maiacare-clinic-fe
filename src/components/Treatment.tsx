@@ -63,7 +63,6 @@ function Treatment() {
   const [successModal, setSuccessModal] = useState<boolean>(false);
   const [terminationSuccessModal, setTerminationSuccessModal] =
     useState<boolean>(false);
-  // console.log("terminationSuccessModal", terminationSuccessModal);
 
   const [ivfProgressData, setIvfProgressData] = useState(IVFProgressData);
 
