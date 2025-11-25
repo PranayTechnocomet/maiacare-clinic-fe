@@ -1,5 +1,6 @@
 import {
   ConsultationStatus,
+  MedicalHistoryType,
   MedicationPrescriptionType,
   Patient,
   PatientJourneyItem,
@@ -706,6 +707,7 @@ export const consultationData: ConsultationEntry[] = [
 ];
 
 import { ColumnDef } from "@tanstack/react-table";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 // import { Patient, SelectPatientType } from "./types/interfaces";
 
 export type LeaveEntry = {
@@ -716,6 +718,42 @@ export type LeaveEntry = {
   days: string;
   status?: string;
 };
+
+export interface PartnerDetailData {
+  profile: {
+    basic_detail_name: string;
+    basic_detail_gender: string;
+    basic_detail_age: string;
+    basic_detail_phone: string;
+    basic_detail_email: string;
+    profileImage?: string;
+  };
+
+  medicalHistory: MedicalHistoryType;
+
+  PhysicalAssessmentData: {
+    date: string;
+    height: string;
+    weight: string;
+    bmi: string;
+    bloodGroup: string;
+    systolic: string;
+    diastolic: string;
+    heartRate: string;
+  }[];
+
+  fertilityAssessment: {
+    semenAnalysis: string;
+    semenAnalysisContent: string;
+    fertilityIssues: string;
+    fertilityIssuesContent: string;
+    fertilityTreatment: string;
+    fertilityTreatmentContent: string;
+    surgeries: string;
+    surgeriesContent: string;
+  };
+}
+
 
 export const leaveData: LeaveEntry[] = [
   {
@@ -1206,7 +1244,7 @@ export const tempAppointmentProfileData = {
 
 export interface tempAppointmentProfileData {
   appointment_id: string;
-  patient_profile: string | any;
+  patient_profile: string | StaticImport;
   patient_name: string;
   patient_status: string;
   patient_contactnumber: string;
@@ -1218,6 +1256,29 @@ export interface tempAppointmentProfileData {
   patient_additional_commet: string;
   patient_time: string;
 }
+
+export interface AppointmentsType {
+  id: string;
+  status: string | number;   // <-- FIX HERE
+  doctor: {
+    _id: string;
+    name: string;
+  };
+  patient: {
+    _id: string;
+    name: string;
+    profileImage: StaticImageData;
+    contactNumber: string;
+  };
+  appointmentDate: string;
+  appointmentTime: string;
+  reason: string[];
+  title: string;
+  date: string;
+  time: string;
+}
+
+
 
 export const doctorlistingModalData: tempAppointmentProfileData[] = [
   {

@@ -117,7 +117,7 @@ export interface FertilityAssessmentHistory {
 }
 
 export interface AddPatientFormData {
-  bloodGroup: any;
+  bloodGroup: string;
   // Personal details
 
   name: string;
@@ -216,18 +216,23 @@ export interface SelectPatientType {
 }
 
 export interface MedicalHistoryType {
-  medication: string,
-  surgeries: string,
-  surgeriesContent: string,
-  medicalCondition: OptionType[],
-  familyMedicalHistory: string,
-  lifestyle: OptionType[],
-  stress: string,
-  exercise: string,
-  medicationcontent: string,
-  surgeriescontent: string,
+  medication: string;
+  medicationcontent: string;
 
-};
+  surgeries: string;
+  surgeriesContent: string;
+
+  currentMedication?: string;
+
+  MedicalconditionAllergies: OptionType[] ;
+
+  familyMedicalHistory: string | string[] ;
+
+  lifestyle: OptionType[];
+
+  exercise: string;
+  stress: string;
+}
 
 export interface TreatmentPlan {
   treatment: string;

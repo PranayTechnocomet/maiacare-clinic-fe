@@ -1,8 +1,24 @@
 "use client";
 
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 
-function AppointmentProfile({ tempProfileData }: any) {
+interface AppointmentProfileProps {
+  tempProfileData: {
+    FertilityAssessment: string;
+    time: string;
+    date: string;
+    id: number;
+    name: string;
+    profilePhoto: string | StaticImport;
+    patientProfile: string;
+    patientName: string;
+    patientId: string;
+    gender: string;
+    patientyear: string;
+  };
+}
+function AppointmentProfile({ tempProfileData }: AppointmentProfileProps) {
   return (
     <>
       <div className="appointment-reschedule-patient-box mb-3">

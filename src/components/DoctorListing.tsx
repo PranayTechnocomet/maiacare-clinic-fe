@@ -8,7 +8,7 @@ import Image from 'next/image';
 import PriyaGupta from '../assets/images/Priya Gupta.png';
 import { AppointmentRequestCancelModel } from './TempAppoRequstCancelModel';
 import { BsClock } from 'react-icons/bs';
-import { Appointments, AppointmentsMonthData, AppointmentsWeekData, doctorlistingModalData, tempAppointmentProfileData } from '../utlis/StaticData';
+import { Appointments, AppointmentsMonthData, AppointmentsType, AppointmentsWeekData, doctorlistingModalData, tempAppointmentProfileData } from '../utlis/StaticData';
 import { InputFieldGroup } from './ui/InputField';
 import { InputSelect } from './ui/InputSelect';
 import { BookAppointment, SuccessModalBookAppointment } from './form/BookAppointment';
@@ -256,7 +256,7 @@ export function CalendarView() {
   const [filters, setFilters] = useState<string[]>([]);
   const [selectedView, setSelectedView] = useState<string>("day");
   const [doctorListingModal, setDoctorListingModal] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState<tempAppointmentProfileData | any>();
+  const [selectedPatient, setSelectedPatient] = useState<tempAppointmentProfileData | null>(null);
   const [RescheduleModal, setRescheduleModal] = useState(false);
   const [CancelModal, setCancelModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -265,15 +265,11 @@ export function CalendarView() {
   const [blockCalendarModal, setBlockCalendarModal] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
 
-  const [CalnderAppointments, setCalnderAppointments] = useState(Appointments);
-  const [CalnderAppointmentsWeek, setCalnderAppointmentsWeek] = useState<any[]>(AppointmentsWeekData);
-  const [AppointmentsMonthShow, setAppointmentsMonthShow] = useState<any[]>(AppointmentsMonthData)
+  const [CalnderAppointments, setCalnderAppointments] = useState<AppointmentsType[]>(Appointments);
+  const [CalnderAppointmentsWeek, setCalnderAppointmentsWeek] = useState<AppointmentsType[]>(AppointmentsWeekData);
+  const [AppointmentsMonthShow, setAppointmentsMonthShow] = useState<unknown[]>(AppointmentsMonthData);
 
-  // const [CalnderAppointments, setCalnderAppointments] = useState<any[]>([]);
-  // const [CalnderAppointmentsWeek, setCalnderAppointmentsWeek] = useState<any[]>([]);
-  // const [AppointmentsMonthShow, setAppointmentsMonthShow] = useState<any[]>([])
-
-  const [events, setEvents] = useState<Event[] | any>([]);
+  // const [events, setEvents] = useState<Event[] | any>([]);
   const [clickTime, setClickTime] = useState<string>("");
   const [clickDate, setClickDate] = useState<string>("");
 
@@ -1125,7 +1121,7 @@ export function CalendarView() {
                           {/* Grid Lines Container */}
                           <div className="position-relative" style={{ height: `${timeSlots.length * 48}px` }}>
                             {timeSlots.map((slot, slotIndex) => {
-                              const slotAppointments = CalnderAppointments.filter((appt: any) => {
+                              const slotAppointments = CalnderAppointments.filter((appt: AppointmentsType) => {
                                 const currentSlotMinutes = toMinutes(slot.time);
                                 const nextSlot = timeSlots[slotIndex + 1];
                                 const nextSlotMinutes = nextSlot ? toMinutes(nextSlot.time) : currentSlotMinutes + 30;
@@ -1140,7 +1136,7 @@ export function CalendarView() {
                                   className="border-top grid-line-calendar position-relative d-flex flex-wrap"
                                 >
 
-                                  {slotAppointments.slice(0, 4).map((appt: any, i: number) => {
+                                  {slotAppointments.slice(0, 4).map((appt: AppointmentsType, i: number) => {
                                     // If 5 or more appointments, replace the 4th box (index 3) with "+N"
                                     // console.log('appt', appt)
 
@@ -1173,7 +1169,7 @@ export function CalendarView() {
                                                 {multiPatientShow && (
                                                   <div ref={boxRef} className='position-absolute multi-patient-show-box'>
                                                     <div className='d-flex flex-wrap'>
-                                                      {extradata.map((appt: any, i: any) => {
+                                                      {extradata.map((appt: AppointmentsType, i: number) => {
                                                         const isLastOdd =
                                                           extradata.length % 2 !== 0 && i === extradata.length - 1;
                                                         return (
@@ -1436,7 +1432,7 @@ export function CalendarView() {
                   {(selectedCard
                     ? doctorlistingModalData.slice(0, displayLimits[selectedCard])
                     : doctorlistingModalData
-                  ).map((item: any, index: number) => (
+                  ).map((item: tempAppointmentProfileData, index: number) => (
                     <div key={index}>
                       <div className='docotor-listing-today-schedule-datas'>
                         <Card className="d-flex flex-row align-items-center p-2 shadow-sm rounded-3 border-0 selected-calender-data" >

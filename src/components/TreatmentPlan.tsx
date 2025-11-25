@@ -46,7 +46,7 @@ function TreatmentPlan({
         totalSteps: number,
         setMedicalPrescription: React.Dispatch<React.SetStateAction<MedicationPrescriptionType[]>>,
         medicalPrescription: MedicationPrescriptionType[],
-        setTreatmentDetailsTempShow: React.Dispatch<React.SetStateAction<any[]>>,
+        setTreatmentDetailsTempShow: React.Dispatch<React.SetStateAction<unknown[]>>,
         setMedicalPrescriptionDataShowHide: React.Dispatch<React.SetStateAction<boolean>>,
         medicalPrescriptionDataShowHide: boolean
     }) {

@@ -1,8 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { VerifyOtp } from './form/LoginForms'
-import Image from 'next/image'
-import Logo from "../assets/images/Maia Logo.png";
 import { Col, Container, Row } from 'react-bootstrap';
 
 export default function VerificationCode() {

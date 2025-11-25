@@ -7,14 +7,13 @@ import {
   InputFieldHelperText,
 } from "./InputField";
 import Select from "react-dropdown-select";
-import { MultiSelect } from 'react-multi-select-component';
-
+import { MultiSelect } from "react-multi-select-component";
 
 type OptionType = { value: string; label: string };
 interface MultiSelectWithCheckboxProps {
   values: OptionType[];
   onChange: (values: OptionType[]) => void; // expose as full objects for flexibility
-  options: { id: string, value: string, label: string }[];
+  options: { id: string; value: string; label: string }[];
   placeholder?: string;
   label?: string;
   name?: string;
@@ -25,11 +24,11 @@ interface MultiSelectWithCheckboxProps {
   className?: string;
   selectedOptionColor?: string;
   selectedOptionBorderColor?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface InputSelectMultiSelectProps {
-  values: OptionType[];
+  values: OptionType[] ;
   onChange: (values: OptionType[]) => void; // expose as full objects for flexibility
   options: { id: string; value: string; label: string }[];
   placeholder?: string;
@@ -214,12 +213,12 @@ export function MultiSelectWithCheckbox({
   selectedOptionBorderColor = "var(--border-box)",
   ...rest
 }: MultiSelectWithCheckboxProps) {
-
   const [isOpen, setIsOpen] = useState(false); // track dropdown open/close
   return (
     <>
-
-      <div className={`maiacare-input-field-container custom-react-dropdown ${className}`}>
+      <div
+        className={`maiacare-input-field-container custom-react-dropdown ${className}`}
+      >
         {label && <InputFieldLabel label={label} required={required} />}
 
         <MultiSelect
@@ -227,7 +226,6 @@ export function MultiSelectWithCheckbox({
           options={options}
           value={values}
           onChange={onChange}
-          
           labelledBy="Select Status"
           disableSearch={true} // disables search bar
           hasSelectAll={false} // removes "Select All" option
@@ -237,19 +235,17 @@ export function MultiSelectWithCheckbox({
             allItemsAreSelected: "All selected",
           }}
           //  show placeholder while open or empty, show selection after close
-          valueRenderer={(values: any[]) => {
-            if (isOpen || values.length === 0) {
-              return placeholder; // placeholder while open
+          valueRenderer={(selected: OptionType[]) => {
+            if (isOpen || selected.length === 0) {
+              return placeholder;
             }
-            return values.map((s) => s.label).join(", "); // show selected when closed
+            return selected.map((s) => s.label).join(", ");
           }}
         />
       </div>
 
       {error && <InputFieldError error={error} />}
       {helperText && <InputFieldHelperText helperText={helperText} />}
-
     </>
-  )
-
+  );
 }

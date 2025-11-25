@@ -18,7 +18,7 @@ import HeartRate from '../assets/images/Physical-assement-heart-rate-icons.png'
 import MedicalHistory from './form/MedicalHistory';
 // import PhysicalAssessment from '../assets/images/Pluse Sine.png';
 import Simpleeditpro from '@/assets/images/Simpleeditpro.png';
-import { partnerDetailData } from '../utlis/StaticData';
+import { PartnerDetailData, partnerDetailData } from '../utlis/StaticData';
 import Button from './ui/Button';
 import { AddPartnerDetails } from '../components/AddPartnerDetails';
 import { EditFertilityAssessment, FertilityAssessmentType, MedicalHistoryType, PhysicalAssessmentData, PhysicalAssessmentDataModel } from '../utlis/types/interfaces';
@@ -37,7 +37,8 @@ export default function PartnerDetail({ setActiveTab }: { setActiveTab: (tab: st
     const [EditFertilityAssessment, setEditFertilityAssessment] = useState(false);
     const [EditMedicalHistory, setEditMedicalHistory] = useState<boolean>(false);
 
-    const [showData, setShowData] = useState<any>(partnerDetailData);
+    const [showData, setShowData] =
+  useState<PartnerDetailData>(partnerDetailData);
 
     const initialFormDataAddPhysicalAssessment: PhysicalAssessmentDataModel = {
         id: "",
@@ -368,7 +369,7 @@ export default function PartnerDetail({ setActiveTab }: { setActiveTab: (tab: st
                                         <h6 className=" contact-details-emergency">Surgeries</h6>
                                         <p className=" accordion-title-detail">
                                             {showData.medicalHistory?.surgeries === 'yes'
-                                                ? showData.medicalHistory?.surgeriescontent || 'Yes'
+                                                ? showData.medicalHistory?.surgeriesContent || 'Yes'
                                                 : 'No'}
 
                                         </p>
@@ -379,7 +380,7 @@ export default function PartnerDetail({ setActiveTab }: { setActiveTab: (tab: st
                                     <div className="">
                                         <h6 className=" contact-details-emergency">Medical condition / Allergies</h6>
 
-                                        {showData.medicalHistory?.medicalCondition?.map((item: any) => {
+                                        {showData.medicalHistory?.MedicalconditionAllergies?.map((item: any) => {
                                             return (
                                                 <p key={item.id} className="accordion-title-detail d-inline-block border-box-orange-font box-border-orange me-2 mb-2">
                                                     {item.value}

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Modal from "../ui/Modal";
 import Button from "../ui/Button";
 import { Col, Form, Row } from "react-bootstrap";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { InputSelect } from "../ui/InputSelect";
 import Textarea from "../ui/Textarea";
 import restricted_access from "../../assets/images/restricted-access.png";
@@ -31,7 +31,7 @@ interface ActivateDeactivateProfileProps {
 // doctor details interface
 interface DoctorInfo {
   name: string;
-  image: any;
+  image: string | StaticImageData;
   phone: string;
   email: string;
   specialization: string;

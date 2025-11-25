@@ -427,7 +427,7 @@ function TreatmentPatient() {
   };
 
   const handleSave = () => {
-    let newErrors: { [key: number]: string } = {};
+    const newErrors: { [key: number]: string } = {};
 
     // ✅ Validation: Required + unique report names
     const reportNames: string[] = [];
@@ -449,11 +449,7 @@ function TreatmentPatient() {
 
     // ✅ Move completed files
     const completed = uploadedFiles.filter((f) => f.status === "completed");
-
-    // setCompletedFiles((prev) => [...prev, ...completed]);
-    // setPatientReportData((prev: any) => [...prev, ...completed]);
-    // setPatientReport((prev: any) => [...prev, ...completed]);
-    setProgressUpdatesData((prev: any) => ({
+    setProgressUpdatesData((prev:any) => ({
       ...prev,
       report: [...prev.report, ...completed],
     }));

@@ -18,12 +18,20 @@ import {
 import { Dropdown } from "react-bootstrap";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
+// interface RescheduleAppointmentProps {
+//   setDoctorListingModal?: any;
+//   RescheduleModal?: any;
+//   setRescheduleModal?: any;
+//   CancelModal?: any;
+//   setCancelModal?: any;
+//   opcationShowDot?: string;
+// }
 interface RescheduleAppointmentProps {
-  setDoctorListingModal?: any;
-  RescheduleModal?: any;
-  setRescheduleModal?: any;
-  CancelModal?: any;
-  setCancelModal?: any;
+  setDoctorListingModal: React.Dispatch<React.SetStateAction<boolean>>;
+  RescheduleModal: boolean;
+  setRescheduleModal: React.Dispatch<React.SetStateAction<boolean>>;
+  CancelModal: boolean;
+  setCancelModal: React.Dispatch<React.SetStateAction<boolean>>;
   opcationShowDot?: string;
 }
 
