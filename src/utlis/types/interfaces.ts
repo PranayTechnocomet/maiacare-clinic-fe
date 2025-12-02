@@ -169,6 +169,7 @@ export interface SelectPatientType {
 }
 
 export interface FertilityAssessmentType {
+  id:string;
   height: string;
   weight: string;
   bmi: string;

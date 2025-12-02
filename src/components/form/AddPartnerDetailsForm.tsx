@@ -28,6 +28,9 @@ import {
 import toast from "react-hot-toast";
 import { BsInfoCircle } from "react-icons/bs";
 import { PartnerDetailData } from "@/utlis/StaticData";
+import { Dispatch } from "@reduxjs/toolkit";
+import { PartnerDetailsData } from "../AddPartnerDetails";
+// export interface PartnerDetailsData extends PartnerDetailData {}
 
 type AssessmentFormType =
   | FertilityAssessmentType
@@ -46,14 +49,15 @@ type PhysicalAssessmentProps = {
   >;
   setShowContent?: (value: boolean) => void;
   setShowPartnerDetail?: (value: boolean) => void;
-  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailData>>;
-  showData: PartnerDetailData | null;
+ setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>;
+  showData: PartnerDetailsData;
 };
 type MedicalHistoryFormProps = {
   setAddPartner: (value: boolean) => void;
   setActiveTab: (tab: string) => void;
-  setShowData: React.Dispatch<SetStateAction<PartnerDetailData>>;
-  showData: PartnerDetailData;
+  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>; // FIXED
+
+  showData?: PartnerDetailData;
   initialData?: MedicalHistoryType | null;
   setEditMedicalHistory?: React.Dispatch<React.SetStateAction<boolean>>;
   formDataMedicalHistory?: MedicalHistoryType;
@@ -63,13 +67,13 @@ type FormError = Partial<Record<keyof FertilityAssessmentType, string>>;
 type FertilityAssessmentProps = {
   setShowContent?: (value: boolean) => void;
   setShowPartnerDetail?: (value: boolean) => void;
-  setShowData?: React.Dispatch<React.SetStateAction<PartnerDetailData>>;
-  showData?: PartnerDetailData | null;
-  initialData?: FertilityAssessmentType | EditFertilityAssessment | null;
+   setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>;
+  showData: PartnerDetailsData;
+  initialData?: Partial<FertilityAssessmentType>;
   formData: FertilityAssessmentType | EditFertilityAssessment;
   formError?: FormError;
   setFormData: React.Dispatch<
-    React.SetStateAction<FertilityAssessmentType | EditFertilityAssessment>
+    React.SetStateAction<FertilityAssessmentType>
   >;
   setFormError: React.Dispatch<React.SetStateAction<FormError>>;
 };
@@ -80,7 +84,7 @@ export function BasicDetailsForm({
 }: {
   setAddPartner: (value: boolean) => void;
   setActiveTab: (tab: string) => void;
-  setShowData: (value: unknown) => void;
+  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>;
 }) {
   const initialFormError: FormError = {};
   type FormData = {
@@ -223,7 +227,7 @@ export function BasicDetailsForm({
       setActiveTab("medical history");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-    setShowData((prev: PartnerDetailData) => ({
+    setShowData((prev) => ({
       ...prev,
       profile: { ...prev.profile, ...formData },
     }));

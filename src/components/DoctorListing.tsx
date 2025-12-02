@@ -933,7 +933,7 @@ export function CalendarView() {
                   <div className='doctor-listing-modal-profile'>
                     <div className='d-flex justify-content-between'>
                       <div className='d-flex gap-2' >
-                        <Image src={selectedPatient?.patient_profile} alt="doctor" className='doctor-listing-modal-profile-img' width={46} height={46} />
+                        <Image src={selectedPatient?.patient_profile || ""} alt="doctor" className='doctor-listing-modal-profile-img' width={46} height={46} />
                         <div className='d-flex flex-column gap-2'>
                           <div className='d-flex gap-4'>
                             <p className='doctor-listing-modal-profile-title m-0'>{selectedPatient?.patient_name}</p>

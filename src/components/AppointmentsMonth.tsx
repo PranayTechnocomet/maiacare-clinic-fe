@@ -1,42 +1,51 @@
-import React, { useState, useEffect, useRef } from 'react'
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
+import React, { useState, useEffect, useRef } from "react";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import {TreatmentPlanMonthData } from '../utlis/StaticData';
-import dayjs from 'dayjs';
+import { TreatmentPlanMonthData } from "../utlis/StaticData";
+import dayjs from "dayjs";
 
 type AppointmentDay = {
   date: string; // e.g. "2025-10-10"
   names: string[]; // list of names for that date
 };
-
+type AppointmentItem = {
+  id: number | string;
+  date: string;
+  patient: {
+    name: string;
+  };
+};
 type AppointmentsMonthProps = {
   appointmentsData?: AppointmentDay[]; // optional: if not passed, demo data will be used
   selectedDate?: string | null; // selected date from DateCalendar
-  AppointmentsMonthShow: any[];
+  AppointmentsMonthShow: AppointmentItem[];
   setBookAppointmentModal?: React.Dispatch<React.SetStateAction<boolean>>;
   setClickDate?: React.Dispatch<React.SetStateAction<string>>;
 };
-
+type TreatmentPlanItem = {
+  id: string;
+  title: string;
+  date: string;
+  bgColor: string;
+};
 export function AppointmentsMonth({
   appointmentsData,
   selectedDate: externalSelectedDate,
   AppointmentsMonthShow,
   setBookAppointmentModal,
   setClickDate,
-
 }: AppointmentsMonthProps) {
   const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 });
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const calendarRef = useRef<FullCalendar>(null);
   const [showTooltip, setShowTooltip] = useState(true);
 
-
   // CSS datasforcss that will be applied inline
   const datasforcss = {
-    eventLine: { left: '5px', right: '0', height: '1px' },
-    tooltipDot: { width: '12px', height: '12px', top: '-4px', left: '-4px' },
-    pingAnimation: { animation: 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite' }
+    eventLine: { left: "5px", right: "0", height: "1px" },
+    tooltipDot: { width: "12px", height: "12px", top: "-4px", left: "-4px" },
+    pingAnimation: { animation: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite" },
   };
 
   // Sync external selected date with internal state and navigate to month
@@ -53,7 +62,6 @@ export function AppointmentsMonth({
     }
   }, [externalSelectedDate]);
 
-
   // Convert JSON → FullCalendar events
   const events = AppointmentsMonthShow?.map((item) => {
     const parsedDate = new Date(item.date);
@@ -62,40 +70,44 @@ export function AppointmentsMonth({
     const d = String(parsedDate.getDate()).padStart(2, "0");
 
     return {
-      id: item.id,
+      id: String(item.id), // 👈 force to string
       title: item.patient.name,
-      date: `${y}-${m}-${d}`,
+      start: `${y}-${m}-${d}`, // 👈 FullCalendar field
     };
   });
 
   const handleDateClick = (fullDate: string) => {
     // console.log("click date is : ", fullDate);
 
-    setClickDate?.(fullDate)
+    setClickDate?.(fullDate);
     setShowTooltip(false);
-    if(AppointmentsMonthShow.length == 0){
-      setBookAppointmentModal?.(true)
+    if (AppointmentsMonthShow.length == 0) {
+      setBookAppointmentModal?.(true);
     }
-  }
+  };
 
   return (
     <>
-
       <div className="custom-month-datepicker ">
         <div className="calendar-wrapper position-relative">
           {showTooltip && AppointmentsMonthShow?.length === 0 && (
             <div className="position-absolute tooltipCustom">
               <div
                 className="position-absolute get-started-dot-bg-color rounded-circle"
-                style={{ ...datasforcss.tooltipDot, ...datasforcss.pingAnimation }}
+                style={{
+                  ...datasforcss.tooltipDot,
+                  ...datasforcss.pingAnimation,
+                }}
               ></div>
 
               <div className="position-absolute get-started-dot-bg-color rounded-circle tooltipDot"></div>
 
               <div className="get-started-box position-absolute">
                 <p className="appointments-total-box-item">
-                  Get started by clicking anywhere<br />
-                  on the calendar to add your first<br />
+                  Get started by clicking anywhere
+                  <br />
+                  on the calendar to add your first
+                  <br />
                   appointment
                 </p>
 
@@ -109,79 +121,6 @@ export function AppointmentsMonth({
             </div>
           )}
 
-
-          {/* <FullCalendar
-              plugins={[dayGridPlugin, interactionPlugin]}
-              initialView="dayGridMonth"
-              firstDay={1} // Monday
-
-              height="auto"
-              contentHeight="auto"
-              events={events}
-
-              // Inject custom names into each day cell
-              dayCellDidMount={(info) => {
-                const cellDate = info.date;
-                const y = cellDate.getFullYear();
-                const m = String(cellDate.getMonth() + 1).padStart(2, "0");
-                const d = String(cellDate.getDate()).padStart(2, "0");
-                const fullDate = `${y}-${m}-${d}`;
-
-                const todaysEvents = events.filter((ev) => ev.date === fullDate);
-
-                if (todaysEvents.length > 0) {
-                  const container = document.createElement("div");
-                  container.style.marginTop = "4px";
-                  container.style.display = "flex";
-                  container.style.flexDirection = "column";
-                  container.style.gap = "3px";
-
-                  todaysEvents.forEach((ev) => {
-                    const item = document.createElement("div");
-                    item.textContent = ev.title;
-                    item.style.background = "#E6F3F2";
-                    item.style.padding = "4px 6px";
-                    item.style.borderRadius = "48px";
-                    item.style.fontSize = "12px";
-                    item.style.color = "#292929";
-                    container.appendChild(item);
-                  });
-
-                  const frame = info.el.querySelector(".fc-daygrid-day-frame");
-                  frame?.appendChild(container);
-                }
-              }}
-
-              // Custom date format for 1st of month
-              dayCellContent={(arg) => {
-                const date = arg.date;
-                const day = date.getDate();
-                const monthAbbr = date
-                  .toLocaleString("default", { month: "short" })
-                  .replace(".", "");
-
-                if (day === 1) {
-                  return {
-                    html: `
-                  <div style="display:flex; flex-direction:column; align-items:center;">
-                    <div style="font-size:0.85rem; color:#6c757d;">
-                      ${monthAbbr} ${day}
-                    </div>
-                  </div>
-                `,
-                  };
-                }
-
-                return {
-                  html: `
-                <div style="display:flex; flex-direction:column; align-items:center;">
-                  <div style="font-size:0.85rem; color:#6c757d;">${day}</div>
-                </div>
-              `,
-                };
-              }}
-            /> */}
-
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
@@ -189,7 +128,6 @@ export function AppointmentsMonth({
             height="auto"
             contentHeight="auto"
             events={events}
-
             dateClick={(info) => {
               const date = info.date;
               const y = date.getFullYear();
@@ -200,7 +138,6 @@ export function AppointmentsMonth({
               // call your logic
               handleDateClick(fullDate);
             }}
-
             // Inject custom names into each day cell
             dayCellDidMount={(info) => {
               const cellDate = info.date;
@@ -281,7 +218,6 @@ export function AppointmentsMonth({
                 if (bottom) bottom.appendChild(container);
               }
             }}
-
             // Custom date format for 1st of month
             dayCellContent={(arg) => {
               const date = arg.date;
@@ -311,24 +247,23 @@ export function AppointmentsMonth({
               };
             }}
           />
-
         </div>
       </div>
     </>
-  )
+  );
 }
 
 export function TreatmentMonthView() {
-
-  const [TreatmentPlanMonthShow, setTreatmentPlanMonthShow] = useState(TreatmentPlanMonthData)
+  const [TreatmentPlanMonthShow, setTreatmentPlanMonthShow] = useState(
+    TreatmentPlanMonthData
+  );
 
   // const [TreatmentPlanMonthShow, setTreatmentPlanMonthShow] = useState([{
   //   id: "",
   //   date: "",
   //   events: [],
-  // bgColor: "", 
+  // bgColor: "",
   // }])
-
 
   // const events = TreatmentPlanMonthShow.flatMap((item) => {
   //   const parsed = dayjs(item.date, "D MMM YYYY");
@@ -340,16 +275,14 @@ export function TreatmentMonthView() {
   //   }));
   // });
 
-  const events = TreatmentPlanMonthShow?.map((item: any) => {
-    const parsed = dayjs(item.date, "D MMM YYYY");
-
-    return item.events.map((ev: any, index: number) => ({
+  const events = TreatmentPlanMonthShow.map((item) =>
+    item.events.map((ev, index) => ({
       id: `${item.id}-${index}`,
       title: ev,
-      date: parsed.format("YYYY-MM-DD"),
+      date: dayjs(item.date, "D MMM YYYY").format("YYYY-MM-DD"),
       bgColor: item.bgColor,
-    }));
-  }).flat(); // flatten the nested arrays
+    }))
+  ).flat(); // flatten the nested arrays
 
   let statusClass = "";
 
@@ -357,8 +290,6 @@ export function TreatmentMonthView() {
     <>
       <div className="custom-month-datepicker">
         <div className="calendar-wrapper position-relative">
-
-
           {/* <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
@@ -430,8 +361,7 @@ export function TreatmentMonthView() {
             contentHeight="auto"
             events={events}
             displayEventTime={false}
-            eventDisplay="none"      // IMPORTANT: disable built-in rendering
-
+            eventDisplay="none" // IMPORTANT: disable built-in rendering
             /* Custom event display */
             dayCellDidMount={(arg) => {
               const cellDate = dayjs(arg.date).format("YYYY-MM-DD");
@@ -440,7 +370,9 @@ export function TreatmentMonthView() {
               const todaysEvents = events.filter((ev) => ev.date === cellDate);
 
               // Hide empty FC event area only for this calendar
-              const fcEventContainer = arg.el.querySelector(".fc-daygrid-day-events");
+              const fcEventContainer = arg.el.querySelector(
+                ".fc-daygrid-day-events"
+              );
               if (fcEventContainer) {
                 if (todaysEvents.length === 0) {
                   fcEventContainer.className = "d-none";
@@ -448,7 +380,6 @@ export function TreatmentMonthView() {
                   fcEventContainer.className = "d-none";
                 }
               }
-
 
               if (todaysEvents.length === 0) return;
 
@@ -460,7 +391,6 @@ export function TreatmentMonthView() {
               wrapper.style.gap = "3px";
 
               todaysEvents.forEach((ev) => {
-
                 switch (ev.bgColor) {
                   case "starting":
                     statusClass = "custom-event-box-starting";
@@ -492,7 +422,6 @@ export function TreatmentMonthView() {
               const frame = arg.el.querySelector(".fc-daygrid-day-frame");
               frame?.appendChild(wrapper);
             }}
-
             /* Custom date format (1st day = “Nov 1”) */
             dayCellContent={(arg) => {
               const date = arg.date;
@@ -516,9 +445,8 @@ export function TreatmentMonthView() {
               };
             }}
           />
-
         </div>
       </div>
     </>
-  )
+  );
 }
