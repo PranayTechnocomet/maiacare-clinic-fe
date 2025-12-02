@@ -457,9 +457,7 @@ export function MedicationPrescriptionForm({
                   required={true}
                   value={formData.quantity}
                   error={formError.quantity}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                 />
               </Col>
               <Col md={12}>
@@ -467,8 +465,8 @@ export function MedicationPrescriptionForm({
                   name="timeslot"
                   value={formData.timeslot}
                   error={formError.timeslot}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleChange(e)
+                  onChange={(e) =>
+                    handleChange(e as React.ChangeEvent<HTMLInputElement>)
                   }
                 />
               </Col>

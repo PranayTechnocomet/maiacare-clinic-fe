@@ -1,47 +1,50 @@
 import { StaticImageData } from "next/image";
-import  "../StaticData";
+import "../StaticData";
 // import StaticImageData from "../../assets/images/Simpleeditpro.png";
-
 
 export type ConsultationStatus = "Active" | "Inactive" | "On Leave";
 
-
-
 export interface User {
-    id: string;
-    name: string;
-    email: string;
-  }
+  id: string;
+  name: string;
+  email: string;
+}
 
 // interfaces.ts
 export interface PatientData {
-    id: string | number;
-    name: string;
-    ProfilePhoto?: {
-        src: string;
-    };
+  id: string | number;
+  name: string;
+  ProfilePhoto?: {
+    src: string;
+  };
 }
 
 export interface BookAppointmentForm {
-    // Appointment Details
-    appointmentId: string;
-    type: string;
-    reasonForVisit: OptionType[];      // multi-select = array
-    appointmentDate: string;
-    appointmentTime: string;
-    forTime: string;
-    additionalNote: string;
+  status?: string;
+  // Appointment Details
+  id: string;
+  appointmentId: string;
+  type: string;
+  reasonForVisit?: string[]; // multi-select = array
+  appointmentDate: string;
+  appointmentTime: string;
+  forTime: string;
+  additionalNote: string;
 
-    // Patient Details
-     patientName: PatientData | null; // object (NOT array)
-    phone: string;
-    email: string;
-    patientAge: string;
-    gender: string;
+  // Patient Details
+  patientName: PatientData | null; // object (NOT array)
+  phone: string;
+  email: string;
+  patientAge: string;
+  gender: string;
 }
 
 export interface AppointmentData {
-  id: string;
+  status: string;
+  visit: string[];
+  name: string;
+  image: string | StaticImageData;
+  id: number;
   appointmentId: string;
   type: string;
   reasonForVisit: string[];
@@ -58,30 +61,29 @@ export interface SelectPatientType {
   ProfilePhoto: StaticImageData;
   name: string;
 }
-  export interface Patient {
-    id: number;
-    name: string;
-    mobile: string;
-    email: string;
-    pincode: string;
-    treatment: string;
-    status: string;
-  };
+export interface Patient {
+  id: number;
+  name: string;
+  mobile: string;
+  email: string;
+  pincode: string;
+  treatment: string;
+  status: string;
+}
 export interface PhysicalAssessmentDataModel {
   id: string;
   height: string;
   weight: string;
   bmi: string;
-  bloodGroup: string
+  bloodGroup: string;
   systolic: string;
   diastolic: string;
   heartRate: string;
-};
+}
 export interface CancelAppointmentForm {
   reasonForCancel: string;
   additionalNote: string;
 }
-
 
 export interface PhysicalAssessmentData {
   // date: string;
@@ -91,7 +93,7 @@ export interface PhysicalAssessmentData {
   // bloodGroup: string;
   // bloodPressure: string;
   // heartRate: string;
-   id: string;
+  id: string;
   date: string;
   height: string;
   weight: string;
@@ -191,10 +193,10 @@ export type FertilityAssessmentType = {
   height?: string;
   weight?: string;
   bmi?: string;
-    bloodGroup?: string;
- systolic?:string;
-    diastolic?: string;
-    heartRate?:string;
+  bloodGroup?: string;
+  systolic?: string;
+  diastolic?: string;
+  heartRate?: string;
   semenAnalysis: string;
   semenAnalysisContent: string;
   fertilityIssues: string;
@@ -233,11 +235,11 @@ export interface MedicalHistoryType {
 
   currentMedication?: string;
 
-  MedicalconditionAllergies: OptionType[] ;
+  MedicalconditionAllergies: OptionType[];
 
-  familyMedicalHistory: string;
+  familyMedicalHistory: string ;
 
-  lifestyle: OptionType[];
+  lifestyle:  OptionType[];
 
   exercise: string;
   stress: string;
@@ -247,9 +249,14 @@ export interface TreatmentPlan {
   treatment: string;
   duration: string;
 }
-
+export type PatientType = {
+  id: string;
+  name: string;
+  ProfilePhoto?: { src: string } | null;
+  // add other fields if present
+};
 export interface TreatmentForm {
-  patientName: string;
+  patientName: PatientType | null;
   treatment: string;
   duration: string;
 }
@@ -265,7 +272,6 @@ export interface TreatmentProgressStatusType {
   status: string;
   notes: string;
   updates: string;
-  
 }
 
 export interface TreatmentTerminationType {
@@ -274,10 +280,10 @@ export interface TreatmentTerminationType {
 }
 
 export interface EditTreatmentPlanType {
-  treatmentplan: TreatmentPlanEditType,
-  medicalPrescription: MedicationPrescriptionType[],
-  tests: OptionType[],
-  followUpAction: FollowUpActionFromType
+  treatmentplan: TreatmentPlanEditType;
+  medicalPrescription: MedicationPrescriptionType[];
+  tests: OptionType[];
+  followUpAction: FollowUpActionFromType;
 }
 
 export interface ProgressUpdatesType {
@@ -321,7 +327,7 @@ export interface PaymentFormData {
 }
 
 export interface MedicationTests {
-  tests: OptionType[],
+  tests: OptionType[];
 }
 
 export type ScheduleTimeOff = {
@@ -348,6 +354,9 @@ export interface FertilityAssessmentFormType {
 export interface TreatmentFertilityAssessmentFormType {
   patient: FertilityAssessmentFormType;
   partner: FertilityAssessmentHistory;
+     medicalPrescription?: MedicationPrescriptionType[],
+      report?: PatientReportType[],
+      StatusAndUpdates?: TreatmentProgressStatusType,
 }
 
 export interface PatientJourneyItem {
@@ -355,14 +364,14 @@ export interface PatientJourneyItem {
   title: string;
   date: string;
   time: string;
-  status: 'Success' | "In Progress" | 'Pending' | 'Failed';
+  status: "Success" | "In Progress" | "Pending" | "Failed";
 }
 
 export interface PatientCalenderFormType {
-  tests: OptionType[],
-  status: OptionType[],
-  symptoms: OptionType[],
-  additionalNote: string
+  tests: OptionType[];
+  status: OptionType[];
+  symptoms: OptionType[];
+  additionalNote: string;
 }
 
 export interface PatientReportType {

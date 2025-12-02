@@ -46,7 +46,12 @@ const ProgressUpdatesStaticData = {
   },
   medicalPrescription: medicationPrescriptionData,
   report: [],
-  StatusAndUpdates: StatusAndUpdatesData,
+  StatusAndUpdates: {
+    stepName: "",
+    status: "",
+    notes: "",
+    updates: "",
+  },
 };
 
 const initialProgressUpdatesData = {
@@ -77,6 +82,7 @@ const initialProgressUpdatesData = {
     stepName: "",
     status: "",
     notes: "",
+    updates: "",
   },
 };
 

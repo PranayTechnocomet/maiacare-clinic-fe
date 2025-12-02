@@ -54,7 +54,7 @@ interface AddPartnerDetailsProps {
   setAddPartner: (value: boolean) => void;
   setShowContent: (value: boolean) => void;
   setShowPartnerDetail: (value: boolean) => void;
-  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>; // FIXED
+  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData >>; // FIXED
   modalEditTab: string | null;
   setModalEditTab: (value: string | null) => void;
   showData: PartnerDetailsData;
@@ -232,38 +232,32 @@ export function PhysicalFertilityAssessmentAccordion({
 
   const handleSubmit = () => {
     const errors = validateForm(formData);
-    console.log("Form submitted", formData);
     setFormError(errors);
 
-    if (Object.keys(errors).length === 0) {
-      // Handle form submission
-      setFormError(initialFormError);
-      setAddPartner(false);
-      setShowPartnerDetail(false);
-      setShowContent(true);
+    if (Object.keys(errors).length !== 0) return;
 
-      setShowData((prev) => ({
-        ...prev,
-        PhysicalAssessmentData: [...prev.PhysicalAssessmentData, formData],
-      }));
+    setFormError(initialFormError);
+    setAddPartner(false);
+    setShowPartnerDetail(false);
+    setShowContent(true);
 
-      setShowData((prev) => ({
-        ...prev,
-        fertilityAssessment: { ...prev.fertilityAssessment, ...formData },
-      }));
-      //   setShowData((prev) => ({
-      //     ...prev,
-      //     PhysicalAssessmentData: [...prev.PhysicalAssessmentData, formData],
-      //     fertilityAssessment: { ...prev.fertilityAssessment, ...formData },
-      //   }));
+    setShowData((prev) => ({
+      ...prev,
+      PhysicalAssessmentData: [
+        ...prev.PhysicalAssessmentData,
+        physicalFormData, // <-- correct data added here
+      ],
+      fertilityAssessment: {
+        ...prev.fertilityAssessment,
+        ...fertilityFormData, // <-- correct data stored here
+      },
+    }));
 
-      toast.success("Partner added successfully", {
-        icon: <BsInfoCircle size={22} color="white" />,
-      });
-    }
-    // setShowData((prev: any) => ({ ...prev, PhysicalAssessmentData: [...prev.PhysicalAssessmentData, formData] }));
-    // setShowData((prev: any) => ({ ...prev, fertilityAssessment: { ...prev.fertilityAssessment, ...formData } }));
+    toast.success("Partner added successfully", {
+      icon: <BsInfoCircle size={22} color="white" />,
+    });
   };
+
   return (
     <>
       <Accordion defaultActiveKey="0">

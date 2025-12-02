@@ -6,6 +6,7 @@ import {
   PatientJourneyItem,
   PhysicalAssessmentData,
   SelectPatientType,
+  TreatmentProgressStatusType,
 } from "./types/interfaces";
 import doctor1 from "@/assets/images/doctor1.png";
 import doctor2 from "@/assets/images/doctor2.png";
@@ -732,14 +733,6 @@ export interface PartnerDetailData {
   medicalHistory: MedicalHistoryType;
 
   PhysicalAssessmentData: {
-    // date: string;
-    // height: string;
-    // weight: string;
-    // bmi: string;
-    // bloodGroup: string;
-    // systolic: string;
-    // diastolic: string;
-    // heartRate: string;
     id: string;
     date: string;
     height: string;
@@ -1165,8 +1158,8 @@ export const partnerDetailData = {
       { value: "Peanut Allergy", label: "Peanut Allergy" },
       { value: "Lactose Intolerant", label: "Lactose Intolerant" },
     ],
-    familyMedicalHistory: ["Mother had endometriosis", "Father had thyroid"],
-    lifestyle: ["Non-smoker", "Occasional alcohol", "Vegetarian diet"],
+    familyMedicalHistory: "Mother had endometriosis",
+    lifestyle: [{label: "Non-smoker" , value:"Non-smoker"}, {label: "Occasional alcohol", value:"Occasional alcohol"}, {label: "Vegetarian diet", value:"Vegetarian diet"}],
     exercise: "rarely",
     stress: "high",
   },
@@ -1928,10 +1921,11 @@ export const medicationPrescriptionData: MedicationPrescriptionType[] = [
     description: "This is description",
   },
 ];
-export const StatusAndUpdatesData = {
+export const StatusAndUpdatesData: TreatmentProgressStatusType = {
   stepName: "Fertility Assessment",
   status: "Success",
   notes: "Cycle is normal, no fertility related issue",
+  updates: "", // or provide some default string value here
 };
 
 export const TreatmentPlanMonthData = [

@@ -43,7 +43,7 @@ type PhysicalAssessmentProps = {
       Partial<Record<keyof PhysicalAssessmentDataModel, string>>
     >
   >;
-  formData: PhysicalAssessmentDataModel;
+  formData: PhysicalAssessmentDataModel | FertilityAssessmentType;
   setFormData: React.Dispatch<
     React.SetStateAction<PhysicalAssessmentDataModel>
   >;

@@ -24,7 +24,10 @@ import MedicalHistory from "./form/MedicalHistory";
 import Simpleeditpro from "@/assets/images/Simpleeditpro.png";
 import { PartnerDetailData, partnerDetailData } from "../utlis/StaticData";
 import Button from "./ui/Button";
-import { AddPartnerDetails } from "../components/AddPartnerDetails";
+import {
+  AddPartnerDetails,
+  PartnerDetailsData,
+} from "../components/AddPartnerDetails";
 import {
   EditFertilityAssessment,
   FertilityAssessmentType,
@@ -82,6 +85,19 @@ export default function PartnerDetail({
 
   const [showData, setShowData] =
     useState<PartnerDetailData>(partnerDetailData);
+  const handleSetShowData: React.Dispatch<
+    React.SetStateAction<PartnerDetailsData>
+  > = (value) => {
+    if (typeof value === "function") {
+      // value(prev) callback form
+      setShowData(
+        (prev) => value(prev as PartnerDetailsData) as PartnerDetailData
+      );
+    } else {
+      // direct object form
+      setShowData(value as PartnerDetailData);
+    }
+  };
 
   const initialFormDataAddPhysicalAssessment: PhysicalAssessmentDataModel = {
     id: "",
@@ -420,7 +436,7 @@ export default function PartnerDetail({
           setAddPartner={setAddPartner}
           setShowContent={setShowContent}
           setShowPartnerDetail={setShowPartnerDetail}
-          setShowData={setShowData}
+          setShowData={handleSetShowData}
           modalEditTab={modalEditTab}
           setModalEditTab={setModalEditTab}
           showData={showData}
@@ -1165,7 +1181,7 @@ export default function PartnerDetail({
         <PhysicalAssessment
           formData={formDataAddPhysicalAssessment}
           setFormData={setFormDataAddPhysicalAssessment}
-          setShowData={setShowData}
+          setShowData={handleSetShowData}
           showData={showData}
           formError={formErrorAddPhysicalAssessment}
           setFormError={setFormErrorAddPhysicalAssessment}
@@ -1207,7 +1223,7 @@ export default function PartnerDetail({
           formError={formErrorEditFertilityAssessment}
           setShowContent={setShowContent}
           setShowPartnerDetail={setShowPartnerDetail}
-          setShowData={setShowData}
+          setShowData={handleSetShowData}
           showData={showData}
         />
 
@@ -1245,7 +1261,7 @@ export default function PartnerDetail({
           setEditMedicalHistory={setEditMedicalHistory}
           setAddPartner={setAddPartner}
           setActiveTab={setActiveTab}
-          setShowData={setShowData}
+          setShowData={handleSetShowData}
           showData={showData}
           initialData={
             modalEditTab === "medical history"

@@ -234,10 +234,10 @@ function Treatment() {
   const [editTreatmentData, setEditTreatmentData] =
     useState<EditTreatmentPlanType>(EditTreatmentStaticData);
 
-  const [progressUpdatesData, setProgressUpdatesData] =
-    useState<ProgressUpdatesType>(ProgressUpdatesStaticData);
-  const [editProgressUpdatesData, setEditProgressUpdatesData] =
-    useState<ProgressUpdatesType>(initialProgressUpdatesData);
+  // const [progressUpdatesData, setProgressUpdatesData] =
+  //   useState<ProgressUpdatesType>(ProgressUpdatesStaticData);
+  // const [editProgressUpdatesData, setEditProgressUpdatesData] =
+  //   useState<ProgressUpdatesType>(initialProgressUpdatesData);
 
   // const isFertilityDataEmpty = (data: TreatmentFertilityAssessmentFormType) => {
   //   const defaultValues = ["", "yes", "no", "Regular"];

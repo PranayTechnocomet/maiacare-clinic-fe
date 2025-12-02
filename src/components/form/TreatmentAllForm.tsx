@@ -5,6 +5,7 @@ import {
   FertilityAssessmentFormType,
   FertilityAssessmentHistory,
   MedicationPrescriptionType,
+  PatientType,
   ProgressUpdatesType,
   TreatmentFertilityAssessmentFormType,
   TreatmentForm,
@@ -34,8 +35,8 @@ import { BsInfoCircle } from "react-icons/bs";
 import Textarea from "../ui/Textarea";
 
 interface TreatmentPatientFormProps {
-  setStep: React.Dispatch<React.SetStateAction<number>>;
-  setStepper: React.Dispatch<React.SetStateAction<number>>;
+  setStep: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setStepper: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
 interface FertilityAssessmentFormProps {
@@ -52,7 +53,7 @@ export function TreatmentPatientForm({
   setStepper,
 }: TreatmentPatientFormProps) {
   const initialFormData: TreatmentForm = {
-    patientName: [],
+    patientName: null,
     treatment: "",
     duration: "",
   };
@@ -90,18 +91,19 @@ export function TreatmentPatientForm({
   const validateForm = (data: TreatmentForm): FormError => {
     const errors: FormError = {};
 
-    if (Object.keys(formData?.patientName).length == 0) {
+    if (!data.patientName) {
       errors.patientName = "Patient is required";
     }
 
-    if (!data.treatment) {
+    if (!data.treatment || data.treatment.trim() === "") {
       errors.treatment = "Treatment is required";
     }
-    if (!data.duration) {
+    if (!data.duration || data.duration.trim() === "") {
       errors.duration = "Duration is required";
     }
     return errors;
   };
+
   const handlePatientNameSelect = (item: PatientType) => {
     setFormData((prev) => ({
       ...prev,
@@ -117,8 +119,9 @@ export function TreatmentPatientForm({
     // console.log("errors", errors);
 
     if (Object.keys(errors).length === 0) {
-      setStep((prev: number) => prev + 1);
-      setStepper((prev: number) => prev + 1);
+      // setStep((prev: number ) => prev + 1);
+      setStep((prev) => (prev ?? 0) + 1);
+      setStepper((prev) => (prev ?? 0) + 1);
       setFormError(initialFormError);
     }
   };
@@ -130,7 +133,7 @@ export function TreatmentPatientForm({
           <h6 className="dashboard-chart-heading mb-0">Treatment Plan</h6>
 
           <Col md={12}>
-            {Object.keys(formData?.patientName).length > 0 ? (
+            {formData.patientName ? (
               <div className="show-patient-box d-flex align-items-center justify-content-between">
                 <div className="d-flex align-items-center gap-2">
                   <Image
@@ -148,7 +151,13 @@ export function TreatmentPatientForm({
                 </div>
                 <div
                   onClick={() => {
-                    setFormData({ ...formData, patientName: {} });
+                    setFormData({
+                      ...formData,
+                      patientName: {
+                        id: "",
+                        name: "",
+                      },
+                    });
                     setTxtPatinetName("");
                   }}
                 >
@@ -656,8 +665,8 @@ export function TreatmentFertilityAssessmentPartner({
     React.SetStateAction<ProgressUpdatesType>
   >;
   editProgressUpdatesData?: ProgressUpdatesType;
-  setStep?: React.Dispatch<React.SetStateAction<number>>;
-  setStepper?: React.Dispatch<React.SetStateAction<number>>;
+  setStep?: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setStepper?: React.Dispatch<React.SetStateAction<number | undefined>>;
   // setStep?: React.Dispatch<React.SetStateAction<number | undefined>>;
   // setStepper?: React.Dispatch<React.SetStateAction<number | undefined>>;
 }) {

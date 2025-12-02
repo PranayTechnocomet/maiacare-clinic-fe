@@ -128,7 +128,7 @@ function TreatmentPatient() {
     StatusAndUpdates: StatusAndUpdatesData,
   };
 
-  const initialProgressUpdatesData = {
+  const initialProgressUpdatesData: ProgressUpdatesType = {
     patient: {
       ageAtFirstMenstruation: "",
       cycleLength: "",
@@ -156,6 +156,7 @@ function TreatmentPatient() {
       stepName: "",
       status: "",
       notes: "",
+      updates: "",
     },
   };
 
@@ -444,7 +445,7 @@ function TreatmentPatient() {
 
     const completed = uploadedFiles.filter((f) => f.status === "completed");
 
-    setProgressUpdatesData((prev: ProgressUpdatesDataType) => ({
+    setProgressUpdatesData((prev: ProgressUpdatesType) => ({
       ...prev,
       report: [...prev.report, ...completed],
     }));
@@ -1106,7 +1107,7 @@ function TreatmentPatient() {
                 </Modal>
               </div>
 
-              {isFertilityDataEmpty(progressUpdatesData) ? (
+              {isFertilityDataEmpty(ProgressUpdatesStaticData) ? (
                 <div className="progressUpdates-border-box text-center mt-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1180,6 +1181,19 @@ function TreatmentPatient() {
                         setProgressUpdatesData
                       }
                     />
+                    {/* {progressUpdatesData.patient && (
+                      <TreatmentFertilityAssessment
+                        data={
+                          progressUpdatesData as TreatmentFertilityAssessmentFormType
+                        }
+                        setTreatmentFertilityAssessmentModel={
+                          setTreatmentFertilityAssessmentModel
+                        }
+                        setTreatmentFertilityAssessmentData={
+                          setProgressUpdatesData
+                        }
+                      />
+                    )} */}
                   </Modal>
                 </div>
               ) : (
@@ -1256,7 +1270,7 @@ function TreatmentPatient() {
                                 </span>
                                 <span className="accordion-title-detail">
                                   {
-                                    progressUpdatesData.patient
+                                    ProgressUpdatesStaticData.patient
                                       .ageAtFirstMenstruation
                                   }
                                 </span>
@@ -1268,7 +1282,7 @@ function TreatmentPatient() {
                                   Cycle Length
                                 </span>
                                 <span className="accordion-title-detail">
-                                  {progressUpdatesData.patient.cycleLength}
+                                  {ProgressUpdatesStaticData.patient.cycleLength}
                                 </span>
                               </div>
                             </Col>
@@ -1279,7 +1293,7 @@ function TreatmentPatient() {
                                   Period Length
                                 </span>
                                 <span className="accordion-title-detail">
-                                  {progressUpdatesData.patient.periodLength}
+                                  {ProgressUpdatesStaticData.patient.periodLength}
                                 </span>
                               </div>
                             </Col>
@@ -1289,7 +1303,7 @@ function TreatmentPatient() {
                                   Last Period Date
                                 </span>
                                 <span className="accordion-title-detail">
-                                  {progressUpdatesData.patient.date}
+                                  {ProgressUpdatesStaticData.patient.date}
                                 </span>
                               </div>
                             </Col>
@@ -1299,7 +1313,7 @@ function TreatmentPatient() {
                                   Is your cycle regular?
                                 </span>
                                 <span className="accordion-title-detail">
-                                  {progressUpdatesData.patient.isCycleRegular}
+                                  {ProgressUpdatesStaticData.patient.isCycleRegular}
                                 </span>
                               </div>
                             </Col>
@@ -1309,7 +1323,7 @@ function TreatmentPatient() {
                                   Do you experience menstrual issues?
                                 </span>
                                 <span className="accordion-title-detail">
-                                  {progressUpdatesData.patient.menstrualIssues}
+                                  {ProgressUpdatesStaticData.patient.menstrualIssues}
                                 </span>
                               </div>
                             </Col>
@@ -1366,7 +1380,7 @@ function TreatmentPatient() {
                                   Have you been pregnant before?
                                 </span>
                                 <span className="accordion-title-detail">
-                                  {progressUpdatesData.patient.pregnancy}
+                                  {ProgressUpdatesStaticData.patient.pregnancy}
                                 </span>
                               </div>
                             </Col>
@@ -1376,7 +1390,7 @@ function TreatmentPatient() {
                                   How long have you been trying to conceive?
                                 </span>
                                 <span className="accordion-title-detail">
-                                  {progressUpdatesData.patient.timeduration}
+                                  {ProgressUpdatesStaticData.patient.timeduration}
                                 </span>
                               </div>
                             </Col>
@@ -1387,7 +1401,7 @@ function TreatmentPatient() {
                                   pregnancy?
                                 </span>
                                 <span className="accordion-title-detail">
-                                  {progressUpdatesData.patient.ectopicpregnancy}
+                                  {ProgressUpdatesStaticData.patient.ectopicpregnancy}
                                 </span>
                               </div>
                             </Col>
@@ -1409,11 +1423,11 @@ function TreatmentPatient() {
                               Semen Analysis
                             </h6>
                             <p className="mb-2 settings-accordion-subtitle">
-                              {progressUpdatesData.partner.semenAnalysis ===
+                              {ProgressUpdatesStaticData.partner.semenAnalysis ===
                               "yes"
-                                ? progressUpdatesData.partner
+                                ? ProgressUpdatesStaticData.partner
                                     .semenAnalysisContent
-                                  ? `Yes | ${progressUpdatesData.partner.semenAnalysisContent}`
+                                  ? `Yes | ${ProgressUpdatesStaticData.partner.semenAnalysisContent}`
                                   : "Yes"
                                 : "No"}
                             </p>
@@ -1426,11 +1440,11 @@ function TreatmentPatient() {
                               Fertility Issues
                             </h6>
                             <p className="mb-2 settings-accordion-subtitle">
-                              {progressUpdatesData.partner.fertilityIssues ===
+                              {ProgressUpdatesStaticData.partner.fertilityIssues ===
                               "yes"
-                                ? progressUpdatesData.partner
+                                ? ProgressUpdatesStaticData.partner
                                     .fertilityIssuesContent
-                                  ? `Yes, ${progressUpdatesData.partner.fertilityIssuesContent}`
+                                  ? `Yes, ${ProgressUpdatesStaticData.partner.fertilityIssuesContent}`
                                   : "Yes"
                                 : "No"}
                             </p>
@@ -1443,9 +1457,9 @@ function TreatmentPatient() {
                               Surgeries
                             </h6>
                             <p className="mb-0 settings-accordion-subtitle">
-                              {progressUpdatesData.partner.surgeries === "yes"
-                                ? progressUpdatesData.partner.surgeriesContent
-                                  ? `Yes, ${progressUpdatesData.partner.surgeriesContent}`
+                              {ProgressUpdatesStaticData.partner.surgeries === "yes"
+                                ? ProgressUpdatesStaticData.partner.surgeriesContent
+                                  ? `Yes, ${ProgressUpdatesStaticData.partner.surgeriesContent}`
                                   : "Yes"
                                 : "No"}
                             </p>
@@ -1458,11 +1472,11 @@ function TreatmentPatient() {
                               Fertility Treatment
                             </h6>
                             <p className="mb-0 settings-accordion-subtitle">
-                              {progressUpdatesData.partner
+                              {ProgressUpdatesStaticData.partner
                                 .fertilityTreatment === "yes"
-                                ? progressUpdatesData.partner
+                                ? ProgressUpdatesStaticData.partner
                                     .fertilityTreatmentContent
-                                  ? `Yes, ${progressUpdatesData.partner.fertilityTreatmentContent}`
+                                  ? `Yes, ${ProgressUpdatesStaticData.partner.fertilityTreatmentContent}`
                                   : "Yes"
                                 : "No"}
                             </p>

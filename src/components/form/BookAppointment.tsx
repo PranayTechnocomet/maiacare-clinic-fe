@@ -27,7 +27,10 @@ import {
   useState,
 } from "react";
 import Button from "../ui/Button";
-import { BookAppointmentForm } from "../../utlis/types/interfaces";
+import {
+  AppointmentData,
+  BookAppointmentForm,
+} from "../../utlis/types/interfaces";
 import { PhoneNumberInput } from "../ui/PhoneNumberInput";
 import { RadioButtonGroup } from "../ui/RadioField";
 import Image from "next/image";
@@ -37,11 +40,21 @@ import SuccessImageBookAppointment from "@/assets/images/appointmentrequest.png"
 import { PatientsDetails } from "../../utlis/StaticData";
 import temppatientImg1 from "@/assets/images/Profile-doctor.png";
 
+// interface BookAppointmentProps {
+//   setBookAppointmentModal: React.Dispatch<React.SetStateAction<boolean>>;
+//   setShowSuccessModalBook: React.Dispatch<React.SetStateAction<boolean>>;
+//   appointmentTime?: string;
+//   appointmentDate?: string;
+//   onAddAppointment?:string;
+// }
 interface BookAppointmentProps {
   setBookAppointmentModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowSuccessModalBook: React.Dispatch<React.SetStateAction<boolean>>;
   appointmentTime?: string;
   appointmentDate?: string;
+  editData?: AppointmentData | null;
+  onSave?: (updatedData: { id: number }) => void;
+  onAddAppointment?: (newAppointment: AppointmentData) => void;
 }
 type FormError = Partial<Record<keyof BookAppointmentForm, string>>;
 interface PatientData {
@@ -61,8 +74,12 @@ export function BookAppointment({
   setShowSuccessModalBook,
   appointmentTime,
   appointmentDate,
+  onAddAppointment,
+  editData,
+  onSave,
 }: BookAppointmentProps) {
   const initialFormData: BookAppointmentForm = {
+    id: "",
     appointmentId: "",
     type: "",
     reasonForVisit: [],
@@ -70,7 +87,7 @@ export function BookAppointment({
     appointmentTime: appointmentTime || "",
     forTime: "",
     additionalNote: "",
-
+    status:"",
     patientName: null,
     phone: "",
     email: "",
@@ -121,7 +138,7 @@ export function BookAppointment({
     const errors: FormError = {};
     // if (!data.appointmentId.trim()) errors.appointmentId = "Appointment ID is required";
     if (!data.type.trim()) errors.type = "Type is required";
-    if (!data.reasonForVisit.length)
+    if (!data.reasonForVisit?.length)
       errors.reasonForVisit = "reasonForVisit is required";
     if (!data.appointmentDate?.trim())
       errors.appointmentDate = "Appointment Date is required";
@@ -171,10 +188,21 @@ export function BookAppointment({
     e.preventDefault();
     const errors = validateForm2(formData);
     setFormError(errors);
+
     if (Object.keys(errors).length === 0) {
       console.log("form submit success", formData);
 
-      // close main modal
+      onAddAppointment?.({
+        ...formData,
+        patientName: formData.patientName?.name ?? "",
+        reasonForVisit: formData.reasonForVisit ?? [],
+        name: formData.patientName?.name ?? "",
+        image: formData.patientName?.ProfilePhoto?.src ?? "",
+        status: formData.status ?? "",
+        visit: [],
+        id: editData?.id ?? 0,
+      });
+
       setBookAppointmentModal?.(false);
       setShowSuccessModalBook?.(true);
     }
@@ -287,11 +315,16 @@ export function BookAppointment({
               <InputSelectMultiSelect
                 label="Reason for visit"
                 name="reasonForVisit"
-                values={formData.reasonForVisit}
+                values={(formData.reasonForVisit ?? []).map((item) => ({
+                  id: item,
+                  value: item,
+                  label: item,
+                }))}
                 onChange={(values) => {
-                  setFormData((prev: BookAppointmentForm) => ({
+                  const selectedStrings = values.map((v) => v.value);
+                  setFormData((prev) => ({
                     ...prev,
-                    reasonForVisit: values,
+                    reasonForVisit: selectedStrings,
                   }));
                   setFormError((prev) => ({ ...prev, reasonForVisit: "" }));
                 }}
@@ -309,7 +342,7 @@ export function BookAppointment({
                 placeholder="Select Services"
                 addPlaceholder="Add Services"
                 required={true}
-                dropdownHandle={false} // open close arrow icon show hide
+                dropdownHandle={false}
                 error={formError.reasonForVisit}
               />
             </Col>
