@@ -152,7 +152,6 @@ export default function AppointmentPatientDetail() {
           </Col>
         </Row>
       </div>
-     
     </>
   );
 }

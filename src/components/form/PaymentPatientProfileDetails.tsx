@@ -71,7 +71,7 @@ export default function PaymentPatientProfileDetails() {
 
       {/* STEP 1 – Bill form */}
       {step === 1 && (
-        <div className="amount-class">
+        <div className="amount-class mt-2">
           <InputFieldGroup
             label="Amount"
             name="amount"
@@ -81,7 +81,7 @@ export default function PaymentPatientProfileDetails() {
               setPaymentData({ ...paymentData, amount: e.target.value });
               if (formError.amount) setFormError({ ...formError, amount: "" });
             }}
-            error={formError.amount}
+           
             placeholder="Amount"
             className="amount position-relative"
           >
@@ -89,7 +89,7 @@ export default function PaymentPatientProfileDetails() {
               <LiaRupeeSignSolid className="Rupee-icon" />
             </InputGroup.Text>
           </InputFieldGroup>
-
+          <div className="text-danger maiacare-input-field-error"> {formError.amount}</div>
           <Row className="mt-3">
             <Col md={6}>
               <InputSelect

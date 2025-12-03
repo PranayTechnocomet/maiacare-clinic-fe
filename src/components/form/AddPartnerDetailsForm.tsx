@@ -734,9 +734,9 @@ export function PhysicalAssessment({
               value={formData.height ?? ""}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const newValue = e.target.value;
-                if (/^[0-9'"]*$/.test(newValue)) {
-                  handleChange(e);
-                }
+                // if (/^[0-9'"]*$/.test(newValue)) {
+                //   handleChange(e);
+                // }
               }}
               placeholder="Enter height (in)"
               required={true}

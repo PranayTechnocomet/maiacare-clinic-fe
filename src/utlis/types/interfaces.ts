@@ -206,6 +206,7 @@ export type FertilityAssessmentType = {
   fertilityTreatmentContent: string;
   surgeries: string;
   surgeriesContent: string;
+  
 };
 
 export interface EditFertilityAssessment {
