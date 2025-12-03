@@ -32,7 +32,7 @@ interface ActivateDeactivateProfileProps {
   onClose: () => void;
   setShowSuccessModal: React.Dispatch<React.SetStateAction<boolean>>;
   title?: string;
-  initialStatus: "deactivate" | "activate";
+  initialStatus?: "deactivate" | "activate";
 }
 // doctor details interface
 interface DoctorInfo {

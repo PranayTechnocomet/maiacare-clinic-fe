@@ -108,6 +108,7 @@ export default function PartnerDetail({
     systolic: "",
     diastolic: "",
     heartRate: "",
+    
   };
   const initialFormDataEditFertilityAssessment: EditFertilityAssessment = {
     semenAnalysis: "",

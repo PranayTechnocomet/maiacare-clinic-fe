@@ -47,6 +47,7 @@ type PhysicalAssessmentProps = {
   setFormData: React.Dispatch<
     React.SetStateAction<PhysicalAssessmentDataModel>
   >;
+
   setShowContent?: (value: boolean) => void;
   setShowPartnerDetail?: (value: boolean) => void;
   setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>;
@@ -57,7 +58,7 @@ type MedicalHistoryFormProps = {
   setActiveTab: (tab: string) => void;
   setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>; // FIXED
 
-  showData?: PartnerDetailData;
+  showData?: PartnerDetailsData;
   initialData?: MedicalHistoryType | null;
   setEditMedicalHistory?: React.Dispatch<React.SetStateAction<boolean>>;
   formDataMedicalHistory?: MedicalHistoryType;
@@ -558,13 +559,17 @@ export function MedicalHistoryForm({
           <Col md={12} className="mt-md-3 mt-2">
             <InputSelectMultiSelect
               label="Do you have any medical condition?"
-              name="medicalCondition"
+              name="MedicalconditionAllergies"
               values={FormData.MedicalconditionAllergies}
               onChange={(values) => {
-                setFormData((prev) => ({ ...prev, medicalCondition: values }));
+                setFormData((prev) => ({
+                  ...prev,
+                  MedicalconditionAllergies: values, // FIXED
+                }));
+
                 setMedicalHistoryFormError((prev) => ({
                   ...prev,
-                  medicalCondition: "",
+                  MedicalconditionAllergies: "", // FIXED
                 }));
               }}
               options={[
@@ -580,7 +585,7 @@ export function MedicalHistoryForm({
               placeholder="Search Medical Condition or Allergies"
               addPlaceholder="Add Medical Condition or Allergies"
               required={true}
-              dropdownHandle={false} // open close arrow icon show hide
+              dropdownHandle={false}
               selectedOptionColor="var(--border-box)"
               selectedOptionBorderColor="var(--border-box)"
               error={medicalHistoryFormError.MedicalconditionAllergies}
@@ -707,12 +712,11 @@ export function PhysicalAssessment({
   type FormError = Partial<Record<keyof FertilityAssessmentType, string>>;
 
   const initialFormError: FormError = {};
-  // const [formError, setFormError] = useState<FormError>(initialFormError);
-
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+    console.log("e value", name, value);
     setFormData((prev) => ({ ...prev, [name]: value }));
     setFormError?.((prev) => ({ ...prev, [name]: "" }));
   };
@@ -727,16 +731,13 @@ export function PhysicalAssessment({
               name="height"
               type="text"
               className="setting-password-input"
-              value={formData.height}
+              value={formData.height ?? ""}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const newValue = e.target.value;
-
-                // Allow only digits, single quote, double quote
                 if (/^[0-9'"]*$/.test(newValue)) {
                   handleChange(e);
                 }
               }}
-              onBlur={(e: React.FocusEvent<HTMLInputElement>) => {}}
               placeholder="Enter height (in)"
               required={true}
               disabled={false}

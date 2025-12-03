@@ -2,13 +2,18 @@
 import React, { useRef, useState } from "react";
 import { Nav } from "react-bootstrap";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   HiOutlineChevronDoubleLeft,
   HiOutlineChevronDoubleRight,
   HiOutlineMenu,
 } from "react-icons/hi";
-import { MdWindow, MdSettings, MdOutlineCalendarToday } from "react-icons/md";
+import {
+  MdWindow,
+  MdSettings,
+  MdOutlineCalendarToday,
+  MdOutlineLogout,
+} from "react-icons/md";
 import { BsPeople } from "react-icons/bs";
 import { FaChevronDown } from "react-icons/fa";
 import { RiChat3Line, RiNotificationLine } from "react-icons/ri";
@@ -19,10 +24,8 @@ import UserProfileIcon from "../../assets/images/user-icon.png";
 import { useSelector } from "react-redux";
 import { RootState } from "../../utlis/redux/store";
 import { PiStethoscopeBold } from "react-icons/pi";
-// import { RootState } from "@/utils/redux/store";
-import { FaBoxesStacked } from "react-icons/fa6";
 import { LuScrollText } from "react-icons/lu";
-
+import "../../style/siteLayout.css";
 
 interface Props {
   collapsed: boolean;
@@ -31,7 +34,7 @@ interface Props {
 }
 
 const SiteLayout = ({ collapsed, setCollapsed, children }: Props) => {
-
+  const router = useRouter();
   const pathname = usePathname();
   const navRef = useRef<HTMLDivElement | null>(null);
 
@@ -72,7 +75,9 @@ const SiteLayout = ({ collapsed, setCollapsed, children }: Props) => {
       navRef.current.scrollBy({ top: 100, behavior: "smooth" });
     }
   };
-
+  const handleLogout = () => {
+    console.log("logout");
+  };
   return (
     <div className="layout">
       {/* ====== DESKTOP SIDEBAR ====== */}
@@ -127,7 +132,12 @@ const SiteLayout = ({ collapsed, setCollapsed, children }: Props) => {
             })}
           </Nav>
         </div>
-
+        <div
+          className="sidebar__nav-item d-flex align-items-center justify-content-center mb-2"
+          onClick={handleLogout}
+        >
+          <MdOutlineLogout size={20} />
+        </div>
         <div className="sidebar__bottom">
           <div
             role="button"
@@ -136,13 +146,12 @@ const SiteLayout = ({ collapsed, setCollapsed, children }: Props) => {
           >
             <FaChevronDown size={20} />
           </div>
-          <div className="sidebar__user"
-          
-           >
+          <div className="sidebar__user cursor-pointer">
             <img
               src={UserProfileIcon.src}
               alt="User"
               className="sidebar__user-avatar"
+              onClick={() => router.push("/profile")}
             />
             <span className="sidebar__text">John Doe</span>
           </div>
@@ -193,7 +202,13 @@ const SiteLayout = ({ collapsed, setCollapsed, children }: Props) => {
             })}
           </Nav>
         </div>
-
+        <div
+          className="sidebar__nav-item d-flex align-items-center justify-content-start mb-2"
+          onClick={handleLogout}
+        >
+          <MdOutlineLogout size={20} />
+          <span className="sidebar__text">Logout</span>
+        </div>
         <div className="sidebar__bottom">
           <div
             role="button"
@@ -202,7 +217,10 @@ const SiteLayout = ({ collapsed, setCollapsed, children }: Props) => {
           >
             <FaChevronDown size={20} />
           </div>
-          <div className="sidebar__user">
+          <div
+            className="sidebar__user cursor-pointer"
+            onClick={() => router.push("/profile")}
+          >
             <img
               src={UserProfileIcon.src}
               alt="User"

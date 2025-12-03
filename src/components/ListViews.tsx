@@ -54,7 +54,7 @@ export type ConsultationStatus =
   | "Rescheduled"
   | "Cancelled";
 export interface AppointmentRow {
-  id:  number;
+  id: number;
   name: string;
   image: string | StaticImageData;
   mobile: string;
@@ -304,7 +304,9 @@ export default function ListView() {
                 </div>
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown-menu-end">
-                <Dropdown.Item onClick={() => router.push(`/appointments/${id}`)}>
+                <Dropdown.Item
+                  onClick={() => router.push(`/appointments/${id}`)}
+                >
                   <img
                     src={eye.src}
                     alt="eye"

@@ -74,21 +74,17 @@ export default function MedicalHistory({
     // Validate the formData and return any errors found
     const errors = validateForm(formData);
     setFormError(errors);
-    // console.log("errors", errors);
     if (Object.keys(errors).length === 0) {
       setShowModal(false);
       setFormError(initialFormError);
       if (initialData) {
-        // If editing, update the existing entry
         setMedicalHistoryFormData(formData);
         toast.success("Changes saved successfully", {
           icon: <BsInfoCircle size={22} color="white" />,
         });
       } else {
         // If creating new, add to the arrayd
-
         setMedicalHistoryFormData(formData);
-
         toast.success("Medical history added successfully", {
           icon: <BsInfoCircle size={22} color="white" />,
         });
@@ -99,7 +95,7 @@ export default function MedicalHistory({
 
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Row className="g-md-2 g-1">
           <Col md={12}>
             <RadioButtonGroup
@@ -274,8 +270,7 @@ export default function MedicalHistory({
               className="w-100"
               variant="default"
               disabled={false}
-              type="button"
-              onClick={(e) => handleSubmit}
+              type="submit"
             >
               Save
             </Button>

@@ -21,6 +21,10 @@ export default function AppointmentDoctorProfileDetails() {
     useState(false);
   const [showCancleAppointment, setShowCancleAppointment] = useState(false);
   const [showCancleSuccess, setShowCancleSuccess] = useState(false);
+  const [showCheckIn, setShowCheckIn] = useState(0);
+  const handleCheckIn = () => {
+    setShowCheckIn(1);
+  };
   return (
     <div>
       <ContentContainer>
@@ -186,16 +190,31 @@ export default function AppointmentDoctorProfileDetails() {
           </div>
         </div>
         <Row>
-          <Col md={6}>
-            <Button className="maiacare-button maiacare-button-large outline-layout w-100 btn">
-              No Show
-            </Button>
-          </Col>
-          <Col md={6}>
-            <Button className="common-btn-blue maiacare-button w-100">
-              Check In
-            </Button>
-          </Col>
+          {showCheckIn === 0? (
+            <>
+              <Col md={6}>
+                <Button className="maiacare-button maiacare-button-large outline-layout w-100 btn">
+                  No Show
+                </Button>
+              </Col>
+              <Col md={6}>
+                <Button
+                  className="common-btn-blue maiacare-button w-100"
+                  onClick={handleCheckIn}
+                >
+                  Check In
+                </Button>
+              </Col>
+            </>
+          ) : (
+            <>
+              <Col>
+                <Button className="common-btn-blue maiacare-button w-100">
+                  Finish Appointment
+                </Button>
+              </Col>
+            </>
+          )}
         </Row>
       </ContentContainer>
       <Modal

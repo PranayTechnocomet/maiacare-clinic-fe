@@ -101,7 +101,7 @@ export function AddPartnerDetails({
       label: "Medical History",
       content: (
         <MedicalHistoryForm
-          // showData={setShowData}
+          showData={showData} // ShowData}
           setAddPartner={setAddPartner}
           setActiveTab={setActiveTab}
           setShowData={setShowData}
@@ -185,7 +185,7 @@ export function PhysicalFertilityAssessmentAccordion({
     systolic: "",
     diastolic: "",
     heartRate: "",
-    // other required fields of PhysicalAssessmentDataModel
+  
   };
 
   const [physicalFormData, setPhysicalFormData] =

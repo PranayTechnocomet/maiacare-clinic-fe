@@ -71,6 +71,7 @@ export interface Patient {
   status: string;
 }
 export interface PhysicalAssessmentDataModel {
+ 
   id: string;
   height: string;
   weight: string;
