@@ -2010,10 +2010,6 @@ body {
   cursor: pointer;
 }
 
-.camera-icon {
-  right: -10%;
-  top: 60%;
-}
 
 .patient-profile-image {
   border-radius: 8px;

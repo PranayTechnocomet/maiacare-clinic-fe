@@ -40,10 +40,12 @@ import sthetoscope from "../assets/images/Stethoscope.png";
 import email from "../assets/images/Email.png";
 import activation from "../assets/images/restricted-access.png";
 import deactivation from "../assets/images/restricted-access.png";
+
 import {
   ReassignRequest,
   SuccessModalReassignAppointment,
 } from "./form/ReassignRequest";
+import { ActivateDeactivateProfile } from "./form/ActivateDeactivateModal";
 export interface ConsultationInfo {
   id: number; // <-- ADD ID
   name: string;
@@ -85,6 +87,8 @@ export default function Consultation() {
   const [showResultModal, setShowResultModal] = useState(false);
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
   const [showSuccessModalBook, setShowSuccessModalBook] = useState(false);
+  const [showActivedeactive, setActivedeactive] = useState(false);
+  const [showactivesuccess, setShowactivesuccess] = useState(false);
 
   const handleAddPatient = () => {
     router.push("/addpatient"); // Route to your Add Patient screen
@@ -362,7 +366,7 @@ export default function Consultation() {
                   />
                   Edit Profile
                 </Dropdown.Item>
-                <Dropdown.Item onClick={() => handleActive(info.row.original)}>
+                <Dropdown.Item onClick={() => setActivedeactive(true)}>
                   <Image
                     src={active_deactive}
                     alt="Poweractivate"
@@ -656,6 +660,14 @@ export default function Consultation() {
           </Row>
         </div>
       </Modal>
+      <ActivateDeactivateProfile
+        setShowSuccessModal={setShowactivesuccess}
+        show={showActivedeactive} // boolean value ✔
+        onClose={() => {
+          setActivedeactive(false); // close popup
+          setShowactivesuccess(false); // success modal also false
+        }}
+      />
 
       {/* success modal */}
 

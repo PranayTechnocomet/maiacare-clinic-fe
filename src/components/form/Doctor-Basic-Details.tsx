@@ -679,7 +679,7 @@ const DoctorBasicDetails = () => {
                         show={showQualificationModal}
                         onHide={closeQualificationModal}
                         centered
-                        dialogClassName="custom-modal-width"
+                        // dialogClassName="custom-modal-width"
                         header="Qualification Details"
                       >
                         <div>
