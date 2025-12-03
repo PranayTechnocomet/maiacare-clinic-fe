@@ -21,13 +21,19 @@ import temppatientImg1 from "../../assets/images/patient1.png";
 import { RadioButtonGroup } from "../ui/RadioField";
 
 // pass props
+// interface ActivateDeactivateProfileProps {
+//   show: boolean;
+//   onClose: () => void;
+//   setShowSuccessModal: React.Dispatch<React.SetStateAction<boolean>>;
+//   title?: string;
+// }
 interface ActivateDeactivateProfileProps {
   show: boolean;
   onClose: () => void;
   setShowSuccessModal: React.Dispatch<React.SetStateAction<boolean>>;
   title?: string;
+  initialStatus: "deactivate" | "activate";
 }
-
 // doctor details interface
 interface DoctorInfo {
   name: string;
@@ -121,13 +127,14 @@ export function ActivateDeactivateProfile({
   const validate = (): boolean => {
     const errors: FormError = {};
 
-    if (!formData.actionType.trim()) {
-      errors.actionType = "Please select profile action.";
+    if (!formData.profile.trim()) {
+      errors.profile = "Please select profile action.";
     }
 
     if (!formData.reason.trim()) {
       errors.reason = "Please select a reason.";
     }
+
     if (
       formData.additionalNote.trim().length > 0 &&
       formData.additionalNote.trim().length < 5
@@ -140,16 +147,13 @@ export function ActivateDeactivateProfile({
   };
 
   // final submit
-  const handleSubmit = () => {
-    setFormError({});
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // prevent default form submit
+    if (!validate()) return; // stop if validation fails
+
     setShowSuccessModal(true);
-    setFormData({
-      profile: "",
-      actionType: "",
-      reason: "",
-      additionalNote: "",
-    });
-    onClose();
+    onClose(); // close modal only on successful validation
+    // Optionally reset form if needed
   };
 
   return (

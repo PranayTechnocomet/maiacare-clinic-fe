@@ -51,8 +51,6 @@ const PatientReport = () => {
   const [aadharFile, setAadharFile] = useState<UploadedFile | null>(null);
   const [panFile, setPanFile] = useState<UploadedFile | null>(null);
   const [licenceFile, setLicenceFile] = useState<UploadedFile | null>(null);
-  // const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  // const [fileError, setFileError] = useState<string>("");
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const panFileRef = useRef<HTMLInputElement | null>(null);
@@ -204,7 +202,11 @@ const PatientReport = () => {
     // If there are no errors, proceed
     if (Object.keys(newErrors).length === 0) {
       console.log("All files are valid, proceed with save:", uploadedFiles);
-       return; 
+      // const completed = uploadedFiles.filter((f) => f.status === "completed");
+      // setPatientReportData((prev: any) => [...prev, ...completed]);
+      // setUploadedFiles([]);
+      // setShowModal(false);
+      return;
       // Do your save/upload logic here
     }
   };
@@ -229,10 +231,10 @@ const PatientReport = () => {
   //     return; // stop saving
   //   }
 
-  //   const completed = uploadedFiles.filter((f) => f.status === "completed");
-  //   setPatientReportData((prev:any) => [...prev, ...completed]);
-  //   setUploadedFiles([]);
-  //   setShowModal(false);
+  // const completed = uploadedFiles.filter((f) => f.status === "completed");
+  // setPatientReportData((prev:any) => [...prev, ...completed]);
+  // setUploadedFiles([]);
+  // setShowModal(false);
   // };
 
   const handleClose = () => {

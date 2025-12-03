@@ -14,6 +14,8 @@ import Delete from "@/assets/images/Delete.png";
 import Loading from "@/assets/images/Loading.png";
 import { Col, Row } from "react-bootstrap";
 import GreenRight from "@/assets/images/GreenRight.png";
+import report from "@/assets/images/medical-reports.png";
+import { FiUpload } from "react-icons/fi";
 import {
   IVFProgressData,
   medicationPrescriptionData,
@@ -213,7 +215,7 @@ export default function ReportDetails() {
       reportName: "MBBS Certificate",
     },
   ]);
-
+  const [step, setstep] = useState(0);
   const handleOpenModal = () => {
     setUploadedFiles([]); // reset every time modal opens
     setShowModal(true);
@@ -253,12 +255,29 @@ export default function ReportDetails() {
     }));
     setUploadedFiles([]);
     setShowModal(false);
+    setstep(1);
   };
 
   return (
     <div>
       <ContentContainer>
-        <div className="contact-details-heading m-0">Reports</div>
+        {/* <div className="contact-details-heading m-0">Reports</div> */}
+        <div className="d-flex justify-content-between align-items-center">
+          <h2 className="contact-details-heading m-0">Reports</h2>
+          {step === 1 ? (
+            <Button
+              variant="outline"
+              type="button"
+              contentSize="small"
+              onClick={handleOpenModal}
+            >
+              <div className="d-flex justify-content-center align-items-center gap-2">
+                <FiUpload fontSize={18} />
+                Upload
+              </div>
+            </Button>
+          ) : null}
+        </div>
         {progressUpdatesData.report.length > 0 ? (
           <>
             <Row className="mt-3">
@@ -324,28 +343,38 @@ export default function ReportDetails() {
             </Row>
           </>
         ) : (
-          <Button
-            variant="outline"
-            type="submit"
-            contentSize="small"
-            onClick={handleOpenModal}
-          >
-            <div className="d-flex justify-content-center align-items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-              >
-                <path
-                  d="M17.8125 10C17.8125 10.2486 17.7137 10.4871 17.5379 10.6629C17.3621 10.8387 17.1236 10.9375 16.875 10.9375H10.9375V16.875C10.9375 17.1236 10.8387 17.3621 10.6629 17.5379C10.4871 17.7137 10.2486 17.8125 10 17.8125C9.75136 17.8125 9.5129 17.7137 9.33709 17.5379C9.16127 17.3621 9.0625 17.1236 9.0625 16.875V10.9375H3.125C2.87636 10.9375 2.6379 10.8387 2.46209 10.6629C2.28627 10.4871 2.1875 10.2486 2.1875 10C2.1875 9.75136 2.28627 9.5129 2.46209 9.33709C2.6379 9.16127 2.87636 9.0625 3.125 9.0625H9.0625V3.125C9.0625 2.87636 9.16127 2.6379 9.33709 2.46209C9.5129 2.28627 9.75136 2.1875 10 2.1875C10.2486 2.1875 10.4871 2.28627 10.6629 2.46209C10.8387 2.6379 10.9375 2.87636 10.9375 3.125V9.0625H16.875C17.1236 9.0625 17.3621 9.16127 17.5379 9.33709C17.7137 9.5129 17.8125 9.75136 17.8125 10Z"
-                  fill="#2B4360"
-                />
-              </svg>
-              Upload Reports
-            </div>
-          </Button>
+          <div className="d-flex flex-column justify-content-center align-items-center mt-3">
+            <Image
+              src={report}
+              alt="No report"
+              width={120}
+              height={120}
+              className="mb-3"
+            />
+
+            <Button
+              variant="outline"
+              type="submit"
+              contentSize="small"
+              onClick={handleOpenModal}
+            >
+              <div className="d-flex justify-content-center align-items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                >
+                  <path
+                    d="M17.8125 10C17.8125 10.2486 17.7137 10.4871 17.5379 10.6629C17.3621 10.8387 17.1236 10.9375 16.875 10.9375H10.9375V16.875C10.9375 17.1236 10.8387 17.3621 10.6629 17.5379C10.4871 17.7137 10.2486 17.8125 10 17.8125C9.75136 17.8125 9.5129 17.7137 9.33709 17.5379C9.16127 17.3621 9.0625 17.1236 9.0625 16.875V10.9375H3.125C2.87636 10.9375 2.6379 10.8387 2.46209 10.6629C2.28627 10.4871 2.1875 10.2486 2.1875 10C2.1875 9.75136 2.28627 9.5129 2.46209 9.33709C2.6379 9.16127 2.87636 9.0625 3.125 9.0625H9.0625V3.125C9.0625 2.87636 9.16127 2.6379 9.33709 2.46209C9.5129 2.28627 9.75136 2.1875 10 2.1875C10.2486 2.1875 10.4871 2.28627 10.6629 2.46209C10.8387 2.6379 10.9375 2.87636 10.9375 3.125V9.0625H16.875C17.1236 9.0625 17.3621 9.16127 17.5379 9.33709C17.7137 9.5129 17.8125 9.75136 17.8125 10Z"
+                    fill="#2B4360"
+                  />
+                </svg>
+                Upload Reports
+              </div>
+            </Button>
+          </div>
         )}
 
         <Modal
