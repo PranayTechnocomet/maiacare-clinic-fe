@@ -576,7 +576,7 @@ const Dashboard: React.FC = () => {
     <>
       <div className="py-2">
         {/* Top Stats */}
-        <Row className="mb-3">
+        <Row className="mb-3 gap-3 gap-md-0">
           <Col md={3} xxl={2}>
             <Card className="">
               <Card.Body>

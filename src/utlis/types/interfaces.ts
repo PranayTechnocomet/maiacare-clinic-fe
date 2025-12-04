@@ -182,7 +182,7 @@ export type FertilityAssessmentType = {
   surgeriesContent: string;
 };
 
-export type FertilityAssessmentSeprateType = {};
+// export type FertilityAssessmentSeprateType = {};
 
 export interface EditFertilityAssessment {
   semenAnalysis: string;

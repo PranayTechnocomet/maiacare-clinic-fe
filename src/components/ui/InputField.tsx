@@ -2,20 +2,20 @@ import React from 'react'
 import { Form } from 'react-bootstrap'
 
 export const InputFieldGroup = ({
-    label = "",
+    label="",
     name,
-    type = "text",
+    type="text",
     value,
-    onChange = () => { },
-    onBlur = () => { },
-    onClick = () => { },
-    placeholder = "",
-    required = false,
-    disabled = false,
-    readOnly = false,
-    error = "",
-    helperText = "",
-    className = "",
+    onChange=()=>{},
+    onBlur=()=>{},
+    onClick=()=>{},
+    placeholder="",
+    required=false,
+    disabled=false,
+    readOnly=false,
+    error="",
+    helperText="",
+    className="",    
     children,
     ...rest
 }: {
@@ -34,40 +34,38 @@ export const InputFieldGroup = ({
     helperText?: string;
     className?: string;
     children?: React.ReactNode;
-    [key: string]: any;
+    [key: string]: unknown;
 }) => {
     return (
-        <>
-            <div className={`maiacare-input-field-container ${className}`}>
-                {label && (
-                    <InputFieldLabel label={label} required={required} />
-                )}
-                <InputField name={name} type={type} value={value} onChange={onChange} onBlur={onBlur} onClick={onClick} placeholder={placeholder} disabled={disabled} readOnly={readOnly} children={children} {...rest} />
-                {helperText && <InputFieldHelperText helperText={helperText} />}
-            </div>
-            {error && <InputFieldError error={error} />}
-        </>
-    )
+  <div className={`maiacare-input-field-container ${className}`}>
+    {label && (
+    <InputFieldLabel label={label} required={required} />
+    )}
+    <InputField name={name} type={type} value={value} onChange={onChange} onBlur={onBlur} onClick={onClick} placeholder={placeholder} disabled={disabled} readOnly={readOnly}  {...rest} >{children}</InputField>
+    {error && <InputFieldError error={error} />}
+    {helperText && <InputFieldHelperText helperText={helperText} />}
+  </div> 
+    )   
 }
 
-export const InputFieldLabel = ({ label = "", required = false, className = "" }: { label?: string; required?: boolean, className?: string }) => {
+export const InputFieldLabel = ({label="", required=false, className=""}: {label?: string; required?: boolean, className?: string}) => {
     return (
-        <Form.Label className={`maiacare-input-field-label ${className}`}>{label} {required && <span className="text-danger">*</span>}</Form.Label>
+        <Form.Label className={`maiacare-input-field-label  ${className}`}>{label} {required && <span className="text-danger">*</span>}</Form.Label>
     )
 }
 
 export const InputField = ({
     name,
-    type = "text",
+    type="text",
     value,
-    onChange = () => { },
-    onBlur = () => { },
-    onClick = () => { },
-    placeholder = "",
-    required = false,
-    disabled = false,
-    readOnly = false,
-    className = "",
+    onChange=()=>{},
+    onBlur=()=>{},
+    onClick=()=>{},
+    placeholder="",
+    required=false,
+    disabled=false,
+    readOnly=false,
+    className="",
     children,
     ...rest
 }: {
@@ -76,24 +74,24 @@ export const InputField = ({
     value?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-    onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
+    onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;   
     placeholder?: string;
     required?: boolean;
     disabled?: boolean;
     readOnly?: boolean;
     className?: string;
     children?: React.ReactNode;
-    [key: string]: any;
+    [key: string]: unknown;
 }) => {
     return (
         <>
-            <Form.Control className={`maiacare-input-field ${className}`} name={name} type={type} value={value} onChange={onChange} onBlur={onBlur} onClick={onClick} placeholder={placeholder} disabled={disabled} readOnly={readOnly} {...rest} />
-            {children}
+        <Form.Control className={`maiacare-input-field ${className}`} name={name} type={type} value={value} onChange={onChange} onBlur={onBlur} onClick={onClick} placeholder={placeholder} disabled={disabled} readOnly={readOnly} {...rest} />
+        {children}
         </>
     )
 }
 
-export const InputFieldError = ({ error = "", className = "" }: { error?: string, className?: string }) => {
+export const InputFieldError = ({error="", className=""}: {error?: string, className?: string}) => {
     return (
         <div className={`${className}`}>
             <Form.Text className="text-danger maiacare-input-field-error">{error}</Form.Text>
@@ -102,7 +100,7 @@ export const InputFieldError = ({ error = "", className = "" }: { error?: string
 }
 
 
-export const InputFieldHelperText = ({ helperText = "", className = "" }: { helperText?: string, className?: string }) => {
+export const InputFieldHelperText = ({helperText="", className=""}: {helperText?: string, className?: string}) => {
     return (
         <div className={`${className}`}>
             <Form.Text className="maiacare-input-field-helper-text">{helperText}</Form.Text>

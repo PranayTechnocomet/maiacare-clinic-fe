@@ -487,6 +487,15 @@
   border-radius: 7px;
   margin-right: 0.75rem;
 }
+.amountstatus {
+  border: 1px solid #f4c47e;
+  color: #f4c47e;
+  border-radius: 6px;
+  padding: 3px 11px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
 .test-card {
   color: #b0b4c1;
 }
