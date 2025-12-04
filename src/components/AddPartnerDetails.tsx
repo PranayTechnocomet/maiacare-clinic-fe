@@ -185,7 +185,7 @@ export function PhysicalFertilityAssessmentAccordion({
     systolic: "",
     diastolic: "",
     heartRate: "",
-  
+    
   };
 
   const [physicalFormData, setPhysicalFormData] =

@@ -45,6 +45,7 @@ const PhisicalAssessmentForm = ({
     systolic: editPhysicalAssessment?.systolic || "",
     diastolic: editPhysicalAssessment?.diastolic || "",
     heartRate: editPhysicalAssessment?.heartRate || "",
+  
   };
   const initialFormDataForClear: PhysicalAssessmentDataModel = {
     id: "",
@@ -55,6 +56,7 @@ const PhisicalAssessmentForm = ({
     systolic: "",
     diastolic: "",
     heartRate: "",
+  
   };
   const [formData, setFormData] =
     useState<PhysicalAssessmentDataModel>(initialFormData);
@@ -81,7 +83,7 @@ const PhisicalAssessmentForm = ({
 
       // errors.diastolic = "At least one of systolic or diastolic is required";
     }
-    if (!data.heartRate.trim()) errors.heartRate = "Heart rate is required";
+    if (!data.heartRate?.trim()) errors.heartRate = "Heart rate is required";
 
     return errors;
   };

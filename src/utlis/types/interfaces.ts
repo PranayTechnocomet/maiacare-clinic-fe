@@ -72,21 +72,14 @@ export interface Patient {
 }
 export interface PhysicalAssessmentDataModel {
   id: string;
-  // height: string;
-  // weight: string;
-  // bmi: string;
-  bloodGroup: string;
-  systolic: string;
-  diastolic: string;
-  // heartRate: string;
-  patientId: string | undefined;
   height: string;
   weight: string;
   bmi: string;
-  // bloodGroup: string
-  bloodPressureSystolic?: string;
-  bloodPressureDiastolic?: string;
-  heartRate?: string;
+  bloodGroup: string;
+  systolic: string;
+  diastolic: string;
+  heartRate: string;
+ 
 }
 export interface CancelAppointmentForm {
   reasonForCancel: string;
