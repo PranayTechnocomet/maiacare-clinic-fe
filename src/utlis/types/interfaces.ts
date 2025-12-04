@@ -87,13 +87,6 @@ export interface CancelAppointmentForm {
 }
 
 export interface PhysicalAssessmentData {
-  // date: string;
-  // height: string;
-  // weight: string;
-  // bmi: string;
-  // bloodGroup: string;
-  // bloodPressure: string;
-  // heartRate: string;
   id: string;
   date: string;
   height: string;
@@ -188,6 +181,8 @@ export type FertilityAssessmentType = {
   surgeries: string;
   surgeriesContent: string;
 };
+
+export type FertilityAssessmentSeprateType = {};
 
 export interface EditFertilityAssessment {
   semenAnalysis: string;

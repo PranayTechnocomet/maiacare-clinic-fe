@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import Image from "next/image";
 import Modal from "../ui/Modal";
-import { InputFieldGroup } from "../ui/InputField";
+import { InputField, InputFieldGroup } from "../ui/InputField";
 import { Accordion, Col, Row } from "react-bootstrap";
 import { RadioButtonGroup } from "../ui/RadioField";
 import { InputSelect, InputSelectMultiSelect } from "../ui/InputSelect";
@@ -30,6 +30,7 @@ import { BsInfoCircle } from "react-icons/bs";
 import { PartnerDetailData } from "@/utlis/StaticData";
 import { Dispatch } from "@reduxjs/toolkit";
 import { PartnerDetailsData } from "../AddPartnerDetails";
+import PhisicalAssessmentForm from "./PhisicalAssessmentForm";
 // export interface PartnerDetailsData extends PartnerDetailData {}
 type PhysicalAssessmentProps = {
   formError?: Partial<Record<keyof PhysicalAssessmentDataModel, string>>;
@@ -40,7 +41,7 @@ type PhysicalAssessmentProps = {
   >;
   formData: PhysicalAssessmentDataModel | FertilityAssessmentType;
   setFormData: React.Dispatch<
-    React.SetStateAction<PhysicalAssessmentDataModel >
+    React.SetStateAction<PhysicalAssessmentDataModel>
   >;
 
   setShowContent?: (value: boolean) => void;
@@ -707,23 +708,35 @@ export function PhysicalAssessment({
   type FormError = Partial<Record<keyof FertilityAssessmentType, string>>;
 
   const initialFormError: FormError = {};
-  // const handleChange = (
-  //   e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  // ) => {
-  //   const { name, value } = e.target;
-  //   console.log("e value", name, value);
-  //   setFormData((prev) => ({ ...prev, [name]: value }));
-  //   setFormError?.((prev) => ({ ...prev, [name]: "" }));
-  // };
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+    console.log("e value", name, value);
+    // console.log("teast", [name]: value);
+
     setFormData((prev) => ({ ...prev, [name]: value }));
     setFormError?.((prev) => ({ ...prev, [name]: "" }));
   };
+
+  const initialFormData: PhysicalAssessmentDataModel = {
+    id: "",
+    height: "",
+    weight: "",
+    bmi: "",
+    bloodGroup: "",
+    systolic: "",
+    diastolic: "",
+    heartRate: "",
+  };
+  const [showPhisicalAssessment, setShowPhisicalAssessment] =
+    useState<boolean>(true);
+  const [editPhysicalAssessment, setEditPhysicalAssessment] =
+    useState<PhysicalAssessmentDataModel>(initialFormData);
+  const [modalFormPhisicalData, setModalFormPhisicalData] = useState<
+    PhysicalAssessmentDataModel[]
+  >([]);
+
   return (
     <>
       <form>
@@ -734,21 +747,22 @@ export function PhysicalAssessment({
               name="height"
               type="text"
               className="setting-password-input"
-              value={formData.height ?? ""}
-              onChange={handleChange}
-              // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              //   const newValue = e.target.value;
-              //   // if (/^[0-9'"]*$/.test(newValue)) {
-              //   //   handleChange(e);
-              //   // }
-              // }}
+              value={formData.height}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const newValue = e.target.value;
+
+                // Allow only digits, single quote, double quote
+                if (/^[0-9'"]*$/.test(newValue)) {
+                  handleChange(e);
+                }
+              }}
+              onBlur={(e: React.FocusEvent<HTMLInputElement>) => {}}
               placeholder="Enter height (in)"
               required={true}
               disabled={false}
               readOnly={false}
               error={formError?.height}
             />
-           
           </Col>
           <Col md={6}>
             <InputFieldGroup
@@ -767,7 +781,6 @@ export function PhysicalAssessment({
               error={formError?.weight}
             />
           </Col>
-
           <Col md={6}>
             <InputFieldGroup
               label="BMI"
@@ -811,7 +824,6 @@ export function PhysicalAssessment({
               ]}
             />
           </Col>
-
           <Col md={5} className="input-custom-width">
             <InputFieldGroup
               label="Blood Pressure"

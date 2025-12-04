@@ -478,10 +478,18 @@
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-right: 2px solid #dee2e6;
-  background: #F5F7FA;
-
+  background: #f5f7fa;
 }
-
+.test-pill {
+  background: #fbefeb;
+  color: #e29578;
+  padding: 10px;
+  border-radius: 7px;
+  margin-right: 0.75rem;
+}
+.test-card {
+  color: #b0b4c1;
+}
 .Rupee-icon {
   color: #2b4360;
   width: 23px;

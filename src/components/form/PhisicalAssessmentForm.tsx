@@ -95,12 +95,6 @@ const PhisicalAssessmentForm = ({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setFormError((prev) => ({ ...prev, [name]: "" }));
-
-    // if (name === "height") {
-    //     const heightValue = value.replace(/[^0-9]/g, '');
-    //     const displayValue = heightValue ? heightValue + "(kg)" : "";
-    //     setFormData((prev) => ({ ...prev, height: displayValue }));
-    // }
   };
 
   // Submit Handler

@@ -54,7 +54,7 @@ interface AddPartnerDetailsProps {
   setAddPartner: (value: boolean) => void;
   setShowContent: (value: boolean) => void;
   setShowPartnerDetail: (value: boolean) => void;
-  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData >>; // FIXED
+  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>; // FIXED
   modalEditTab: string | null;
   setModalEditTab: (value: string | null) => void;
   showData: PartnerDetailsData;
@@ -155,14 +155,14 @@ export function PhysicalFertilityAssessmentAccordion({
   initialData,
 }: PhysicalFertilityAssessmentAccordionProps) {
   const initialFormData: FertilityAssessmentType = {
-    height: "",
-    weight: "",
-    bmi: "",
-    bloodGroup: "",
-    id: "",
-    systolic: "",
-    diastolic: "",
-    heartRate: "",
+    height: initialData?.height || "",
+    weight: initialData?.weight || "",
+    bmi: initialData?.bmi || "",
+    bloodGroup: initialData?.bloodGroup || "",
+    id: initialData?.id || "",
+    systolic: initialData?.systolic || "",
+    diastolic: initialData?.diastolic || "",
+    heartRate: initialData?.heartRate || "",
     semenAnalysis: initialData?.semenAnalysis || "yes",
     semenAnalysisContent: initialData?.semenAnalysisContent || "",
     fertilityIssues: initialData?.fertilityIssues || "no",
@@ -185,7 +185,6 @@ export function PhysicalFertilityAssessmentAccordion({
     systolic: "",
     diastolic: "",
     heartRate: "",
-    
   };
 
   const [physicalFormData, setPhysicalFormData] =
@@ -199,41 +198,45 @@ export function PhysicalFertilityAssessmentAccordion({
   const validateForm = (data: FertilityAssessmentType): FormError => {
     const errors: FormError = {};
 
+    if (!data.semenAnalysis?.trim())
+      errors.semenAnalysis = "Seminal Analysis is required";
+    if (data.semenAnalysis === "yes" && !data.semenAnalysisContent?.trim())
+      errors.semenAnalysisContent = "Seminal Analysis Content is required";
+    if (!data.fertilityIssues?.trim())
+      errors.fertilityIssues = "Fertility Issues is required";
+    if (data.fertilityIssues === "yes" && !data.fertilityIssuesContent?.trim())
+      errors.fertilityIssuesContent = "Fertility Issues Content is required";
+    if (!data.fertilityTreatment?.trim())
+      errors.fertilityTreatment = "Fertility Treatment is required";
+    if (
+      data.fertilityTreatment === "yes" &&
+      !data.fertilityTreatmentContent?.trim()
+    )
+      errors.fertilityTreatmentContent =
+        "Fertility Treatment Content is required";
+    if (!data.surgeries?.trim()) errors.surgeries = "Surgeries is required";
+    if (data.surgeries === "yes" && !data.surgeriesContent?.trim())
+      errors.surgeriesContent = "Surgeries Content is required";
+
+    return errors;
+  };
+  const validateForm2 = (data: PhysicalAssessmentDataModel): FormError => {
+    const errors: FormError = {};
     if (!data.height?.trim()) errors.height = "Height is required";
     if (!data.weight?.trim()) errors.weight = "Weight is required";
     if (!data.bmi?.trim()) errors.bmi = "BMI is required";
     if (!data.bloodGroup?.trim()) errors.bloodGroup = "Blood group is required";
     if (!data.systolic?.trim()) errors.systolic = "Blood pressure is required";
-
     if (!data.heartRate?.trim()) errors.heartRate = "Heart rate is required";
-
-    if (!data.semenAnalysis.trim())
-      errors.semenAnalysis = "Seminal Analysis is required";
-    if (data.semenAnalysis === "yes" && !data.semenAnalysisContent.trim())
-      errors.semenAnalysisContent = "Seminal Analysis Content is required";
-    if (!data.fertilityIssues.trim())
-      errors.fertilityIssues = "Fertility Issues is required";
-    if (data.fertilityIssues === "yes" && !data.fertilityIssuesContent.trim())
-      errors.fertilityIssuesContent = "Fertility Issues Content is required";
-    if (!data.fertilityTreatment.trim())
-      errors.fertilityTreatment = "Fertility Treatment is required";
-    if (
-      data.fertilityTreatment === "yes" &&
-      !data.fertilityTreatmentContent.trim()
-    )
-      errors.fertilityTreatmentContent =
-        "Fertility Treatment Content is required";
-    if (!data.surgeries.trim()) errors.surgeries = "Surgeries is required";
-    if (data.surgeries === "yes" && !data.surgeriesContent.trim())
-      errors.surgeriesContent = "Surgeries Content is required";
-
     return errors;
   };
 
   const handleSubmit = () => {
     const errors = validateForm(formData);
-    setFormError(errors);
+    const error2 = validateForm2(physicalFormData);
 
+    setFormError(errors);
+    setFormError(error2);
     if (Object.keys(errors).length !== 0) return;
 
     setFormError(initialFormError);
@@ -274,7 +277,7 @@ export function PhysicalFertilityAssessmentAccordion({
             <PhysicalAssessment
               setFormError={setFormError}
               formError={formError}
-              formData={formData}
+              formData={physicalFormData}
               setFormData={setPhysicalFormData}
               setShowContent={setShowContent}
               setShowPartnerDetail={setShowPartnerDetail}
