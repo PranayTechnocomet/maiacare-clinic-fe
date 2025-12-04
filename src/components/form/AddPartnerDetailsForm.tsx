@@ -31,11 +31,6 @@ import { PartnerDetailData } from "@/utlis/StaticData";
 import { Dispatch } from "@reduxjs/toolkit";
 import { PartnerDetailsData } from "../AddPartnerDetails";
 // export interface PartnerDetailsData extends PartnerDetailData {}
-
-type AssessmentFormType =
-  | FertilityAssessmentType
-  | EditFertilityAssessment
-  | PhysicalAssessmentDataModel;
 type PhysicalAssessmentProps = {
   formError?: Partial<Record<keyof PhysicalAssessmentDataModel, string>>;
   setFormError?: React.Dispatch<
@@ -45,7 +40,7 @@ type PhysicalAssessmentProps = {
   >;
   formData: PhysicalAssessmentDataModel | FertilityAssessmentType;
   setFormData: React.Dispatch<
-    React.SetStateAction<PhysicalAssessmentDataModel>
+    React.SetStateAction<PhysicalAssessmentDataModel >
   >;
 
   setShowContent?: (value: boolean) => void;
@@ -712,15 +707,23 @@ export function PhysicalAssessment({
   type FormError = Partial<Record<keyof FertilityAssessmentType, string>>;
 
   const initialFormError: FormError = {};
+  // const handleChange = (
+  //   e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  // ) => {
+  //   const { name, value } = e.target;
+  //   console.log("e value", name, value);
+  //   setFormData((prev) => ({ ...prev, [name]: value }));
+  //   setFormError?.((prev) => ({ ...prev, [name]: "" }));
+  // };
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
-    console.log("e value", name, value);
     setFormData((prev) => ({ ...prev, [name]: value }));
     setFormError?.((prev) => ({ ...prev, [name]: "" }));
   };
-
   return (
     <>
       <form>
@@ -732,18 +735,20 @@ export function PhysicalAssessment({
               type="text"
               className="setting-password-input"
               value={formData.height ?? ""}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                const newValue = e.target.value;
-                // if (/^[0-9'"]*$/.test(newValue)) {
-                //   handleChange(e);
-                // }
-              }}
+              onChange={handleChange}
+              // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              //   const newValue = e.target.value;
+              //   // if (/^[0-9'"]*$/.test(newValue)) {
+              //   //   handleChange(e);
+              //   // }
+              // }}
               placeholder="Enter height (in)"
               required={true}
               disabled={false}
               readOnly={false}
               error={formError?.height}
             />
+           
           </Col>
           <Col md={6}>
             <InputFieldGroup

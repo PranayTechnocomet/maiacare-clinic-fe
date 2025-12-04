@@ -475,14 +475,11 @@
   padding-left: 3.5rem !important;
 }
 .custom-Rupee-icon {
-  width: 12%;
-
-  position: absolute;
-  top: 39%;
-  padding: 12px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-right: 2px solid #dee2e6;
+  background: #F5F7FA;
+
 }
 
 .Rupee-icon {

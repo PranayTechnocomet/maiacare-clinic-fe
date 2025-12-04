@@ -4,7 +4,7 @@ import Image from "next/image";
 import payment from "../../assets/images/payment.png";
 import Button from "../ui/Button";
 import { InputFieldGroup } from "../ui/InputField";
-import { Col, InputGroup, Row } from "react-bootstrap";
+import { Col, Form, InputGroup, Row } from "react-bootstrap";
 import { LiaRupeeSignSolid } from "react-icons/lia";
 import { InputSelect } from "../ui/InputSelect";
 
@@ -72,24 +72,29 @@ export default function PaymentPatientProfileDetails() {
       {/* STEP 1 – Bill form */}
       {step === 1 && (
         <div className="amount-class mt-2">
-          <InputFieldGroup
-            label="Amount"
-            name="amount"
-            type="text"
-            value={paymentData.amount}
-            onChange={(e) => {
-              setPaymentData({ ...paymentData, amount: e.target.value });
-              if (formError.amount) setFormError({ ...formError, amount: "" });
-            }}
-           
-            placeholder="Amount"
-            className="amount position-relative"
-          >
-            <InputGroup.Text className="custom-Rupee-icon">
+          <div className="maiacare-input-field-label mb-2 ">
+            Amount<span className="text-danger ps-1">*</span>
+          </div>
+          <InputGroup className="custom-search-group mw-100">
+            <InputGroup.Text className=" custom-Rupee-icon ">
               <LiaRupeeSignSolid className="Rupee-icon" />
+              {/* <IoSearch  /> */}
             </InputGroup.Text>
-          </InputFieldGroup>
-          <div className="text-danger maiacare-input-field-error"> {formError.amount}</div>
+            <Form.Control
+              placeholder="Amount"
+              className="custom-search-input ps-2"
+              value={paymentData.amount}
+              onChange={(e) => {
+                setPaymentData({ ...paymentData, amount: e.target.value });
+                if (formError.amount)
+                  setFormError({ ...formError, amount: "" });
+              }}
+            />
+          </InputGroup>
+
+          <div className="text-danger maiacare-input-field-error">
+            {formError.amount}
+          </div>
           <Row className="mt-3">
             <Col md={6}>
               <InputSelect

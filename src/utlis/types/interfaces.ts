@@ -71,15 +71,22 @@ export interface Patient {
   status: string;
 }
 export interface PhysicalAssessmentDataModel {
- 
   id: string;
-  height: string;
-  weight: string;
-  bmi: string;
+  // height: string;
+  // weight: string;
+  // bmi: string;
   bloodGroup: string;
   systolic: string;
   diastolic: string;
-  heartRate: string;
+  // heartRate: string;
+  patientId: string | undefined;
+  height: string;
+  weight: string;
+  bmi: string;
+  // bloodGroup: string
+  bloodPressureSystolic?: string;
+  bloodPressureDiastolic?: string;
+  heartRate?: string;
 }
 export interface CancelAppointmentForm {
   reasonForCancel: string;
@@ -170,25 +177,6 @@ export interface SelectPatientType {
   ProfilePhoto: StaticImageData;
   name: string;
 }
-
-// export interface FertilityAssessmentType {
-//   id:string;
-//   height: string;
-//   weight: string;
-//   bmi: string;
-//   bloodGroup: string;
-//   systolic: string;
-//   diastolic: string;
-//   heartRate: string;
-//   semenAnalysis: string;
-//   semenAnalysisContent: string;
-//   fertilityIssues: string;
-//   fertilityIssuesContent: string;
-//   fertilityTreatment: string;
-//   fertilityTreatmentContent: string;
-//   surgeries: string;
-//   surgeriesContent: string;
-// }
 export type FertilityAssessmentType = {
   id?: string;
   height?: string;
@@ -206,7 +194,6 @@ export type FertilityAssessmentType = {
   fertilityTreatmentContent: string;
   surgeries: string;
   surgeriesContent: string;
-  
 };
 
 export interface EditFertilityAssessment {
@@ -239,9 +226,9 @@ export interface MedicalHistoryType {
 
   MedicalconditionAllergies: OptionType[];
 
-  familyMedicalHistory: string ;
+  familyMedicalHistory: string;
 
-  lifestyle:  OptionType[];
+  lifestyle: OptionType[];
 
   exercise: string;
   stress: string;
@@ -356,9 +343,9 @@ export interface FertilityAssessmentFormType {
 export interface TreatmentFertilityAssessmentFormType {
   patient: FertilityAssessmentFormType;
   partner: FertilityAssessmentHistory;
-     medicalPrescription?: MedicationPrescriptionType[],
-      report?: PatientReportType[],
-      StatusAndUpdates?: TreatmentProgressStatusType,
+  medicalPrescription?: MedicationPrescriptionType[];
+  report?: PatientReportType[];
+  StatusAndUpdates?: TreatmentProgressStatusType;
 }
 
 export interface PatientJourneyItem {
