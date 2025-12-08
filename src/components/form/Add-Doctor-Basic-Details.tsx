@@ -20,9 +20,11 @@ import cross from "../../assets/images/crossedit.png";
 export default function AddDoctorBasicDetails({
   onNext,
   onSaveDoctor,
+  // onUpdate,
 }: {
   onNext: () => void;
   onSaveDoctor: (doctorData: unknown) => void;
+  // onUpdate: (data: FormData) => void;
 }) {
   // Personal Details
   interface FormError {

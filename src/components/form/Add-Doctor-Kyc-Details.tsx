@@ -21,7 +21,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Modal from "../ui/Modal";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-export default function EditKycDetails({
+export default function AddDoctorKycDetails({
   onNext,
   onPrevious,
 }: {
@@ -112,7 +112,6 @@ export default function EditKycDetails({
   const handleSaveChange = () => {
     const errors = validateForm(formData);
     setFormError(errors);
-
     if (Object.keys(errors).length === 0) {
       console.log("✅ Form is valid, go to next step");
 
@@ -124,6 +123,9 @@ export default function EditKycDetails({
       console.log("❌ Form has errors:", errors);
     }
   };
+
+
+
 
   // Aadhar Card image select //
   const handleAadharFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -79,7 +79,6 @@ export interface PhysicalAssessmentDataModel {
   systolic: string;
   diastolic: string;
   heartRate: string;
- 
 }
 export interface CancelAppointmentForm {
   reasonForCancel: string;
@@ -403,4 +402,73 @@ interface ProgressUpdatesData {
   medicalPrescription: OptionType[]; // If you have a proper type for this, replace any[]
   report: UploadedFile[];
   StatusAndUpdates?: StatusAndUpdates | StatusAndUpdates[]; // Because your static data has an array
+}
+
+export interface ClinicContactPerson {
+  name: string;
+  contactNumber: string;
+  email: string;
+  aadharNumber: string;
+}
+
+export interface GroupOperationalHours {
+  weekdayOpen: string;
+  weekdayClose: string;
+  weekendOpen: string;
+  weekendClose: string;
+}
+
+export interface ClinicDetails {
+  clinicLogo: string;
+  clinicName: string;
+  contactNumber: string;
+  email: string;
+  address: string;
+  mapLink: string;
+  pincode: string;
+  city: string;
+  state: string;
+  useCustomHours: boolean;
+  groupOperationalHours: GroupOperationalHours;
+  contactPerson: ClinicContactPerson;
+}
+
+export interface Qualification {
+  degree: string;
+  fieldOfStudy: string;
+  university: string;
+  startYear: number;
+  endYear: number;
+}
+
+export interface OtherDocument {
+  reportName: string;
+  filePath: string;
+  originalName: string;
+}
+
+export interface KycDetails {
+  aadharNumber: string;
+  aadharFile: string;
+  panNumber: string;
+  panFile: string;
+  licenceNumber: string;
+  licenceFile: string;
+  otherDocuments: OtherDocument[];
+}
+// addDoctor interface
+export interface DoctorDetails {
+  profilePicture: string;
+  name: string;
+  specialty: string;
+  yearsOfExperience: number;
+  dob: string;
+  gender: string;
+  fees: number;
+  servicesOffered: string[];
+  contactNumber: string;
+  email: string;
+  clinicDetails: ClinicDetails;
+  qualifications: Qualification[];
+  kycDetails: KycDetails;
 }

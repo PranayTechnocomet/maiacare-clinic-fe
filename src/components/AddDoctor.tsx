@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from "react";
 import CustomTabs from "./ui/CustomTabs";
 import AddDoctorBasicDetails from "./form/Add-Doctor-Basic-Details";
-import EditKycDetails from "./form/Add-Doctor-Kyc-Details";
 import AddDoctorClinicdetails from "./form/Add-Doctor-Clinic-details";
 import { AppDispatch } from "@/utlis/redux/store";
 import { useDispatch } from "react-redux";
 import { setHeaderData } from "@/utlis/redux/slices/headerSlice";
+import AddDoctorKycDetails from "./form/Add-Doctor-Kyc-Details";
 
 const AddDoctor = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -23,6 +23,7 @@ const AddDoctor = () => {
 
   const handlebasicNextClick = () => {
     setActiveTab("Clinic");
+    // onUpdate={(data) => setBasicDetails(data)}
   };
   const handleNextClick = () => {
     setActiveTab("KYC");
@@ -63,7 +64,6 @@ const AddDoctor = () => {
         setActiveKey={setActiveTab}
         tabOptions={tabOptions}
       />
-
       {activeTab === "basic" && (
         <div>
           <AddDoctorBasicDetails
@@ -82,7 +82,7 @@ const AddDoctor = () => {
       )}
       {activeTab === "KYC" && (
         <div>
-          <EditKycDetails
+          <AddDoctorKycDetails
             onNext={handleNextClick}
             onPrevious={handlePrevious}
           />
@@ -92,3 +92,6 @@ const AddDoctor = () => {
   );
 };
 export default AddDoctor;
+function setBasicDetails(data: any) {
+  throw new Error("Function not implemented.");
+}
