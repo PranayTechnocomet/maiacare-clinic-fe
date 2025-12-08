@@ -77,7 +77,7 @@ export function LoginForms() {
             toast.success(response?.data?.message || "Login successful!");
             console.log("response", response);
             // Save token
-            const token = response?.data?.token;
+            const token = response?.data?.data?.token;
             localStorage.setItem("token", token);
             setTokenInCookie(token);
             dispatch(setToken(token));

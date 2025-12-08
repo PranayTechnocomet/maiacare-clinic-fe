@@ -16,16 +16,21 @@ import LightTrush from "../../assets/images/LightTrush.png";
 import { DatePickerFieldGroup } from "../ui/CustomDatePicker";
 import { InputSelect } from "../ui/InputSelect";
 import { PhoneNumberInput } from "../ui/PhoneNumberInput";
-import { AddPatientFormData } from "../../utlis/types/interfaces";
+import {
+  AddPatientFormData,
+  AddPatientFormObjType,
+} from "../../utlis/types/interfaces";
 import dummyPatientImg from "../../assets/images/dummy-patient-sucess.png";
 import { useRouter } from "next/navigation";
+import { addPatient } from "@/utlis/apis/apiHelper";
+import toast from "react-hot-toast";
 
 type FormError = Partial<Record<keyof AddPatientFormData, string>>;
 
 const initialFormData: AddPatientFormData = {
   name: "",
   patientId: "",
-  gender: "male", // default to male if you want
+  gender: "Male", // default to male if you want
   date: "",
   age: "",
   phone: "",
@@ -38,6 +43,7 @@ const initialFormData: AddPatientFormData = {
   emergencyContactName: "",
   emergencyContactPhone: "",
   emergencyContactRelation: "",
+  profileImage: "",
 };
 
 const initialFormError: FormError = {};
@@ -185,18 +191,66 @@ function AddPatientForm() {
 
     return errors;
   };
-
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    const profile = selectedImage || "";
     const errors = validateForm(formData);
     setFormError(errors);
-    console.log("errors", errors);
+    // console.log("errors", errors);
     if (Object.keys(errors).length === 0) {
-      console.log("patient add sucessfully ... ", formData);
-      setFormError(initialFormError);
-      localStorage.setItem("patientAddedSuccess", "true");
-      router.push("/patients");
+      const data: AddPatientFormObjType = {
+        personalDetails: {
+          profileImage: profile,
+          name: formData.name,
+          email: formData.email,
+          gender: formData.gender,
+          dob: formData.date,
+          contactNumber: formData.phone,
+          address: formData.address,
+          pincode: formData.pincode,
+          city: formData.city,
+          state: formData.state,
+        },
+        emergencyContact: {
+          name: formData.emergencyContactName,
+          contactNumber: formData.emergencyContactPhone,
+          relation: formData.emergencyContactRelation,
+        },
+   
+        type: "clinic",
+      };
+  
+      console.log("patient add data ", data);
+
+      addPatient(data)
+        .then((response) => {
+          console.log("response : ", response);
+          router.push("/patients");
+          if (response.data.status) {
+            setShowSuccessModal(true);
+            setFormError(initialFormError);
+          } else {
+            console.log("Error");
+          }
+        })
+        .catch((err) => {
+          console.log("error", err?.response);
+
+          const apiError = err?.response?.data;
+
+          // extract dynamic error message
+          const fieldError = apiError?.details?.errors
+            ? Object.values(apiError.details.errors)[0] // pick first field error
+            : null;
+
+          const message =
+            fieldError ||
+            apiError?.details?.message ||
+            apiError?.message ||
+            "Something went wrong";
+
+          toast.error(message);
+        });
     }
   };
 
@@ -400,8 +454,8 @@ function AddPatientForm() {
                 onChange={(e) => handleChange(e)}
                 required
                 options={[
-                  { label: "Male", value: "male" },
-                  { label: "Female", value: "female" },
+                  { label: "Male", value: "Male" },
+                  { label: "Female", value: "Female" },
                 ]}
               />
             </Col>
@@ -627,9 +681,9 @@ function AddPatientForm() {
                 error={formError.emergencyContactRelation}
                 placeholder="Select Relation"
                 options={[
-                  { id: "1", value: "1", label: "Father" },
-                  { id: "2", value: "2", label: "Mother" },
-                  { id: "3", value: "3", label: "Brother" },
+                  { id: "1", value: "Father", label: "Father" },
+                  { id: "2", value: "Mother", label: "Mother" },
+                  { id: "3", value: "Brother", label: "Brother" },
                 ]}
               />
             </Col>

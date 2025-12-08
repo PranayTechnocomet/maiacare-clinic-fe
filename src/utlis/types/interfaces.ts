@@ -121,6 +121,7 @@ export interface FertilityAssessmentHistory {
 }
 
 export interface AddPatientFormData {
+  profileImage: string;
   bloodGroup: string;
   // Personal details
 
@@ -471,4 +472,28 @@ export interface DoctorDetails {
   clinicDetails: ClinicDetails;
   qualifications: Qualification[];
   kycDetails: KycDetails;
+}
+export interface personalDetails {
+  profileImage: string;
+  name: string;
+  email: string;
+  gender: string;
+  dob: string;
+  contactNumber: string;
+  address: string;
+  pincode: string;
+  city: string;
+  state: string;
+}
+
+export interface emergencyContact {
+  name: string;
+  contactNumber: string;
+  relation: string;
+}
+
+export interface AddPatientFormObjType {
+  personalDetails: personalDetails;
+  emergencyContact: emergencyContact;
+  type: string;
 }
