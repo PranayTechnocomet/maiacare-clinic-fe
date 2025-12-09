@@ -6,9 +6,9 @@ export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   // const token = getTokenFromCookie()
   // If no token, redirect to login
-  if (!token) {
-    return NextResponse.redirect(new URL("/login", req.url));
-  } 
+  // if (!token) {
+  //   return NextResponse.redirect(new URL("/login", req.url));
+  // } 
 
   // Otherwise, allow request
   return NextResponse.next();

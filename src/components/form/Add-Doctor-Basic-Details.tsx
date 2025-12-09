@@ -17,6 +17,7 @@ import ImageSquare from "../../assets/images/ImageSquare.png";
 import Camera from "../../assets/images/Camera.png";
 import { PhoneNumberInput } from "../ui/PhoneNumberInput";
 import cross from "../../assets/images/crossedit.png";
+import { InputSelect } from "../ui/InputSelect";
 export default function AddDoctorBasicDetails({
   onNext,
   onSaveDoctor,
@@ -44,6 +45,12 @@ export default function AddDoctorBasicDetails({
     Email: string;
     Fees: string;
     // About: string;
+    // qualifications
+    degree: string;
+    field: string;
+    university: string;
+    startYear: string;
+    endYear: string;
   };
 
   const initialFormData: FormData = {
@@ -56,12 +63,34 @@ export default function AddDoctorBasicDetails({
     Email: "",
     Fees: "",
     // About: "",
+    // qualifications
+    degree: "",
+    field: "",
+    university: "",
+    startYear: "",
+    endYear: "",
   };
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
 
   // All Validatation
-
+  const [qualifications, setQualifications] = useState([
+    { degree: "", field: "", university: "", startYear: "", endYear: "" },
+  ]);
+  const [formErrors, setFormErrors] = useState([
+    { degree: "", field: "", university: "", startYear: "", endYear: "" },
+  ]);
+  ``;
+  const handleAddQualification = () => {
+    setQualifications([
+      ...qualifications,
+      { degree: "", field: "", university: "", startYear: "", endYear: "" },
+    ]);
+    setFormErrors([
+      ...formErrors,
+      { degree: "", field: "", university: "", startYear: "", endYear: "" },
+    ]);
+  };
   const validateForm = (data: FormData): FormError => {
     const errors: FormError = {};
 
@@ -71,7 +100,12 @@ export default function AddDoctorBasicDetails({
     if (!data.date.trim()) errors.date = "Date is required";
     if (!data.gender.trim()) errors.gender = "Gender is required";
     if (!data.Fees?.trim()) errors.Fees = "Fees is required";
-
+    if (!data.Experience?.trim()) errors.Experience = "Experience is required";
+    if (!data.university?.trim()) errors.university = "university is required";
+    if (!data.field?.trim()) errors.field = "Field is required";
+    if (!data.university?.trim()) errors.university = "university is required";
+    if (!data.startYear?.trim()) errors.startYear = "Start Year is required";
+    if (!data.endYear?.trim()) errors.endYear = "End Year is required";
     const contactRegex = /^[0-9]{10}$/;
     if (!data.Contact.trim()) {
       errors.Contact = "Contact number is required";
@@ -659,7 +693,162 @@ export default function AddDoctorBasicDetails({
       </ContentContainer>
 
       {/* qualifications */}
-      <ContentContainer className="mt-3">hy</ContentContainer>
+      <ContentContainer className="mt-3">
+        <h5 className="profile-card-main-titile mb-4">Qualification Details</h5>
+
+        {qualifications.map((q, index) => (
+          <div key={index} className="position-relative mb-4">
+            {/* Remove Button */}
+            {index > 0 && (
+              <div className="d-flex justify-content-end mb-1">
+                <Button
+                  variant="danger"
+                  size="sm"
+                  className="d-flex align-items-center justify-content-center edit-basic-qualification-button"
+                  onClick={() => {
+                    const updatedQuals = qualifications.filter(
+                      (_, i) => i !== index
+                    );
+                    const updatedErrors = formErrors.filter(
+                      (_, i) => i !== index
+                    ); // keep errors in sync
+                    setQualifications(updatedQuals);
+                    setFormErrors(updatedErrors);
+                  }}
+                >
+                  -
+                </Button>
+              </div>
+            )}
+
+            {/* Qualification Box */}
+            <div
+              className=" p-3"
+              style={{
+                borderRadius: "12px",
+                border: "1px dashed #DDE1E8",
+              }}
+            >
+              <Row className="g-3">
+                <Col md={6} className="">
+                  <InputFieldGroup
+                    label="Degree"
+                    name="degree"
+                    type="text"
+                    value={q.degree}
+                    onChange={(e) => {
+                      const updatedQuals = [...qualifications];
+                      updatedQuals[index].degree = e.target.value;
+                      setQualifications(updatedQuals);
+
+                      // clear error only for this field/index
+                      const updatedErrors = [...formErrors];
+                      updatedErrors[index].degree = "";
+                      setFormErrors(updatedErrors);
+                    }}
+                    placeholder="Degree"
+                    required
+                    error={formErrors[index]?.degree}
+                  />
+                </Col>
+
+                <Col md={6} className="">
+                  <InputFieldGroup
+                    label="Field of study"
+                    name="field"
+                    type="text"
+                    value={q.field}
+                    onChange={(e) => {
+                      const updatedQuals = [...qualifications];
+                      updatedQuals[index].field = e.target.value;
+                      setQualifications(updatedQuals);
+
+                      const updatedErrors = [...formErrors];
+                      updatedErrors[index].field = "";
+                      setFormErrors(updatedErrors);
+                    }}
+                    placeholder="Field"
+                    required
+                    error={formErrors[index]?.field}
+                  />
+                </Col>
+
+                <Col className="" md={12}>
+                  <InputFieldGroup
+                    label="University"
+                    name="university"
+                    type="text"
+                    value={q.university}
+                    onChange={(e) => {
+                      const updatedQuals = [...qualifications];
+                      updatedQuals[index].university = e.target.value;
+                      setQualifications(updatedQuals);
+
+                      const updatedErrors = [...formErrors];
+                      updatedErrors[index].university = "";
+                      setFormErrors(updatedErrors);
+                    }}
+                    placeholder="University"
+                    required
+                    error={formErrors[index]?.university}
+                  />
+                </Col>
+
+                <Col md={6} className="">
+                  <InputSelect
+                    label="Start Year"
+                    name="startYear"
+                    value={q.startYear}
+                    onChange={(e) => {
+                      const updatedQuals = [...qualifications];
+                      updatedQuals[index].startYear = e.target.value;
+                      setQualifications(updatedQuals);
+
+                      const updatedErrors = [...formErrors];
+                      updatedErrors[index].startYear = "";
+                      setFormErrors(updatedErrors);
+                    }}
+                    options={yearOptions}
+                    error={formErrors[index]?.startYear}
+                    required
+                  />
+                </Col>
+
+                <Col md={6} className="">
+                  <InputSelect
+                    label="End Year"
+                    name="endYear"
+                    value={q.endYear}
+                    onChange={(e) => {
+                      const updatedQuals = [...qualifications];
+                      updatedQuals[index].endYear = e.target.value;
+                      setQualifications(updatedQuals);
+
+                      const updatedErrors = [...formErrors];
+                      updatedErrors[index].endYear = "";
+                      setFormErrors(updatedErrors);
+                    }}
+                    options={yearOptions.filter((year) => {
+                      if (!q.startYear) return true;
+                      return Number(year.value) >= Number(q.startYear) + 1;
+                    })}
+                    error={formErrors[index]?.endYear}
+                    required
+                  />
+                </Col>
+              </Row>
+            </div>
+          </div>
+        ))}
+
+        <Button
+          variant="default"
+          className="maiacare-button common-btn-blue "
+          onClick={handleAddQualification}
+        >
+          + Add Qualification
+        </Button>
+      </ContentContainer>
 
       <div className="d-flex justify-content-end mt-4">
         <Button
