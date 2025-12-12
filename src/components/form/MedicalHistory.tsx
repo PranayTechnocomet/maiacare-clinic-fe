@@ -14,22 +14,33 @@ import {
   MedicalHistoryType,
   OptionType,
 } from "../../utlis/types/interfaces";
+import {
+  addMedicalHistory,
+  updateMedicalHistory,
+} from "@/utlis/apis/apiHelper";
 
 interface MedicalHistoryProps {
-  setMedicalHistoryFormData: React.Dispatch<
-    React.SetStateAction<MedicalHistoryType>
-  >;
+  // setMedicalHistoryFormData: React.Dispatch<
+  //   React.SetStateAction<MedicalHistoryType>
+  // >;
+  // setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  // initialData?: MedicalHistoryShow | null;
+  // onClose?: () => void;
+  // patientId?: string;
+  // fetchPatientData?: () => void;
+
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   initialData?: MedicalHistoryShow | null;
-  onClose?: () => void;
-  patientId?: string;
+  patientId?: string | number | undefined;
   fetchPatientData?: () => void;
+  onClose?: () => void;
 }
 
 export default function MedicalHistory({
-  setMedicalHistoryFormData,
   setShowModal,
   initialData,
+  patientId,
+  fetchPatientData,
   onClose,
 }: MedicalHistoryProps) {
   type FormError = Partial<Record<keyof MedicalHistoryType, string>>;
@@ -83,30 +94,209 @@ export default function MedicalHistory({
     setFormError((prev) => ({ ...prev, [name]: "" }));
   };
 
+  // const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   // Validate the formData and return any errors found
+  //   const errors = validateForm(formData);
+  //   setFormError(errors);
+  //   if (Object.keys(errors).length === 0) {
+  //     setShowModal(false);
+  //     setFormError(initialFormError);
+  //     if (initialData) {
+  //       setMedicalHistoryFormData(formData);
+  //       toast.success("Changes saved successfully", {
+  //         icon: <BsInfoCircle size={22} color="white" />,
+  //       });
+  //     } else {
+  //       // If creating new, add to the arrayd
+  //       setMedicalHistoryFormData(formData);
+  //       toast.success("Medical history added successfully", {
+  //         icon: <BsInfoCircle size={22} color="white" />,
+  //       });
+  //     }
+  //     if (onClose) onClose();
+  //   }
+  // };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Validate the formData and return any errors found
     const errors = validateForm(formData);
     setFormError(errors);
+    // console.log("errors", errors);
+
     if (Object.keys(errors).length === 0) {
-      setShowModal(false);
-      setFormError(initialFormError);
-      if (initialData) {
-        setMedicalHistoryFormData(formData);
-        toast.success("Changes saved successfully", {
-          icon: <BsInfoCircle size={22} color="white" />,
-        });
+      const normalizeEnum = (value: string | undefined, allowed: string[]) => {
+        if (!value) return "";
+        const match = allowed.find(
+          (a) => a.toLowerCase() === value.toLowerCase()
+        );
+        return match || value;
+      };
+
+      const updatedFormData = {
+        patientId,
+
+        medications: {
+          status: formData.medication?.toLowerCase() === "yes" ? "Yes" : "No",
+          medicationsDetails:
+            formData.medication?.toLowerCase() === "yes"
+              ? formData.medicationcontent || ""
+              : "", // remove if No
+        },
+
+        surgeries: {
+          status: formData.surgeries?.toLowerCase() === "yes" ? "Yes" : "No",
+          surgeriesDetails:
+            formData.surgeries?.toLowerCase() === "yes"
+              ? formData.surgeriesContent || ""
+              : "", // remove if No
+        },
+
+        conditions: Array.isArray(formData.MedicalconditionAllergies)
+          ? formData.MedicalconditionAllergies.map((item) => item.value)
+          : [],
+
+        familyHistory: formData.familyMedicalHistory || "",
+
+        lifestyle: Array.isArray(formData.lifestyle)
+          ? formData.lifestyle.map((item) => item.value)
+          : [],
+
+        exerciseFrequency: normalizeEnum(formData.exercise, [
+          "Never",
+          "Rarely",
+          "Regularly",
+        ]),
+
+        stressLevel: normalizeEnum(formData.stress, [
+          "Low",
+          "Moderate",
+          "High",
+        ]),
+      };
+
+      const updatedFormDataForEdit = {
+        medicalHistoryId: initialData?._id,
+
+        medications: {
+          status: formData.medication?.toLowerCase() === "yes" ? "Yes" : "No",
+          medicationsDetails:
+            formData.medication?.toLowerCase() === "yes"
+              ? formData.medicationcontent || ""
+              : "", // remove if No
+        },
+        surgeries: {
+          status: formData.surgeries?.toLowerCase() === "yes" ? "Yes" : "No",
+          surgeriesDetails:
+            formData.surgeries?.toLowerCase() === "yes"
+              ? formData.surgeriesContent || ""
+              : "", // remove if No
+        },
+
+        conditions: Array.isArray(formData.MedicalconditionAllergies)
+          ? formData.MedicalconditionAllergies.map((item) => item.value)
+          : [],
+
+        familyHistory: formData.familyMedicalHistory || "",
+
+        lifestyle: Array.isArray(formData.lifestyle)
+          ? formData.lifestyle.map((item) => item.value)
+          : [],
+
+        exerciseFrequency: normalizeEnum(formData.exercise, [
+          "Never",
+          "Rarely",
+          "Regularly",
+        ]),
+
+        stressLevel: normalizeEnum(formData.stress, [
+          "Low",
+          "Moderate",
+          "High",
+        ]),
+      };
+
+      if (initialData && initialData._id) {
+        // If editing, update the existing entry
+
+        // console.log("edit api call : ", updatedFormDataForEdit);
+
+        updateMedicalHistory(updatedFormDataForEdit)
+          .then((response) => {
+            if (response.data.status) {
+              // console.log("PUT medical history response:", response);
+              setShowModal(false);
+              setFormError(initialFormError);
+              toast.success(response.data.message, {
+                icon: <BsInfoCircle size={22} color="white" />,
+              });
+
+              fetchPatientData?.();
+            } else {
+              console.log("error");
+            }
+          })
+          .catch((err) => {
+            console.log("error", err?.response);
+
+            const apiError = err?.response?.data;
+
+            // extract dynamic error message
+            const fieldError = apiError?.details?.errors
+              ? Object.values(apiError.details.errors)[0] // pick first field error
+              : null;
+
+            const message =
+              fieldError ||
+              apiError?.details?.message ||
+              apiError?.message ||
+              "Something went wrong";
+
+            toast.error(message);
+          });
       } else {
         // If creating new, add to the arrayd
-        setMedicalHistoryFormData(formData);
-        toast.success("Medical history added successfully", {
-          icon: <BsInfoCircle size={22} color="white" />,
-        });
+
+        // console.log("updatedFormData : ", updatedFormData);
+
+        addMedicalHistory(updatedFormData)
+          .then((response) => {
+            if (response.data.status) {
+              // console.log("POST medical history response:", response);
+
+              setShowModal(false);
+              setFormError(initialFormError);
+              toast.success(response.data.message, {
+                icon: <BsInfoCircle size={22} color="white" />,
+              });
+
+              fetchPatientData?.(); // FETCH UPDATED PATIENT DATA
+            } else {
+              console.log("error");
+            }
+          })
+          .catch((err) => {
+            console.log("error", err?.response);
+
+            const apiError = err?.response?.data;
+
+            // extract dynamic error message
+            const fieldError = apiError?.details?.errors
+              ? Object.values(apiError.details.errors)[0] // pick first field error
+              : null;
+
+            const message =
+              fieldError ||
+              apiError?.details?.message ||
+              apiError?.message ||
+              "Something went wrong";
+
+            toast.error(message);
+          });
       }
-      if (onClose) onClose();
+      // if (onClose) onClose();
     }
   };
-
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -120,8 +310,8 @@ export default function MedicalHistory({
               required={true}
               error={formError.medication}
               options={[
-                { label: "Yes", value: "yes" },
-                { label: "No", value: "no" },
+                { label: "Yes", value: "Yes" },
+                { label: "No", value: "No" },
               ]}
             />
 
@@ -146,8 +336,8 @@ export default function MedicalHistory({
               required={true}
               error={formError.surgeries}
               options={[
-                { label: "Yes", value: "yes" },
-                { label: "No", value: "no" },
+                { label: "Yes", value: "Yes" },
+                { label: "No", value: "No" },
               ]}
             />
             {formData.surgeries === "yes" && (
@@ -249,9 +439,9 @@ export default function MedicalHistory({
               required={true}
               error={formError.exercise}
               options={[
-                { label: "Never", value: "never" },
-                { label: "Rarely", value: "rarely" },
-                { label: "Regularly", value: "regularly" },
+                { label: "Never", value: "Never" },
+                { label: "Rarely", value: "Rarely" },
+                { label: "Regularly", value: "Regularly" },
               ]}
             />
           </Col>
@@ -264,9 +454,9 @@ export default function MedicalHistory({
               required={true}
               error={formError.stress}
               options={[
-                { label: "Low", value: "low" },
-                { label: "Moderate", value: "moderate" },
-                { label: "High", value: "high" },
+                { label: "Low", value: "Low" },
+                { label: "Moderate", value: "Moderate" },
+                { label: "High", value: "High" },
               ]}
             />
           </Col>

@@ -7,7 +7,7 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import ContentContainer from "../ContentContainer";
 import CustomTabs from "../CustomTabs";
 import { PersonalDetails } from "@/utlis/types/interfaces";
-import profile from "@/assets/images/Profile-doctor.png";
+import profile from "@/assets/images/patient_profile.png";
 import { useRouter } from "next/navigation";
 type ProfileProps = {
   profileData?: PersonalDetails | null;
@@ -167,8 +167,12 @@ export const ProfileCard: React.FC<ProfileProps> = ({
             </Dropdown.Toggle>
             <Dropdown.Menu className="dropdown-menu-end">
               <Dropdown.Item
-              onClick={()=>router.push(`/editPatient`)}
-              >Edit</Dropdown.Item>
+                onClick={() =>
+                  router.push(`/patients/editPatient/${patientIdShow || ""}`)
+                }
+              >
+                Edit
+              </Dropdown.Item>
               <Dropdown.Item>View</Dropdown.Item>
               <Dropdown.Item className="text-danger">Delete</Dropdown.Item>
             </Dropdown.Menu>

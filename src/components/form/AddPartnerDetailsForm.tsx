@@ -62,6 +62,7 @@ type MedicalHistoryFormProps = {
 type FormError = Partial<Record<keyof FertilityAssessmentType, string>>;
 
 type FertilityAssessmentProps = {
+  
   setShowContent?: (value: boolean) => void;
   setShowPartnerDetail?: (value: boolean) => void;
   setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>;
@@ -905,15 +906,10 @@ export function PhysicalAssessment({
 }
 
 export function FertilityAssessment({
-  setShowContent,
-  setShowPartnerDetail,
-  setShowData,
-  showData,
-  initialData,
-  formData,
-  setFormData,
-  setFormError,
-  formError,
+    formData,
+    setFormData,
+    setFormError,
+    formError
 }: FertilityAssessmentProps) {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>

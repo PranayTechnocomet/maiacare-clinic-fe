@@ -518,8 +518,8 @@ export default function PartnerDetail({
                         </svg>
 
                         <span className="doctor-profile-subheading">
-                          {" "}
-                          {showData.profile.basic_detail_age} Years{" "}
+                         
+                          {showData.profile.basic_detail_age} Years
                         </span>
                       </div>
                     </div>

@@ -21,8 +21,12 @@ import {
   AddPatientFormObjType,
 } from "../../utlis/types/interfaces";
 import dummyPatientImg from "../../assets/images/dummy-patient-sucess.png";
-import { useRouter } from "next/navigation";
-import { addPatient } from "@/utlis/apis/apiHelper";
+import { useParams, useRouter } from "next/navigation";
+import {
+  addPatient,
+  getPatientInfo,
+  updatePatient,
+} from "@/utlis/apis/apiHelper";
 import toast from "react-hot-toast";
 import { formatDateTime } from "@/utlis/Helper";
 
@@ -54,6 +58,12 @@ function EditPatientForm() {
   const [formData, setFormData] = useState<AddPatientFormData>(initialFormData);
   const [formError, setFormError] = useState<FormError>(initialFormError);
   const router = useRouter();
+  const params = useParams();
+  const rawId = params?.id;
+  const patientId = Array.isArray(rawId) ? rawId[0] : rawId; // ✅ always a string
+
+  // const patientId = params?.id; // URL → /patients/edit/[id]
+
   // Handle form field change
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -163,11 +173,44 @@ function EditPatientForm() {
       setPreviewImage(selectedImage);
     }
   }, [showModal]);
+  useEffect(() => {
+    if (!patientId) return;
 
+    getPatientInfo(patientId)
+      .then((res) => {
+        const data = res.data.data;
+        setFormData({
+          name: data?.personalDetails?.name || "",
+          patientId: data?.patientId || "",
+          gender: data?.personalDetails?.gender || "Male",
+          date: data?.personalDetails?.dob || "",
+          age: data?.personalDetails?.age || "",
+          phone: data?.personalDetails?.contactNumber || "",
+          email: data?.personalDetails?.email || "",
+          address: data?.personalDetails?.address || "",
+          pincode: data?.personalDetails?.pincode || "",
+          city: data?.personalDetails?.city || "",
+          state: data?.personalDetails?.state || "",
+          bloodGroup: data?.personalDetails?.bloodGroup || "",
+          emergencyContactName: data?.emergencyContact?.name || "",
+          emergencyContactPhone: data?.emergencyContact?.contactNumber || "",
+          emergencyContactRelation: data?.emergencyContact?.relation || "",
+          profileImage: data?.personalDetails?.profileImage || "",
+        });
+
+        // ⭐ Set Profile image preview
+        if (data?.personalDetails?.profileImage) {
+          setSelectedImage(data.personalDetails.profileImage);
+        }
+      })
+      .catch((err) => {
+        console.log("Error fetching patient data", err);
+      });
+  }, [patientId]);
   const validateForm = (data: AddPatientFormData): FormError => {
     const errors: FormError = {};
     if (!data.name.trim()) errors.name = "Name is required";
-    if (!data.patientId.trim()) errors.patientId = "Patient ID is required";
+    // if (!data.patientId.trim()) errors.patientId = "Patient ID is required";
     if (!data.date) errors.date = "Date of birth is required";
 
     if (!data.phone.trim()) {
@@ -194,67 +237,71 @@ function EditPatientForm() {
   };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!patientId) {
+      toast.error("Patient ID is missing");
+      return;
+    }
     const profile = selectedImage || "";
     const errors = validateForm(formData);
+
     setFormError(errors);
-    // console.log("errors", errors);
-    if (Object.keys(errors).length === 0) {
-      const data: AddPatientFormObjType = {
-        personalDetails: {
-          profileImage: profile,
-          name: formData.name,
-          email: formData.email,
-          gender: formData.gender,
-          dob: formatDateTime(formData.date),
-          contactNumber: formData.phone,
-          address: formData.address,
-          pincode: formData.pincode,
-          city: formData.city,
-          state: formData.state,
-        },
-        emergencyContact: {
-          name: formData.emergencyContactName,
-          contactNumber: formData.emergencyContactPhone,
-          relation: formData.emergencyContactRelation,
-        },
-   
-        type: "clinic",
-      };
-  
-      console.log("patient add data ", data);
 
-      addPatient(data)
-        .then((response) => {
-          console.log("response : ", response);
+    if (Object.keys(errors).length !== 0) return;
 
+    const data: AddPatientFormObjType = {
+      personalDetails: {
+        profileImage: profile,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        gender: formData.gender,
+        dob: formatDateTime(formData.date),
+        contactNumber: formData.phone.trim(),
+        address: formData.address,
+        pincode: formData.pincode,
+        city: formData.city,
+        state: formData.state,
+      },
+      emergencyContact: {
+        name: formData.emergencyContactName.trim(),
+        contactNumber: formData.emergencyContactPhone.trim(),
+        relation: formData.emergencyContactRelation,
+      },
+      type: "clinic",
+    };
+
+    updatePatient(patientId, data)
+      .then((response) => {
+        console.log("Update Success Response:", response);
+
+        if (response?.data?.status) {
+          setShowSuccessModal(true);
+          setFormError(initialFormError);
+
+          localStorage.setItem("patientUpdatedSuccess", "true");
           router.push("/patients");
-          localStorage.setItem("patientAddedSuccess", "true");
-          if (response.data.status) {
-            setShowSuccessModal(true);
-            setFormError(initialFormError);
-          } else {
-            console.log("Error");
-          }
-        })
-        .catch((err) => {
-          console.log("error", err?.response);
+        } else {
+          toast.error("Update failed. Please try again.");
+        }
+      })
+      .catch((err) => {
+        console.log("Full Update Error:", err);
 
-          const apiError = err?.response?.data;
+        const apiError = err?.response?.data;
 
-          // extract dynamic error message
-          const fieldError = apiError?.details?.errors
-            ? Object.values(apiError.details.errors)[0] // pick first field error
-            : null;
+        const fieldError = apiError?.details?.errors
+          ? Object.values(apiError.details.errors)[0]
+          : null;
 
-          const message =
-            fieldError ||
-            apiError?.details?.message ||
-            apiError?.message ||
-            "Something went wrong";
+        const message =
+          fieldError ||
+          apiError?.details?.message ||
+          apiError?.message ||
+          err?.message ||
+          "Something went wrong while updating patient";
 
-          toast.error(message);
-        });
-    }
+        console.error("Update Error:", apiError);
+        toast.error(message);
+      });
   };
 
   return (
@@ -268,12 +315,18 @@ function EditPatientForm() {
                 <div className="profile-wrapper">
                   {/* Profile image */}
                   <Image
+                    src={selectedImage ? `/${selectedImage}` : Simpleeditpro}
+                    alt="Profile"
+                    width={160}
+                    height={160}
+                  />
+                  {/* <Image
                     src={selectedImage ? selectedImage : Simpleeditpro}
                     alt="Profile"
                     className="profile-image"
                     width={160}
                     height={160}
-                  />
+                  /> */}
                   {/* Camera Icon */}
                   <div
                     className="camera-icon"

@@ -13,24 +13,33 @@ import {
   FertilityAssessmentFormType,
   TreatmentFertilityAssessmentFormType,
 } from "../../utlis/types/interfaces";
+import {
+  addFertilityAssessment,
+  updateFertilityAssessment,
+} from "@/utlis/apis/apiHelper";
 
 interface FertilityAssessmentFormProps {
+  // setShowFertilityAssessment?: React.Dispatch<React.SetStateAction<boolean>>;
+  // editFertilityAssessment?: FertilityAssessmentFormType;
+  // patientId?: string | undefined;
+  // fetchPatientData?: () => void;
+  // setModalFormFertilityData?: Dispatch<SetStateAction<unknown>>;
+
   setShowFertilityAssessment?: React.Dispatch<React.SetStateAction<boolean>>;
   editFertilityAssessment?: FertilityAssessmentFormType;
   patientId?: string | undefined;
   fetchPatientData?: () => void;
-  setModalFormFertilityData?: Dispatch<SetStateAction<unknown>>;
 }
 
 export const FertilityAssessmentForm = ({
   setShowFertilityAssessment,
   editFertilityAssessment,
-  fetchPatientData,
   patientId,
-  setModalFormFertilityData,
+  fetchPatientData,
 }: FertilityAssessmentFormProps) => {
   type FormError = Partial<Record<keyof FertilityAssessmentFormType, string>>;
   const initialFormError: FormError = {};
+  console.log("patientId", patientId);
 
   const initialFormData: FertilityAssessmentFormType = {
     ageAtFirstMenstruation:
@@ -38,7 +47,7 @@ export const FertilityAssessmentForm = ({
     cycleLength: editFertilityAssessment?.cycleLength || "",
     periodLength: editFertilityAssessment?.periodLength || "",
     lastPeriodDate: editFertilityAssessment?.lastPeriodDate || "",
-    date: editFertilityAssessment?.date || "",
+    // date: editFertilityAssessment?.lastPeriodDate || "",
 
     isCycleRegular: editFertilityAssessment?.isCycleRegular || "Regular",
 
@@ -47,8 +56,7 @@ export const FertilityAssessmentForm = ({
       editFertilityAssessment?.menstrualIssuesDetails || "",
 
     pregnantBefore: editFertilityAssessment?.pregnantBefore || "Yes",
-    pregnantBeforeDetails:
-      editFertilityAssessment?.pregnantBeforeDetails || "",
+    pregnantBeforeDetails: editFertilityAssessment?.pregnantBeforeDetails || "",
 
     tryingToConceiveDuration:
       editFertilityAssessment?.tryingToConceiveDuration || "",
@@ -57,9 +65,9 @@ export const FertilityAssessmentForm = ({
       editFertilityAssessment?.miscarriageOrEctopicHistory || "No",
     miscarriageOrEctopicDetails:
       editFertilityAssessment?.miscarriageOrEctopicDetails || null,
-    pregnancy: editFertilityAssessment?.pregnancy || "",
+    pregnancy: editFertilityAssessment?.pregnancy || "No",
     timeduration: editFertilityAssessment?.timeduration || "",
-    ectopicpregnancy: editFertilityAssessment?.ectopicpregnancy || "",
+    ectopicpregnancy: editFertilityAssessment?.ectopicpregnancy || "No",
   };
 
   const [formData, setFormData] =
@@ -74,7 +82,9 @@ export const FertilityAssessmentForm = ({
       errors.cycleLength = "Cycle length is required";
     if (!data.periodLength.trim())
       errors.periodLength = "Period length is required";
-    if (!data.date) errors.date = "Date is required";
+    if (!data.lastPeriodDate)
+      errors.lastPeriodDate = "Last period date is required";
+
     if (!data.isCycleRegular)
       errors.isCycleRegular = "Is cycle regular is required";
     if (!data.menstrualIssues)
@@ -86,7 +96,14 @@ export const FertilityAssessmentForm = ({
 
     return errors;
   };
-
+ const formatDisplayDate = (dateString: string) => {
+  if (!dateString) return "-";
+  const d = new Date(dateString);
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  return `${day}-${month}-${year}`;
+};
   const handleChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -103,31 +120,116 @@ export const FertilityAssessmentForm = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const errors = validateForm(formData);
     setFormError(errors);
     console.log("errors", errors);
     if (Object.keys(errors).length === 0) {
       //   setShowModal(true);
-      setModalFormFertilityData?.(formData);
-      setShowFertilityAssessment?.(false);
-      setFormError(initialFormError);
 
-      if (
-        editFertilityAssessment &&
-        editFertilityAssessment.ageAtFirstMenstruation
-      ) {
-        toast.success("Changes saved successfully", {
-          icon: <BsInfoCircle size={22} color="white" />,
-        });
+      // const updatedFormData = {
+      //     ...formData,
+      //     patientId,
+
+      // };
+
+      const updatedFormData = {
+        ...formData,
+        patientId,
+
+        ageAtFirstMenstruation: Number(formData.ageAtFirstMenstruation),
+        cycleLength: Number(formData.cycleLength),
+        periodLength: Number(formData.periodLength),
+      };
+
+      const updatedFormDataForEdit = {
+        ...formData,
+        fertilityAssessmentId: editFertilityAssessment?._id,
+        ageAtFirstMenstruation: Number(formData.ageAtFirstMenstruation),
+        cycleLength: Number(formData.cycleLength),
+        periodLength: Number(formData.periodLength),
+      };
+
+      console.log(
+        "updatedFormData",
+        updatedFormDataForEdit.fertilityAssessmentId
+      );
+
+      if (editFertilityAssessment && editFertilityAssessment?._id) {
+        updateFertilityAssessment(updatedFormDataForEdit)
+          .then((response) => {
+            if (response.data.status) {
+              console.log("Fertility Assessment Response:", response);
+
+              setShowFertilityAssessment?.(false);
+              setFormError(initialFormError);
+              toast.success(response.data.message, {
+                icon: <BsInfoCircle size={22} color="white" />,
+              });
+
+              fetchPatientData?.(); //  FETCH UPDATED PATIENT DATA
+            } else {
+              console.log("error");
+            }
+          })
+          .catch((err) => {
+            console.log("error", err?.response);
+
+            const apiError = err?.response?.data;
+
+            // extract dynamic error message
+            const fieldError = apiError?.details?.errors
+              ? Object.values(apiError.details.errors)[0] // pick first field error
+              : null;
+
+            const message =
+              fieldError ||
+              apiError?.details?.message ||
+              apiError?.message ||
+              "Something went wrong";
+
+            toast.error(message);
+          });
       } else {
-        toast.success("Fertility assessment added successfully", {
-          icon: <BsInfoCircle size={22} color="white" />,
-        });
+        // console.log("formData : ", updatedFormData);
+
+        addFertilityAssessment(updatedFormData)
+          .then((response) => {
+            if (response.data.status) {
+              console.log("Fertility Assessment Response:", response);
+
+              setShowFertilityAssessment?.(false);
+              setFormError(initialFormError);
+
+              toast.success(response.data.message, {
+                icon: <BsInfoCircle size={22} color="white" />,
+              });
+
+              fetchPatientData?.(); // FETCH UPDATED PATIENT DATA
+            } else {
+              console.log("error");
+            }
+          })
+          .catch((err) => {
+            console.log("error", err?.response);
+
+            const apiError = err?.response?.data;
+
+            // extract dynamic error message
+            const fieldError = apiError?.details?.errors
+              ? Object.values(apiError.details.errors)[0] // pick first field error
+              : null;
+
+            const message =
+              fieldError ||
+              apiError?.details?.message ||
+              apiError?.message ||
+              "Something went wrong";
+
+            toast.error(message);
+          });
       }
     }
   };
-
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -206,13 +308,13 @@ export const FertilityAssessmentForm = ({
                 <Col md={6}>
                   <DatePickerFieldGroup
                     label="Last Period Date"
-                    name="date"
-                    value={formData.date}
+                    name="lastPeriodDate"
+                    value={formatDisplayDate(formData.lastPeriodDate)}
                     placeholder="Enter last period date"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       handleChange(e);
                     }}
-                    error={formError.date}
+                    error={formError.lastPeriodDate}
                     onBlur={() => {}}
                     required
                     disabled={false}
@@ -242,14 +344,25 @@ export const FertilityAssessmentForm = ({
                     label="Do you experience menstrual issues?"
                     name="menstrualIssues"
                     className="mt-2"
-                    value={formData.menstrualIssues || "yes"}
+                    value={formData.menstrualIssues || "Yes"}
                     onChange={handleChange}
                     required
                     options={[
-                      { label: "Yes", value: "yes" },
-                      { label: "No", value: "no" },
+                      { label: "Yes", value: "Yes" },
+                      { label: "No", value: "No" },
                     ]}
                   />
+                  {formData.menstrualIssues === "Yes" && (
+                    <InputFieldGroup
+                      type="text"
+                      value={formData.menstrualIssuesDetails || ""}
+                      name="menstrualIssuesDetails"
+                      onChange={handleChange}
+                      error={formError.menstrualIssuesDetails}
+                      placeholder="menstrual issues details"
+                      className="mt-md-3 mt-2"
+                    ></InputFieldGroup>
+                  )}
                 </Col>
               </Row>
             </Accordion.Body>
@@ -271,12 +384,13 @@ export const FertilityAssessmentForm = ({
                     label="Have you been pregnant before?"
                     name="pregnancy"
                     className="mt-2"
-                    value={formData.pregnancy || "yes"}
+                    // value={formData.pregnancy || "yes"}
+                    value={formData.pregnancy || "No"}
                     onChange={handleChange}
                     required
                     options={[
-                      { label: "Yes", value: "yes" },
-                      { label: "No", value: "no" },
+                      { label: "Yes", value: "Yes" },
+                      { label: "No", value: "No" },
                     ]}
                   />
                 </Col>
@@ -305,8 +419,8 @@ export const FertilityAssessmentForm = ({
                     onChange={handleChange}
                     required
                     options={[
-                      { label: "Yes", value: "yes" },
-                      { label: "No", value: "no" },
+                      { label: "Yes", value: "Yes" },
+                      { label: "No", value: "No" },
                     ]}
                   />
                 </Col>

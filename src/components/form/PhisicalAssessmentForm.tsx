@@ -9,34 +9,37 @@ import Button from "@/components/ui/Button";
 import { InputFieldGroup } from "@/components/ui/InputField";
 import { Col, Row } from "react-bootstrap";
 import { InputSelect } from "@/components/ui/InputSelect";
-import { PhysicalAssessment, PhysicalAssessmentDataModel } from "../../utlis/types/interfaces";
+import {
+  PhysicalAssessment,
+  PhysicalAssessmentDataModel,
+} from "../../utlis/types/interfaces";
 import toast from "react-hot-toast";
 import { BsInfoCircle } from "react-icons/bs";
+import {
+  addPhysicalAssessment,
+  updatePhysicalAssessment,
+} from "@/utlis/apis/apiHelper";
 
 interface PropsPhisicalAssessmentForm {
   setShowPhisicalAssessment: React.Dispatch<React.SetStateAction<boolean>>;
-  setModalFormPhisicalData: React.Dispatch<
-    React.SetStateAction<PhysicalAssessmentDataModel[]>
-  >;
   editPhysicalAssessment?: PhysicalAssessmentDataModel;
   setEditPhysicalAssessment?: React.Dispatch<
     React.SetStateAction<PhysicalAssessmentDataModel>
   >;
   modalFormPhisicalData?: PhysicalAssessment[] | null;
   patientId?: string;
-   fetchPatientData?: () => void;
+  fetchPatientData?: () => void;
 }
 
 // React.Dispatch<React.SetStateAction<PhysicalAssessmentDataModel>>  PhysicalAssessmentDataModel
 
 const PhisicalAssessmentForm = ({
   setShowPhisicalAssessment,
-  setModalFormPhisicalData,
   editPhysicalAssessment,
   setEditPhysicalAssessment,
   modalFormPhisicalData,
+  patientId,
   fetchPatientData,
-  patientId
 }: PropsPhisicalAssessmentForm) => {
   type FormError = Partial<Record<keyof PhysicalAssessmentDataModel, string>>;
   const initialFormError: FormError = {};
@@ -47,9 +50,9 @@ const PhisicalAssessmentForm = ({
     bmi: editPhysicalAssessment?.bmi || "",
     bloodGroup: editPhysicalAssessment?.bloodGroup || "",
     bloodPressureSystolic: editPhysicalAssessment?.bloodPressureSystolic || "",
-    bloodPressureDiastolic: editPhysicalAssessment?.bloodPressureDiastolic || "",
+    bloodPressureDiastolic:
+      editPhysicalAssessment?.bloodPressureDiastolic || "",
     heartRate: editPhysicalAssessment?.heartRate || "",
-  
   };
   const initialFormDataForClear: PhysicalAssessmentDataModel = {
     patientId: "",
@@ -60,7 +63,6 @@ const PhisicalAssessmentForm = ({
     bloodPressureSystolic: "",
     bloodPressureDiastolic: "",
     heartRate: "",
-  
   };
   const [formData, setFormData] =
     useState<PhysicalAssessmentDataModel>(initialFormData);
@@ -82,7 +84,10 @@ const PhisicalAssessmentForm = ({
         errors.bloodGroup = "Blood group is required";
     }
 
-    if (!data.bloodPressureSystolic.trim() && !data.bloodPressureDiastolic.trim()) {
+    if (
+      !data.bloodPressureSystolic.trim() &&
+      !data.bloodPressureDiastolic.trim()
+    ) {
       errors.bloodPressureSystolic = " systolic is required";
 
       // errors.diastolic = "At least one of systolic or diastolic is required";
@@ -101,12 +106,14 @@ const PhisicalAssessmentForm = ({
     setFormError((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // Submit Handler
+
+  console.log("editPhysicalAssessment", editPhysicalAssessment);
+  
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errors = validateForm(formData);
     setFormError(errors);
-    console.log("errors", errors);
+    // console.log("errors", errors);
 
     if (Object.keys(errors).length === 0) {
       const formattedDate = new Date()
@@ -118,38 +125,113 @@ const PhisicalAssessmentForm = ({
         })
         .replace(/^(\w+)/, "$1"); // Adds comma after weekday
 
+      const isDisabled = (modalFormPhisicalData?.length ?? 0) > 0;
+
       const updatedFormData = {
         ...formData,
-        date: formattedDate,
-        id: generateRandomId(),
+        patientId,
+        bloodGroup: isDisabled
+          ? modalFormPhisicalData?.[0]?.bloodGroup ?? formData.bloodGroup
+          : formData.bloodGroup,
       };
 
-      if (editPhysicalAssessment && editPhysicalAssessment.patientId) {
-        setModalFormPhisicalData((prev) =>
-          prev.map((item) =>
-            item.patientId === editPhysicalAssessment.patientId
-              ? { ...item, ...formData }
-              : item
-          )
-        );
-        setShowPhisicalAssessment(false);
-        setFormError(initialFormError);
-        setEditPhysicalAssessment?.(initialFormDataForClear);
-        toast.success("Changes saved successfully", {
-          icon: <BsInfoCircle size={22} color="white" />,
-        });
+      const updatedFormDataForEdit = {
+        patientId: editPhysicalAssessment?.patientId,
+        physicalAssessmentId: editPhysicalAssessment?._id,
+        weight: formData.weight,
+        height: formData.height,
+        bmi: formData.bmi,
+        bloodPressureSystolic: formData.bloodPressureSystolic,
+        bloodPressureDiastolic: formData.bloodPressureDiastolic,
+        heartRate: formData.heartRate,
+        bloodGroup: isDisabled
+          ? modalFormPhisicalData?.[0]?.bloodGroup ?? formData.bloodGroup
+          : formData.bloodGroup,
+      };
+
+      if (editPhysicalAssessment && editPhysicalAssessment?._id) {
+        console.log("formData : ", updatedFormDataForEdit);
+        updatePhysicalAssessment(updatedFormDataForEdit)
+          .then((response) => {
+            console.log("physicalassessmentput response : ", response.data);
+
+            if (response.data.status) {
+              setShowPhisicalAssessment(false);
+              setFormError(initialFormError);
+              setEditPhysicalAssessment?.(initialFormDataForClear);
+
+              toast.success(response.data.message, {
+                icon: <BsInfoCircle size={22} color="white" />,
+              });
+              // FETCH NEW DATA
+              fetchPatientData?.();
+            } else {
+              console.log("error");
+            }
+          })
+          .catch((err) => {
+            console.log("error", err?.response);
+
+            const apiError = err?.response?.data;
+
+            // extract dynamic error message
+            const fieldError = apiError?.details?.errors
+              ? Object.values(apiError.details.errors)[0] // pick first field error
+              : null;
+
+            const message =
+              fieldError ||
+              apiError?.details?.message ||
+              apiError?.message ||
+              "Something went wrong";
+
+            toast.error(message);
+          });
       } else {
-        setModalFormPhisicalData((prev) => [...prev, updatedFormData]);
-        setShowPhisicalAssessment(false);
-        setFormError(initialFormError);
-        setFormData(initialFormData);
-        toast.success("Physical assessment added successfully", {
-          icon: <BsInfoCircle size={22} color="white" />,
-        });
+        // console.log("formData : ", updatedFormData);
+        addPhysicalAssessment(updatedFormData)
+          .then((response) => {
+            console.log(
+              "physicalassessmentpost response------- : ",
+              response.data
+            );
+            // console.log("add api");
+
+            if (response.data.status) {
+              toast.success(response.data.message, {
+                icon: <BsInfoCircle size={22} color="white" />,
+              });
+
+              fetchPatientData?.(); // FETCH UPDATED PATIENT DATA
+
+              setShowPhisicalAssessment(false);
+              setFormError(initialFormError);
+              // setFormData(initialFormData);
+            } else {
+              console.log("error");
+            }
+          })
+          .catch((err) => {
+            console.log("error", err?.response);
+
+            const apiError = err?.response?.data;
+
+            // extract dynamic error message
+            const fieldError = apiError?.details?.errors
+              ? Object.values(apiError.details.errors)[0] // pick first field error
+              : null;
+
+            const message =
+              fieldError ||
+              apiError?.details?.message ||
+              apiError?.message ||
+              "Something went wrong";
+
+            toast.error(message);
+          });
       }
     }
   };
-
   return (
     <>
       <form onSubmit={handleSubmit}>

@@ -18,6 +18,7 @@ export interface PatientData {
   };
 }
 export interface PersonalDetails {
+  _id?: string;
   profileImage: string | StaticImageData; 
   name: string;
   gender: string;
@@ -109,6 +110,20 @@ export interface PartnerBasicDetails {
   partnerContactNumber: string;
   partnerEmail: string;
 }
+export interface FertilityAssessmentPartner {
+  semenAnalysis: string;
+  semenAnalysisDetails: string;
+
+  fertilityIssues: string;
+  fertilityIssuesDetails: string;
+
+  fertilityTreatments: string;
+  fertilityTreatmentsDetails: string;
+
+  surgeries: string;
+  surgeriesDetails: string;
+}
+
 export interface FertilityAssessmentPartnerShow {
   clinicId: string;
 
@@ -206,6 +221,8 @@ export interface Patient {
   status: string;
 }
 export interface PhysicalAssessmentDataModel {
+  _id?: string;
+
   patientId: string;
   height: string;
   weight: string;
@@ -454,6 +471,8 @@ export type ScheduleTimeOff = {
 };
 
 export interface FertilityAssessmentFormType {
+  fertilityAssessmentId?: string;
+  _id?:string;
   ageAtFirstMenstruation: string;
   cycleLength: string;
   periodLength: string;

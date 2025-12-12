@@ -21,11 +21,11 @@ export const login = (data: LoginRequest) => {
 };
 
 // ====: Patient :====
-// add Patient
+// add Patient //done
 export const addPatient = (data: AddPatientFormObjType) => {
   return apiClient.post("/patient/add-patient", data);
 };
-// getAll Patient
+// getAll Patient //done
 export const getAll = () => {
   const token = localStorage.getItem("token");
   return apiClient.get("/patient/get-patient", {
@@ -34,18 +34,19 @@ export const getAll = () => {
     },
   });
 };
-// get patient info
+// get patient info //done
 export const getPatientInfo = (id: string | number) => {
   return apiClient.get(`/patient/get-patient-info/${id}`);
 };
-// update patient
-export const updatePatient = (id: string | number) => {
-  return apiClient.put(`/patient/update-patient/${id}`);
+// update patient   //not done data is get but not updated
+export const updatePatient = (id: string | number,data:object) => {
+  return apiClient.put(`/patient/update-patient/${id}`,data);
 };
 
+// done
 // ====: Physical assesment :====
 // add Physical assesment
-export const addPhysicalAssessment = (data: PhysicalAssessmentDataModel) => {
+export const addPhysicalAssessment = (data: object) => {
   return apiClient.post("/patient/physical-assessment", data);
 };
 // get Physical assesment
@@ -53,13 +54,14 @@ export const getPhysicalAssessment = () => {
   return apiClient.get("/patient/physical-assessment");
 };
 // update Physical assesment
-export const updatePhysicalAssessment = (data: PhysicalAssessmentDataModel) => {
-  return apiClient.put("/patient/physical-assessment", data);
+export const updatePhysicalAssessment = (updatedata: object) => {
+  return apiClient.put("/patient/physical-assessment", updatedata);
 };
 
+// done
 // ====: Fertility assesment :====
 // add Fertility assesment
-export const addFertilityAssessment = (data: FertilityAssessmentType) => {
+export const addFertilityAssessment = (data: object) => {
   return apiClient.post("/patient/fertility-assessment", data);
 };
 
@@ -69,13 +71,14 @@ export const getFertilityAssessment = (id: string | number) => {
 };
 
 // update Fertility assesment
-export const updateFertilityAssessment = (data: FertilityAssessmentType) => {
-  return apiClient.put("/patient/fertility-assessment", data);
+export const updateFertilityAssessment = (updatedata: object) => {
+  return apiClient.put("/patient/fertility-assessment", updatedata);
 };
 
+// done 
 // ====:Medical History :====
 // add Medical History
-export const addMedicalHistory = (data: MedicalHistory) => {
+export const addMedicalHistory = (data: object) => {
   return apiClient.post("/patient/medical-history", data);
 };
 // get Medical History
@@ -83,7 +86,7 @@ export const getMedicalHistory = (id: string | number) => {
   return apiClient.get(`/patient/medical-history/${id}`);
 };
 // update Medical History
-export const updateMedicalHistory = (data: MedicalHistory) => {
+export const updateMedicalHistory = (data: object) => {
   return apiClient.put("/patient/medical-history", data);
 };
 

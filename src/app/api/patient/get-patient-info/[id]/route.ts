@@ -14,3 +14,4 @@ export async function GET(_: NextRequest, { params }: RouteContext) {
     return handleApiError(error);
   }
 }
+  

@@ -171,6 +171,7 @@ const ProfileBasicDetail = ({
   const mapPhysicalAssessmentToFormData = (
     assessment: PhysicalAssessment
   ): PhysicalAssessmentDataModel => ({
+    _id: assessment._id,
     patientId: assessment.patientId ?? "",
     height: assessment.height?.toString() ?? "",
     weight: assessment.weight?.toString() ?? "",
@@ -184,6 +185,7 @@ const ProfileBasicDetail = ({
   const mapFertilityAssessmentToFormData = (
     assessment?: FertilityAssessment | null
   ): FertilityAssessmentFormType => ({
+    _id: assessment?._id,
     ageAtFirstMenstruation:
       assessment?.menstrualCycle?.ageAtFirstMenstruation?.toString() ??
       emptyFertilityAssessment.ageAtFirstMenstruation,
@@ -1282,6 +1284,7 @@ const ProfileBasicDetail = ({
               </Button>
             </div>
           ) : (
+            // add medical done
             <>
               <div className="mb-3">
                 <Button
@@ -1570,11 +1573,17 @@ const ProfileBasicDetail = ({
                 modalFormPhisicalData={modalFormPhisicalData}
                 patientId={patientData?._id}
                 fetchPatientData={fetchPatientData}
-                setModalFormPhisicalData={function (
-                  value: React.SetStateAction<PhysicalAssessmentDataModel[]>
-                ): void {
-                  throw new Error("Function not implemented.");
-                }}
+                // setShowPhisicalAssessment={setShowPhisicalAssessment}
+                // editPhysicalAssessment={editPhysicalAssessment}
+                // setEditPhysicalAssessment={setEditPhysicalAssessment}
+                // modalFormPhisicalData={modalFormPhisicalData}
+                // patientId={patientData?._id}
+                // fetchPatientData={fetchPatientData}
+                // setModalFormPhisicalData={function (
+                //   value: React.SetStateAction<PhysicalAssessmentDataModel[]>
+                // ): void {
+                //   throw new Error("Function not implemented.");
+                // }}
               />
             </div>
           </Modal>
@@ -1620,14 +1629,6 @@ const ProfileBasicDetail = ({
                 onClose={() => setEditingMedicalHistory(null)}
                 patientId={patientData?._id}
                 fetchPatientData={fetchPatientData}
-                setMedicalHistoryFormData={function (
-                  value: React.SetStateAction<MedicalHistoryType>
-                ): void {
-                  throw new Error("Function not implemented.");
-                }} // setMedicalHistoryFormData={setMedicalHistoryFormData}
-                // setShowModal={setShowModal}
-                // initialData={editingMedicalHistory}
-                // onClose={() => setEditingMedicalHistory(null)}
               />
             </div>
           </Modal>

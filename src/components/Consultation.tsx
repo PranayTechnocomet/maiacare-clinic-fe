@@ -387,7 +387,10 @@ export default function Consultation() {
                   View Profile
                 </Dropdown.Item>
                 <Dropdown.Item
-                //  onClick={() => router.push(`/doctors/${id}`)}
+                  onClick={() =>
+                  router.push(`/patients/editPatient/${id}`)
+                }
+              
                 >
                   <Image
                     src={edit}
