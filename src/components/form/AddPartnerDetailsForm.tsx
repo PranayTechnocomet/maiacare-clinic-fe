@@ -20,8 +20,12 @@ import cameraicon from "../../assets/images/Cameraicon.png";
 import { log, profile } from "console";
 import {
   EditFertilityAssessment,
+  FertilityAssessmentPartner,
   FertilityAssessmentType,
+  MedicalHistoryShow,
   MedicalHistoryType,
+  PartnerBasicDetailsForm,
+  partnerMedicalHistory,
   PhysicalAssessmentDataModel,
 } from "../../utlis/types/interfaces";
 // import { partnerDetailData } from '@/utils/StaticData';
@@ -31,56 +35,71 @@ import { PartnerDetailData } from "@/utlis/StaticData";
 import { Dispatch } from "@reduxjs/toolkit";
 import { PartnerDetailsData } from "../AddPartnerDetails";
 import PhisicalAssessmentForm from "./PhisicalAssessmentForm";
+import { updatePatientPartnerMedicalHistory } from "@/utlis/apis/apiHelper";
 // export interface PartnerDetailsData extends PartnerDetailData {}
 type PhysicalAssessmentProps = {
+  // formError?: Partial<Record<keyof PhysicalAssessmentDataModel, string>>;
+  // setFormError?: React.Dispatch<
+  //   React.SetStateAction<
+  //     Partial<Record<keyof PhysicalAssessmentDataModel, string>>
+  //   >
+  // >;
+  // // formData: PhysicalAssessmentDataModel | FertilityAssessmentType;
+  // setFormData: React.Dispatch<
+  //   React.SetStateAction<PhysicalAssessmentDataModel>
+  // >;
+
+  // setShowContent?: (value: boolean) => void;
+  // setShowPartnerDetail?: (value: boolean) => void;
+  // setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>;
+  // showData: PartnerDetailsData;
+
   formError?: Partial<Record<keyof PhysicalAssessmentDataModel, string>>;
   setFormError?: React.Dispatch<
     React.SetStateAction<
       Partial<Record<keyof PhysicalAssessmentDataModel, string>>
     >
   >;
-  formData: PhysicalAssessmentDataModel | FertilityAssessmentType;
+  formData: PhysicalAssessmentDataModel;
   setFormData: React.Dispatch<
     React.SetStateAction<PhysicalAssessmentDataModel>
   >;
-
-  setShowContent?: (value: boolean) => void;
-  setShowPartnerDetail?: (value: boolean) => void;
-  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>;
-  showData: PartnerDetailsData;
 };
 type MedicalHistoryFormProps = {
   setAddPartner: (value: boolean) => void;
   setActiveTab: (tab: string) => void;
-  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>; // FIXED
-
-  showData?: PartnerDetailsData;
-  initialData?: MedicalHistoryType | null;
   setEditMedicalHistory?: React.Dispatch<React.SetStateAction<boolean>>;
-  formDataMedicalHistory?: MedicalHistoryType;
+  formDataMedicalHistory?: MedicalHistoryShow | null;
+  patientId: string | number | undefined;
+  fetchPatientData?: () => void;
+  setPartnerMedicalHistory?: React.Dispatch<
+    React.SetStateAction<partnerMedicalHistory | null>
+  >;
+  onSuccess?: () => void;
 };
 type FormError = Partial<Record<keyof FertilityAssessmentType, string>>;
 
 type FertilityAssessmentProps = {
-  
-  setShowContent?: (value: boolean) => void;
-  setShowPartnerDetail?: (value: boolean) => void;
-  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>;
-  showData: PartnerDetailsData;
-  initialData?: Partial<FertilityAssessmentType>;
-  formData: FertilityAssessmentType | EditFertilityAssessment;
-  formError?: FormError;
-  setFormData: React.Dispatch<React.SetStateAction<FertilityAssessmentType>>;
+  formData: FertilityAssessmentPartner | EditFertilityAssessment;
+  setFormData: React.Dispatch<React.SetStateAction<FertilityAssessmentPartner>>;
   setFormError: React.Dispatch<React.SetStateAction<FormError>>;
+  formError?: FormError;
 };
+
 export function BasicDetailsForm({
   setAddPartner,
   setActiveTab,
-  setShowData,
+  patientId,
+  setPartnerBasicDetails,
+  onSuccess,
 }: {
   setAddPartner: (value: boolean) => void;
   setActiveTab: (tab: string) => void;
-  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>;
+  patientId: string | number | undefined;
+  setPartnerBasicDetails?: React.Dispatch<
+    React.SetStateAction<PartnerBasicDetailsForm | null>
+  >;
+  onSuccess?: () => void;
 }) {
   const initialFormError: FormError = {};
   type FormData = {
@@ -212,29 +231,31 @@ export function BasicDetailsForm({
     return errors;
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+ const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-    const errors = validateForm(formData);
-    setFormError(errors);
+  const errors = validateForm(formData);
+  setFormError(errors);
 
-    if (Object.keys(errors).length === 0) {
-      setFormError(initialFormError);
-      setActiveTab("medical history");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+  if (Object.keys(errors).length === 0) {
+    const updatedFormData: PartnerBasicDetailsForm = {
+      patientId,
+      partnerName: formData.basic_detail_name,
+      partnerGender: formData.basic_detail_gender,
+      partnerAge: formData.basic_detail_age,
+      partnerContactNumber: formData.basic_detail_phone,
+      partnerEmail: formData.basic_detail_email,
+      partnerImage: formData.profileImage,
+    };
 
-      // Update showData's profile by merging old profile with form data fields
-      setShowData((prev) => ({
-        ...prev,
-        profile: {
-          ...(typeof prev?.profile === "object" && prev?.profile !== null
-            ? prev.profile
-            : {}),
-          ...formData,
-        },
-      }));
-    }
-  };
+    console.log("Partner Basic Details:", updatedFormData);
+
+    setPartnerBasicDetails?.(updatedFormData);
+    setFormError(initialFormError);
+    setActiveTab("medical history");
+    onSuccess?.();
+  }
+};
 
   return (
     <>
@@ -412,26 +433,68 @@ export function BasicDetailsForm({
 export function MedicalHistoryForm({
   setAddPartner,
   setActiveTab,
-  setShowData,
-  showData,
-  initialData,
   setEditMedicalHistory,
   formDataMedicalHistory,
+  patientId,
+  fetchPatientData,
+  setPartnerMedicalHistory,
+  onSuccess,
 }: MedicalHistoryFormProps) {
+  const medicalConditionOptions = [
+    { id: "1", value: "PCOS", label: "PCOS" },
+    { id: "2", value: "Thyroid Disorder", label: "Thyroid Disorder" },
+    { id: "3", value: "Diabetes", label: "Diabetes" },
+    { id: "4", value: "Hypertension", label: "Hypertension" },
+  ];
+
+  const lifestyleOptions = [
+    { id: "1", value: "Non-smoker", label: "Non-smoker" },
+    { id: "2", value: "Occasional alcohol", label: "Occasional alcohol" },
+    { id: "3", value: "Vegetarian diet", label: "Vegetarian diet" },
+  ];
   type FormError = Partial<Record<keyof MedicalHistoryType, string>>;
 
   const initialFormData: MedicalHistoryType = {
-    medication: formDataMedicalHistory?.medication || "yes",
-    surgeries: formDataMedicalHistory?.surgeries || "yes",
-    surgeriesContent: formDataMedicalHistory?.surgeriesContent || "",
-    MedicalconditionAllergies:
-      formDataMedicalHistory?.MedicalconditionAllergies || [],
-    familyMedicalHistory: formDataMedicalHistory?.familyMedicalHistory || "",
+    medication: formDataMedicalHistory?.medications?.status || "No",
+    medicationcontent:
+      formDataMedicalHistory?.medications?.medicationsDetails || "",
+    surgeries: formDataMedicalHistory?.surgeries?.status || "Yes",
 
-    lifestyle: formDataMedicalHistory?.lifestyle || [],
-    stress: formDataMedicalHistory?.stress || "low",
-    exercise: formDataMedicalHistory?.exercise || "never",
-    medicationcontent: formDataMedicalHistory?.medicationcontent || "",
+    // surgeriesContent: initialData?.surgeries?.surgeriesDetails || "",
+    surgeriescontent: formDataMedicalHistory?.surgeries?.surgeriesDetails || "",
+
+    // medicalCondition: initialData?.conditions || [],
+    // medicalCondition: Array.isArray(formDataMedicalHistory?.conditions)
+    //   ? formDataMedicalHistory.conditions.map((item: any) => ({
+    //       id:
+    //         medicalConditionOptions.find((opt) => opt.value === item)?.id ||
+    //         item,
+    //       value: item,
+    //       label: item,
+    //     }))
+    //   : [],
+    medicalCondition: Array.isArray(formDataMedicalHistory?.conditions)
+  ? formDataMedicalHistory.conditions.map((item: string) => ({
+      id:
+        medicalConditionOptions.find((opt) => opt.value === item)?.id ?? item,
+      value: item,
+      label: item,
+    }))
+  : [],
+
+
+    familyMedicalHistory: formDataMedicalHistory?.familyHistory || "",
+    // lifestyle: initialData?.lifestyle || [],
+    lifestyle: Array.isArray(formDataMedicalHistory?.lifestyle)
+  ? formDataMedicalHistory.lifestyle.map((item: string) => ({
+      id: lifestyleOptions.find((opt) => opt.value === item)?.id ?? item,
+      value: item,
+      label: item,
+    }))
+  : [],
+
+    stress: formDataMedicalHistory?.stressLevel || "High",
+    exercise: formDataMedicalHistory?.exerciseFrequency || "Rarely",
   };
 
   const MedicalHistoryFormError: FormError = {};
@@ -445,14 +508,11 @@ export function MedicalHistoryForm({
 
     if (data.medication === "yes" && !data.medicationcontent.trim())
       errors.medicationcontent = "Medication Content is required";
-    if (data.surgeries === "yes" && !data.surgeriesContent.trim())
-      errors.surgeriesContent = "Surgeries Content is required";
-    if (!data.MedicalconditionAllergies.length)
-      errors.MedicalconditionAllergies = "Medical Condition is required";
+    if (data.surgeries === "yes" && !data.surgeriescontent.trim())
+      errors.surgeriescontent = "Surgeries Content is required";
+    if (!data.medicalCondition.length)
+      errors.medicalCondition = "Medical Condition is required";
     if (!data.lifestyle.length) errors.lifestyle = "Lifestyle is required";
-
-    // if (!data.medicationcontent.trim()) errors.medicationcontent = "Medication Content is required";
-
     return errors;
   };
   const handleChange = (
@@ -465,35 +525,146 @@ export function MedicalHistoryForm({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const errors = validateForm(FormData);
     setMedicalHistoryFormError(errors);
 
     if (Object.keys(errors).length === 0) {
-      if (formDataMedicalHistory) {
-        toast.success("Changes saved successfully", {
-          icon: <BsInfoCircle size={22} color="white" />,
-        });
+      const normalizeEnum = (value: string | undefined, allowed: string[]) => {
+        if (!value) return "";
+        const match = allowed.find(
+          (a) => a.toLowerCase() === value.toLowerCase()
+        );
+        return match || value;
+      };
 
-        const updatedData: PartnerDetailsData = {
-          ...showData,
-          medicalHistory: FormData,
-          fertilityAssessment: showData?.fertilityAssessment, // important fix
-          // PhysicalAssessmentData: showData?.PhysicalAssessmentData,
-          PhysicalAssessmentData: showData?.PhysicalAssessmentData ?? [],
+      const updatedFormData = {
+        patientId,
 
-          profile: showData?.profile,
-        };
+        medications: {
+          status: FormData.medication?.toLowerCase() === "yes" ? "Yes" : "No",
+          medicationsDetails:
+            FormData.medication?.toLowerCase() === "yes"
+              ? FormData.medicationcontent || ""
+              : "", // remove if No
+        },
 
-        setShowData(updatedData);
-        setEditMedicalHistory?.(false);
+        surgeries: {
+          status: FormData.surgeries?.toLowerCase() === "yes" ? "Yes" : "No",
+          surgeriesDetails:
+            FormData.surgeries?.toLowerCase() === "yes"
+              ? FormData.surgeriescontent || ""
+              : "", // remove if No
+        },
+
+        conditions: Array.isArray(FormData.medicalCondition)
+          ? FormData.medicalCondition.map((item) => item.value)
+          : [],
+
+        familyHistory: FormData.familyMedicalHistory || "",
+
+        lifestyle: Array.isArray(FormData.lifestyle)
+          ? FormData.lifestyle.map((item) => item.value)
+          : [],
+
+        exerciseFrequency: normalizeEnum(FormData.exercise, [
+          "Never",
+          "Rarely",
+          "Regularly",
+        ]),
+
+        stressLevel: normalizeEnum(FormData.stress, [
+          "Low",
+          "Moderate",
+          "High",
+        ]),
+      };
+
+      const updatedFormDataForEdit = {
+        patientId: patientId,
+
+        medications: {
+          status: FormData.medication?.toLowerCase() === "yes" ? "Yes" : "No",
+          medicationsDetails:
+            FormData.medication?.toLowerCase() === "yes"
+              ? FormData.medicationcontent || ""
+              : "", // remove if No
+        },
+
+        surgeries: {
+          status: FormData.surgeries?.toLowerCase() === "yes" ? "Yes" : "No",
+          surgeriesDetails:
+            FormData.surgeries?.toLowerCase() === "yes"
+              ? FormData.surgeriescontent || ""
+              : "", // remove if No
+        },
+
+        conditions: Array.isArray(FormData.medicalCondition)
+          ? FormData.medicalCondition.map((item) => item.value)
+          : [],
+
+        familyHistory: FormData.familyMedicalHistory || "",
+
+        lifestyle: Array.isArray(FormData.lifestyle)
+          ? FormData.lifestyle.map((item) => item.value)
+          : [],
+
+        exerciseFrequency: normalizeEnum(FormData.exercise, [
+          "Never",
+          "Rarely",
+          "Regularly",
+        ]),
+
+        stressLevel: normalizeEnum(FormData.stress, [
+          "Low",
+          "Moderate",
+          "High",
+        ]),
+      };
+
+      if (formDataMedicalHistory && formDataMedicalHistory?.clinicId) {
+        // console.log("edit api call", updatedFormDataForEdit);
+
+        updatePatientPartnerMedicalHistory(updatedFormDataForEdit)
+          .then((response) => {
+            if (response.data.status) {
+              // console.log("PUT medical history response:", response);
+
+              toast.success(response.data.message, {
+                icon: <BsInfoCircle size={22} color="white" />,
+              });
+
+              fetchPatientData?.();
+              setEditMedicalHistory?.(false);
+            } else {
+              console.log("error");
+            }
+          })
+          .catch((err) => {
+            console.log("error", err?.response);
+
+            const apiError = err?.response?.data;
+
+            // extract dynamic error message
+            const fieldError = apiError?.details?.errors
+              ? Object.values(apiError.details.errors)[0] // pick first field error
+              : null;
+
+            const message =
+              fieldError ||
+              apiError?.details?.message ||
+              apiError?.message ||
+              "Something went wrong";
+
+            toast.error(message);
+          });
       } else {
-        setActiveTab("physical & fertility assessment");
+        console.log("FormData", updatedFormData);
+        // setActiveTab("physical & fertility assessment");
 
-        setShowData((prev) => ({
-          ...prev,
-          medicalHistory: FormData,
-        }));
+        setPartnerMedicalHistory?.(updatedFormData); // set form object and call api last form
+        setActiveTab("physical & fertility assessment");
+        setMedicalHistoryFormError(MedicalHistoryFormError);
+        onSuccess?.();
       }
     }
   };
@@ -544,20 +715,20 @@ export function MedicalHistoryForm({
             {FormData.surgeries === "yes" && (
               <InputFieldGroup
                 type="text"
-                value={FormData.surgeriesContent}
+                value={FormData.surgeriescontent}
                 name="surgeriesContent"
                 onChange={handleChange}
-                error={medicalHistoryFormError.surgeriesContent}
+                error={medicalHistoryFormError.surgeriescontent}
                 placeholder="Enter surgeries"
                 className={`mt-md-3 mt-2`}
               ></InputFieldGroup>
             )}
           </Col>
           <Col md={12} className="mt-md-3 mt-2">
-            <InputSelectMultiSelect
+            {/* <InputSelectMultiSelect
               label="Do you have any medical condition?"
               name="MedicalconditionAllergies"
-              values={FormData.MedicalconditionAllergies}
+              values={FormData.medicalCondition}
               onChange={(values) => {
                 setFormData((prev) => ({
                   ...prev,
@@ -585,7 +756,27 @@ export function MedicalHistoryForm({
               dropdownHandle={false}
               selectedOptionColor="var(--border-box)"
               selectedOptionBorderColor="var(--border-box)"
-              error={medicalHistoryFormError.MedicalconditionAllergies}
+              error={medicalHistoryFormError.medicalCondition}
+            /> */}
+            <InputSelectMultiSelect
+              label="Do you have any medical condition?"
+              name="medicalCondition"
+              values={FormData.medicalCondition}
+              onChange={(values) => {
+                setFormData((prev) => ({ ...prev, medicalCondition: values }));
+                setMedicalHistoryFormError((prev) => ({
+                  ...prev,
+                  medicalCondition: "",
+                }));
+              }}
+              options={medicalConditionOptions}
+              placeholder="Search Medical Condition or Allergies"
+              addPlaceholder="Add Medical Condition or Allergies"
+              required={true}
+              dropdownHandle={false} // open close arrow icon show hide
+              selectedOptionColor="var(--border-box)"
+              selectedOptionBorderColor="var(--border-box)"
+              error={medicalHistoryFormError.medicalCondition}
             />
           </Col>
           <Col md={12} className="mt-md-3 mt-2">
@@ -701,10 +892,6 @@ export function PhysicalAssessment({
   setFormError,
   formData,
   setFormData,
-  setShowContent,
-  setShowPartnerDetail,
-  setShowData,
-  showData,
 }: PhysicalAssessmentProps) {
   type FormError = Partial<Record<keyof FertilityAssessmentType, string>>;
 
@@ -906,10 +1093,10 @@ export function PhysicalAssessment({
 }
 
 export function FertilityAssessment({
-    formData,
-    setFormData,
-    setFormError,
-    formError
+  formData,
+  setFormData,
+  setFormError,
+  formError,
 }: FertilityAssessmentProps) {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -972,7 +1159,7 @@ export function FertilityAssessment({
                 value={formData.fertilityIssuesContent}
                 name="fertilityIssuesContent"
                 onChange={handleChange}
-                error={formError?.semenAnalysisContent}
+                error={formError?.fertilityIssuesContent}
                 placeholder="If yes, provide details if available"
                 className={`mt-2`}
               ></InputFieldGroup>

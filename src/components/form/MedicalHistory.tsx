@@ -49,9 +49,9 @@ export default function MedicalHistory({
     medicationcontent: initialData?.medications?.medicationsDetails || "",
 
     surgeries: initialData?.surgeries?.status || "yes",
-    surgeriesContent: initialData?.surgeries?.surgeriesDetails || "",
+    surgeriescontent: initialData?.surgeries?.surgeriesDetails || "",
 
-    MedicalconditionAllergies:
+    medicalCondition:
       initialData?.conditions?.map(
         (item: string): OptionType => ({ value: item, label: item })
       ) || [],
@@ -73,12 +73,12 @@ export default function MedicalHistory({
     const errors: FormError = {};
     if (data.medication === "yes" && !data.medicationcontent.trim())
       errors.medicationcontent = "Medication Content is required";
-    if (data.surgeries === "yes" && !data.surgeriesContent.trim())
-      errors.surgeriesContent = "Surgeries Content is required";
+    if (data.surgeries === "yes" && !data.surgeriescontent.trim())
+      errors.surgeriescontent = "Surgeries Content is required";
     if (!data.surgeries.trim()) errors.surgeries = "Surgeries is required";
 
-    if (!data.MedicalconditionAllergies?.length)
-      errors.MedicalconditionAllergies = "Medical Condition is required";
+    if (!data.medicalCondition?.length)
+      errors.medicalCondition = "Medical Condition is required";
     if (!data.lifestyle?.length) errors.lifestyle = "Lifestyle is required";
 
     if (!data.stress.trim()) errors.stress = "Stress Level is required";
@@ -148,12 +148,12 @@ export default function MedicalHistory({
           status: formData.surgeries?.toLowerCase() === "yes" ? "Yes" : "No",
           surgeriesDetails:
             formData.surgeries?.toLowerCase() === "yes"
-              ? formData.surgeriesContent || ""
+              ? formData.surgeriescontent || ""
               : "", // remove if No
         },
 
-        conditions: Array.isArray(formData.MedicalconditionAllergies)
-          ? formData.MedicalconditionAllergies.map((item) => item.value)
+        conditions: Array.isArray(formData.medicalCondition)
+          ? formData.medicalCondition.map((item) => item.value)
           : [],
 
         familyHistory: formData.familyMedicalHistory || "",
@@ -189,12 +189,12 @@ export default function MedicalHistory({
           status: formData.surgeries?.toLowerCase() === "yes" ? "Yes" : "No",
           surgeriesDetails:
             formData.surgeries?.toLowerCase() === "yes"
-              ? formData.surgeriesContent || ""
+              ? formData.surgeriescontent || ""
               : "", // remove if No
         },
 
-        conditions: Array.isArray(formData.MedicalconditionAllergies)
-          ? formData.MedicalconditionAllergies.map((item) => item.value)
+        conditions: Array.isArray(formData.medicalCondition)
+          ? formData.medicalCondition.map((item) => item.value)
           : [],
 
         familyHistory: formData.familyMedicalHistory || "",
@@ -343,10 +343,10 @@ export default function MedicalHistory({
             {formData.surgeries === "yes" && (
               <InputFieldGroup
                 type="text"
-                value={formData.surgeriesContent}
+                value={formData.surgeriescontent}
                 name="surgeriesContent"
                 onChange={handleChange}
-                error={formError.surgeriesContent}
+                error={formError.surgeriescontent}
                 placeholder="Enter surgeries"
                 className="mt-md-3 mt-2"
               ></InputFieldGroup>
@@ -356,7 +356,7 @@ export default function MedicalHistory({
             <InputSelectMultiSelect
               label="Do you have any medical condition?"
               name="medicalCondition"
-              values={formData.MedicalconditionAllergies}
+              values={formData.medicalCondition}
               onChange={(values) => {
                 setFormData((prev) => ({
                   ...prev,
@@ -383,7 +383,7 @@ export default function MedicalHistory({
               dropdownHandle={false} // open close arrow icon show hide
               selectedOptionColor="var(--border-box)"
               selectedOptionBorderColor="var(--border-box)"
-              error={formError.MedicalconditionAllergies}
+              error={formError.medicalCondition}
             />
           </Col>
           <Col md={12} className="mt-md-3 mt-2">

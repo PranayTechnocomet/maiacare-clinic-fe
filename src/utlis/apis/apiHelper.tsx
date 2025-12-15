@@ -20,6 +20,21 @@ export const login = (data: LoginRequest) => {
   return apiClient.post("/auth/login", data);
 };
 
+// ====: Profile :====
+// get profile
+export const getProfile = () => {
+  const token = localStorage.getItem("token");
+  return apiClient.get("/profile/get", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+// update profile
+export const updateProfile = (data: object) => {
+  return apiClient.put("/profile/update", data);
+};
 // ====: Patient :====
 // add Patient //done
 export const addPatient = (data: AddPatientFormObjType) => {
@@ -39,8 +54,8 @@ export const getPatientInfo = (id: string | number) => {
   return apiClient.get(`/patient/get-patient-info/${id}`);
 };
 // update patient   //not done data is get but not updated
-export const updatePatient = (id: string | number,data:object) => {
-  return apiClient.put(`/patient/update-patient/${id}`,data);
+export const updatePatient = (id: string | number, data: object) => {
+  return apiClient.put(`/patient/update-patient/${id}`, data);
 };
 
 // done
@@ -75,7 +90,7 @@ export const updateFertilityAssessment = (updatedata: object) => {
   return apiClient.put("/patient/fertility-assessment", updatedata);
 };
 
-// done 
+// done
 // ====:Medical History :====
 // add Medical History
 export const addMedicalHistory = (data: object) => {
@@ -93,7 +108,7 @@ export const updateMedicalHistory = (data: object) => {
 // ====: Patient Partner :====
 // Partner Basic Details
 // add
-export const addPatientPartnerBasicDetails = (data: PartnerBasicDetail) => {
+export const addPatientPartnerBasicDetails = (data: object) => {
   return apiClient.post("/patient/partner/basicDetails", data);
 };
 
@@ -103,13 +118,13 @@ export const getPatientPartnerBasicDetails = (id: string | number) => {
 };
 
 // update
-export const updatePatientPartnerBasicDetails = (data: PartnerBasicDetail) => {
+export const updatePatientPartnerBasicDetails = (data: object) => {
   return apiClient.put("/patient/partner/basicDetails", data);
 };
 
 // Partner Medical History
 // add
-export const addPatientPartnerMedicalHistory = (data: MedicalHistory) => {
+export const addPatientPartnerMedicalHistory = (data: object) => {
   return apiClient.post("/patient/partner/medicalHistory", data);
 };
 
@@ -119,14 +134,14 @@ export const getPatientPartnerMedicalHistory = (id: string | number) => {
 };
 
 // update
-export const updatePatientPartnerMedicalHistory = (data: MedicalHistory) => {
+export const updatePatientPartnerMedicalHistory = (data: object) => {
   return apiClient.put("/patient/partner/medicalHistory", data);
 };
 
 // Partner Physical Assessment
 // add
 export const addPatientPartnerPhysicalAssessment = (
-  data: PhysicalAssessmentDataModel
+  data: object
 ) => {
   return apiClient.post("/patient/partner/physicalAssessment", data);
 };
@@ -136,7 +151,7 @@ export const getPatientPartnerPhysicalAssessment = () => {
 };
 // update
 export const updatePatientPartnerPhysicalAssessment = (
-  data: PhysicalAssessmentDataModel
+  data: object
 ) => {
   return apiClient.put("/patient/partner/physicalAssessment", data);
 };
@@ -144,7 +159,7 @@ export const updatePatientPartnerPhysicalAssessment = (
 // Partner Fertility Assessment
 // add
 export const addPatientPartnerFertilityAssessment = (
-  data: FertilityAssessmentType
+  data: object
 ) => {
   return apiClient.post("/patient/partner/fertilityAssessment", data);
 };
@@ -154,18 +169,18 @@ export const getPatientPartnerFertilityAssessment = (id: string | number) => {
 };
 // update
 export const updatePatientPartnerFertilityAssessment = (
-  data: FertilityAssessmentType
+  data: object
 ) => {
   return apiClient.put("/patient/partner/fertilityAssessment", data);
 };
 
 // ====: Doctor :====
 // add Doctor
-export const addDoctor = (data: DoctorDetails) => {
+export const addDoctor = (data: object) => {
   return apiClient.post("/doctor/add-doctor", data);
 };
 // edit doctor
-export const editDoctor = (data: DoctorDetails) => {
+export const editDoctor = (data: object) => {
   return apiClient.put("/doctor/update-doctor", data);
 };
 // get Doctor

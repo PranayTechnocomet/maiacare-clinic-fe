@@ -12,14 +12,23 @@ import { Accordion } from "react-bootstrap";
 import Button from "./ui/Button";
 // import '../style/fertilityassessment.css'
 import {
+  FertilityAssessmentPartner,
   FertilityAssessmentType,
   MedicalHistoryType,
+  PartnerBasicDetailsForm,
+  partnerMedicalHistory,
   PhysicalAssessmentDataModel,
 } from "../utlis/types/interfaces";
 import toast from "react-hot-toast";
 import { BsInfoCircle } from "react-icons/bs";
 import { PartnerDetailData } from "@/utlis/StaticData";
 import { StaticImageData } from "next/image";
+import {
+  addPatientPartnerBasicDetails,
+  addPatientPartnerFertilityAssessment,
+  addPatientPartnerMedicalHistory,
+  addPatientPartnerPhysicalAssessment,
+} from "@/utlis/apis/apiHelper";
 interface ProfileType {
   // define the fields, for example:
   name?: string;
@@ -41,42 +50,38 @@ export interface PartnerDetailsData {
   fertilityAssessment?: FertilityAssessmentType;
   PhysicalAssessmentData: PhysicalAssessmentDataModel[];
 }
-// interface AddPartnerDetailsProps {
-//   setAddPartner: (value: boolean) => void;
-//   setShowContent: (value: boolean) => void;
-//   setShowPartnerDetail: (value: boolean) => void;
-//   setShowData: React.Dispatch<React.SetStateAction<PartnerDetailData>>;
-//   modalEditTab: string | null;
-//   setModalEditTab: (value: string | null) => void;
-//   showData: PartnerDetailsData;
-// }
+
 interface AddPartnerDetailsProps {
   setAddPartner: (value: boolean) => void;
-  setShowContent: (value: boolean) => void;
-  setShowPartnerDetail: (value: boolean) => void;
-  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>; // FIXED
-  modalEditTab: string | null;
-  setModalEditTab: (value: string | null) => void;
-  showData: PartnerDetailsData;
+  patientId: string | number | undefined;
+  fetchPatientData?: () => void;
+  setPartnerBasicDetails?: React.Dispatch<
+    React.SetStateAction<PartnerBasicDetailsForm | null>
+  >;
+  setPartnerMedicalHistory?: React.Dispatch<
+    React.SetStateAction<partnerMedicalHistory | null>
+  >;
+  partnerBasicDetails?: PartnerBasicDetailsForm | null;
+  partnerMedicalHistory?: partnerMedicalHistory | null;
 }
 interface PhysicalFertilityAssessmentAccordionProps {
-  setShowContent: (value: boolean) => void;
   setAddPartner: (value: boolean) => void;
-  setShowPartnerDetail: (value: boolean) => void;
-  setShowData: React.Dispatch<React.SetStateAction<PartnerDetailsData>>;
-  showData: PartnerDetailsData;
-  initialData?: Partial<FertilityAssessmentType>;
+  patientId: string | number | undefined;
+  fetchPatientData?: () => void;
+  partnerBasicDetails?: PartnerBasicDetailsForm | null;
+  partnerMedicalHistory?: partnerMedicalHistory | null;
 }
 export function AddPartnerDetails({
   setAddPartner,
-  setShowContent,
-  setShowPartnerDetail,
-  setShowData,
-  modalEditTab,
-  setModalEditTab,
-  showData,
+  patientId,
+  fetchPatientData,
+  setPartnerBasicDetails,
+  setPartnerMedicalHistory,
+  partnerBasicDetails,
+  partnerMedicalHistory,
 }: AddPartnerDetailsProps) {
   const [activeTab, setActiveTab] = useState<string>("basic");
+  const [completedStep, setCompletedStep] = useState(0);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -91,7 +96,9 @@ export function AddPartnerDetails({
           <BasicDetailsForm
             setAddPartner={setAddPartner}
             setActiveTab={setActiveTab}
-            setShowData={setShowData}
+            patientId={patientId}
+            setPartnerBasicDetails={setPartnerBasicDetails}
+            onSuccess={() => setCompletedStep(1)}
           />
         </div>
       ),
@@ -101,15 +108,11 @@ export function AddPartnerDetails({
       label: "Medical History",
       content: (
         <MedicalHistoryForm
-          showData={showData} // ShowData}
           setAddPartner={setAddPartner}
           setActiveTab={setActiveTab}
-          setShowData={setShowData}
-          initialData={
-            modalEditTab === "medical history"
-              ? showData.medicalHistory
-              : undefined
-          }
+          patientId={patientId}
+          setPartnerMedicalHistory={setPartnerMedicalHistory}
+          onSuccess={() => setCompletedStep(2)}
         />
         // <h6>Medical History</h6>
       ),
@@ -119,16 +122,11 @@ export function AddPartnerDetails({
       label: "Physical & Fertility Assessment",
       content: (
         <PhysicalFertilityAssessmentAccordion
-          setShowContent={setShowContent}
           setAddPartner={setAddPartner}
-          setShowPartnerDetail={setShowPartnerDetail}
-          setShowData={setShowData}
-          showData={showData}
-          initialData={
-            modalEditTab === "physical & fertility assessment"
-              ? showData.fertilityAssessment
-              : undefined
-          }
+          patientId={patientId}
+          fetchPatientData={fetchPatientData}
+          partnerBasicDetails={partnerBasicDetails}
+          partnerMedicalHistory={partnerMedicalHistory}
         />
       ),
     },
@@ -147,36 +145,27 @@ export function AddPartnerDetails({
 }
 
 export function PhysicalFertilityAssessmentAccordion({
-  setShowContent,
   setAddPartner,
-  setShowPartnerDetail,
-  setShowData,
-  showData,
-  initialData,
+  patientId,
+  fetchPatientData,
+  partnerBasicDetails,
+  partnerMedicalHistory,
 }: PhysicalFertilityAssessmentAccordionProps) {
-  const initialFormData: FertilityAssessmentType = {
-    height: initialData?.height || "",
-    weight: initialData?.weight || "",
-    bmi: initialData?.bmi || "",
-    bloodGroup: initialData?.bloodGroup || "",
-    id: initialData?.id || "",
-    bloodPressureSystolic: initialData?.bloodPressureSystolic || "",
-    bloodPressureDiastolic: initialData?.bloodPressureDiastolic || "",
-    heartRate: initialData?.heartRate || "",
-    semenAnalysis: initialData?.semenAnalysis || "yes",
-    semenAnalysisContent: initialData?.semenAnalysisContent || "",
-    fertilityIssues: initialData?.fertilityIssues || "no",
-    fertilityIssuesContent: initialData?.fertilityIssuesContent || "",
-    fertilityTreatment: initialData?.fertilityTreatment || "no",
-    fertilityTreatmentContent: initialData?.fertilityTreatmentContent || "",
-    surgeries: initialData?.surgeries || "no",
-    surgeriesContent: initialData?.surgeriesContent || "",
-  };
-
-  const [formData, setFormData] =
-    useState<FertilityAssessmentType>(initialFormData);
-  type FormError = Partial<Record<keyof FertilityAssessmentType, string>>;
-  const initialPhysicalData: PhysicalAssessmentDataModel = {
+  type FormError = Partial<
+    Record<
+      keyof FertilityAssessmentPartner | keyof PhysicalAssessmentDataModel,
+      string
+    >
+  >;
+  const initialFormErrorPhysical: FormError = {};
+  const [formErrorPhysical, setFormErrorPhysical] = useState<FormError>(
+    initialFormErrorPhysical
+  );
+  const initialFormErrorFertility: FormError = {};
+  const [formErrorFertility, setFormErrorFertility] = useState<FormError>(
+    initialFormErrorFertility
+  );
+  const initialFormDataPhysical: PhysicalAssessmentDataModel = {
     patientId: "",
     height: "",
     weight: "",
@@ -187,78 +176,171 @@ export function PhysicalFertilityAssessmentAccordion({
     heartRate: "",
   };
 
-  const [physicalFormData, setPhysicalFormData] =
-    useState<PhysicalAssessmentDataModel>(initialPhysicalData);
-  const [fertilityFormData, setFertilityFormData] =
-    useState<FertilityAssessmentType>(initialFormData);
+  const initialFormDataFertility: FertilityAssessmentPartner = {
+    semenAnalysis: "Yes",
+    semenAnalysisDetails: "",
+    fertilityIssues: "No",
+    fertilityIssuesDetails: "",
+    fertilityTreatments: "No",
+    fertilityTreatmentsDetails: "",
+    surgeries: "No",
+    surgeriesDetails: "",
+  };
+
+  const [formDataPhysical, setFormDataPhysical] =
+    useState<PhysicalAssessmentDataModel>(initialFormDataPhysical);
+  const [formDataFertility, setFormDataFertility] =
+    useState<FertilityAssessmentPartner>(initialFormDataFertility);
 
   const initialFormError: FormError = {};
   const [formError, setFormError] = useState<FormError>(initialFormError);
 
-  const validateForm = (data: FertilityAssessmentType): FormError => {
+  const validateFormPhysical = (
+    data: PhysicalAssessmentDataModel
+  ): FormError => {
     const errors: FormError = {};
 
-    if (!data.semenAnalysis?.trim())
-      errors.semenAnalysis = "Seminal Analysis is required";
-    if (data.semenAnalysis === "yes" && !data.semenAnalysisContent?.trim())
-      errors.semenAnalysisContent = "Seminal Analysis Content is required";
-    if (!data.fertilityIssues?.trim())
-      errors.fertilityIssues = "Fertility Issues is required";
-    if (data.fertilityIssues === "yes" && !data.fertilityIssuesContent?.trim())
-      errors.fertilityIssuesContent = "Fertility Issues Content is required";
-    if (!data.fertilityTreatment?.trim())
-      errors.fertilityTreatment = "Fertility Treatment is required";
+    if (!data.height.trim()) errors.height = "Height is required";
+    if (!data.weight.trim()) errors.weight = "Weight is required";
+    if (!data.bmi.trim()) errors.bmi = "BMI is required";
+
+    if (!data.bloodGroup.trim()) errors.bloodGroup = "Blood group is required";
+
     if (
-      data.fertilityTreatment === "yes" &&
-      !data.fertilityTreatmentContent?.trim()
-    )
-      errors.fertilityTreatmentContent =
-        "Fertility Treatment Content is required";
-    if (!data.surgeries?.trim()) errors.surgeries = "Surgeries is required";
-    if (data.surgeries === "yes" && !data.surgeriesContent?.trim())
-      errors.surgeriesContent = "Surgeries Content is required";
+      !data.bloodPressureSystolic.trim() ||
+      !data.bloodPressureDiastolic.trim()
+    ) {
+      errors.bloodPressureSystolic = "Systolic & Diastolic are required";
+    }
+
+    if (!data.heartRate.trim()) errors.heartRate = "Heart rate is required";
 
     return errors;
   };
-  const validateForm2 = (data: PhysicalAssessmentDataModel): FormError => {
+
+  const validateFormPhysicalFertility = (
+    data: FertilityAssessmentPartner
+  ): FormError => {
     const errors: FormError = {};
-    if (!data.height?.trim()) errors.height = "Height is required";
-    if (!data.weight?.trim()) errors.weight = "Weight is required";
-    if (!data.bmi?.trim()) errors.bmi = "BMI is required";
-    if (!data.bloodGroup?.trim()) errors.bloodGroup = "Blood group is required";
-    if (!data.bloodPressureSystolic?.trim()) errors.bloodPressureSystolic = "Blood pressure is required";
-    if (!data.heartRate?.trim()) errors.heartRate = "Heart rate is required";
+    if (!data.semenAnalysis.trim())
+      errors.semenAnalysis = "Seminal Analysis is required";
+    if (data.semenAnalysis === "Yes" && !data.semenAnalysisDetails.trim())
+      errors.semenAnalysisDetails = "Seminal Analysis Details is required";
+    if (!data.fertilityIssues.trim())
+      errors.fertilityIssues = "Fertility Issues is required";
+    if (data.fertilityIssues === "Yes" && !data.fertilityIssuesDetails.trim())
+      errors.fertilityIssuesDetails = "Fertility Issues Details is required";
+    if (!data.fertilityTreatments.trim())
+      errors.fertilityTreatments = "Fertility Treatments is required";
+    if (
+      data.fertilityTreatments === "Yes" &&
+      !data.fertilityTreatmentsDetails.trim()
+    )
+      errors.fertilityTreatmentsDetails =
+        "Fertility Treatments Details is required";
+    if (!data.surgeries.trim()) errors.surgeries = "Surgeries is required";
+    if (data.surgeries === "Yes" && !data.surgeriesDetails.trim())
+      errors.surgeriesDetails = "Surgeries Details is required";
+
     return errors;
   };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
 
-  const handleSubmit = () => {
-    const errors = validateForm(formData);
-    const error2 = validateForm2(physicalFormData);
+    const errorsPhysical = validateFormPhysical(formDataPhysical);
+    const errorsFertility = validateFormPhysicalFertility(formDataFertility);
+    // console.log("Errors Physical :", errorsPhysical);
 
-    setFormError(errors);
-    setFormError(error2);
-    if (Object.keys(errors).length !== 0) return;
+    setFormErrorPhysical(errorsPhysical);
+    setFormErrorFertility(errorsFertility);
 
-    setFormError(initialFormError);
-    setAddPartner(false);
-    setShowPartnerDetail(false);
-    setShowContent(true);
+    if (
+      Object.keys(errorsPhysical).length === 0 &&
+      Object.keys(errorsFertility).length === 0
+    ) {
+      // Handle form submission
 
-    setShowData((prev) => ({
-      ...prev,
-      PhysicalAssessmentData: [
-        ...prev.PhysicalAssessmentData,
-        physicalFormData, // <-- correct data added here
-      ],
-      fertilityAssessment: {
-        ...prev.fertilityAssessment,
-        ...fertilityFormData, // <-- correct data stored here
-      },
-    }));
+      const updatedFormDataPhysical = {
+        ...formDataPhysical,
+        patientId,
+      };
 
-    toast.success("Partner added successfully", {
-      icon: <BsInfoCircle size={22} color="white" />,
-    });
+      const updatedFormDataFertility = {
+        patientId: patientId,
+        semenAnalysis: {
+          status: formDataFertility.semenAnalysis,
+          semenAnalysisDetails: formDataFertility.semenAnalysisDetails,
+        },
+
+        fertilityIssues: {
+          status: formDataFertility.fertilityIssues,
+          fertilityIssuesDetails: formDataFertility.fertilityIssuesDetails,
+        },
+
+        fertilityTreatments: {
+          status: formDataFertility.fertilityTreatments,
+          fertilityTreatmentsDetails:
+            formDataFertility.fertilityTreatmentsDetails,
+        },
+
+        surgeries: {
+          status: formDataFertility.surgeries,
+          surgeriesDetails: formDataFertility.surgeriesDetails,
+        },
+      };
+
+      console.log("formDataPhysical Form data", updatedFormDataPhysical);
+      console.log("formDataFertility Form data", updatedFormDataFertility);
+
+      if (!partnerBasicDetails) return;
+      if (!partnerMedicalHistory) return;
+
+      Promise.all([
+        addPatientPartnerBasicDetails(partnerBasicDetails),
+        addPatientPartnerMedicalHistory(partnerMedicalHistory),
+        addPatientPartnerPhysicalAssessment(updatedFormDataPhysical),
+        addPatientPartnerFertilityAssessment(updatedFormDataFertility),
+      ])
+        .then(
+          ([basicDetailRes, medicalHistoryRes, physicalRes, fertilityRes]) => {
+            const basicDetailOk = basicDetailRes?.data?.status;
+            const medicalHistory = medicalHistoryRes?.data?.status;
+            const physicalOK = physicalRes?.data?.status;
+            const fertilityOK = fertilityRes?.data?.status;
+
+            if (basicDetailOk && medicalHistory && physicalOK && fertilityOK) {
+              // console.log("all API calls successful");
+              toast.success("Partner added successfully", {
+                icon: <BsInfoCircle size={22} color="white" />,
+              });
+              setFormErrorPhysical(initialFormErrorPhysical);
+              setFormErrorFertility(initialFormErrorFertility);
+              setAddPartner(false); // CLOSE MODAL HERE
+              fetchPatientData?.(); // FETCH NEW DATA
+            } else {
+              console.log("One of the APIs returned status false");
+            }
+          }
+        )
+        .catch((err) => {
+          console.log("error", err?.response);
+
+          const apiError = err?.response?.data;
+
+          // extract dynamic error message
+          const fieldError = apiError?.details?.errors
+            ? Object.values(apiError.details.errors)[0] // pick first field error
+            : null;
+
+          const message =
+            fieldError ||
+            apiError?.details?.message ||
+            apiError?.message ||
+            "Something went wrong";
+
+          toast.error(message);
+        });
+    }
   };
 
   return (
@@ -275,14 +357,10 @@ export function PhysicalFertilityAssessmentAccordion({
           </Accordion.Header>
           <Accordion.Body className="pt-0">
             <PhysicalAssessment
-              setFormError={setFormError}
-              formError={formError}
-              formData={physicalFormData}
-              setFormData={setPhysicalFormData}
-              setShowContent={setShowContent}
-              setShowPartnerDetail={setShowPartnerDetail}
-              setShowData={setShowData}
-              showData={showData}
+              setFormError={setFormErrorPhysical}
+              formError={formErrorPhysical}
+              formData={formDataPhysical}
+              setFormData={setFormDataPhysical}
             />
           </Accordion.Body>
         </Accordion.Item>
@@ -297,15 +375,10 @@ export function PhysicalFertilityAssessmentAccordion({
           </Accordion.Header>
           <Accordion.Body className="pt-0">
             <FertilityAssessment
-              formData={formData}
-              setFormData={setFormData}
-              setFormError={setFormError}
-              formError={formError}
-              setShowContent={setShowContent}
-              setShowPartnerDetail={setShowPartnerDetail}
-              setShowData={setShowData}
-              showData={showData}
-              initialData={initialData}
+              formData={formDataFertility}
+              setFormData={setFormDataFertility}
+              setFormError={setFormErrorFertility}
+              formError={formErrorFertility}
             />
           </Accordion.Body>
         </Accordion.Item>

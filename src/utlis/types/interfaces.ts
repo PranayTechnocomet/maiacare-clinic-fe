@@ -19,7 +19,7 @@ export interface PatientData {
 }
 export interface PersonalDetails {
   _id?: string;
-  profileImage: string | StaticImageData; 
+  profileImage: string | StaticImageData;
   name: string;
   gender: string;
   dob: string;
@@ -122,8 +122,58 @@ export interface FertilityAssessmentPartner {
 
   surgeries: string;
   surgeriesDetails: string;
-}
 
+  id?: string;
+  height?: string;
+  weight?: string;
+  bmi?: string;
+  bloodGroup?: string;
+
+  bloodPressureSystolic?: string;
+  bloodPressureDiastolic?: string;
+
+  heartRate?: string;
+  // semenAnalysis: string;
+  semenAnalysisContent?: string;
+  // fertilityIssues: string;
+  fertilityIssuesContent?: string;
+  fertilityTreatment?: string;
+  fertilityTreatmentContent?: string;
+  // surgeries: string;
+  surgeriesContent?: string;
+}
+export interface PartnerBasicDetailsForm {
+  patientId?: string | number;
+  partnerImage: string;
+  partnerName: string;
+  partnerGender: string;
+  partnerAge: string | number;
+  partnerContactNumber: string;
+  partnerEmail: string;
+}
+export interface partnerMedicalHistory {
+  patientId?: string | number;
+
+  medications?: {
+    status: string;
+    details?: string | null;
+  };
+
+  surgeries?: {
+    status: string;
+    details?: string | null;
+  };
+
+  conditions?: string[];
+
+  familyHistory?: string;
+
+  lifestyle?: string[];
+
+  exerciseFrequency?: string;
+
+  stressLevel?: string;
+}
 export interface FertilityAssessmentPartnerShow {
   clinicId: string;
 
@@ -162,10 +212,10 @@ export interface PatientData {
   emergencyContact: EmergencyContact;
   verified: boolean;
   patientId: number;
-  physicalAssessment: PhysicalAssessment[];   // Updated
-  medicalHistory: MedicalHistoryShow | null;      // Updated
+  physicalAssessment: PhysicalAssessment[]; // Updated
+  medicalHistory: MedicalHistoryShow | null; // Updated
   fertilityAssessment: FertilityAssessment | null; // Updated
-  partnerDetails: PartnerDetails | null;      // Updated
+  partnerDetails: PartnerDetails | null; // Updated
 }
 export interface BookAppointmentForm {
   name: string;
@@ -179,7 +229,7 @@ export interface BookAppointmentForm {
   appointmentTime: string;
   forTime: string;
   additionalNote: string;
- 
+
   // Patient Details
   patientName: SelectPatientType | null; // object (NOT array)
   phone: string;
@@ -359,21 +409,15 @@ export interface SelectPatientType {
 
 export interface MedicalHistoryType {
   medication: string;
-  medicationcontent: string;
-
   surgeries: string;
-  surgeriesContent: string;
-
-  currentMedication?: string;
-
-  MedicalconditionAllergies: OptionType[];
-
+  // surgeriesContent: string,
+  medicalCondition: OptionType[];
   familyMedicalHistory: string;
-
   lifestyle: OptionType[];
-
-  exercise: string;
   stress: string;
+  exercise: string;
+  medicationcontent: string;
+  surgeriescontent: string;
 }
 
 export interface TreatmentPlan {
@@ -472,7 +516,7 @@ export type ScheduleTimeOff = {
 
 export interface FertilityAssessmentFormType {
   fertilityAssessmentId?: string;
-  _id?:string;
+  _id?: string;
   ageAtFirstMenstruation: string;
   cycleLength: string;
   periodLength: string;

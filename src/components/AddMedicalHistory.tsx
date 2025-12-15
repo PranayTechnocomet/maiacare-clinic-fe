@@ -124,7 +124,12 @@ const AddMedicalHistory = () => {
       label: "Partner Details",
       content: (
         <div>
-          <PartnerDetail setActiveTab={setActiveTab} />
+          <PartnerDetail
+            setActiveTab={setActiveTab}
+            patientId={patientData?._id}
+            showData={partnerDetails}
+            fetchPatientData={fetchPatientData}
+          />
         </div>
       ),
     },

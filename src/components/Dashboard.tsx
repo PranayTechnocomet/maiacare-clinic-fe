@@ -660,7 +660,7 @@ const Dashboard: React.FC = () => {
             </Card>
           </Col>
           <Col md={3} xxl={2}>
-            <Card className="mt-lg-4 mt-xxl-0">
+            <Card className="mt-md-4 mt-xxl-0">
               <Card.Body>
                 <Card.Title className="phisical-assessment-accordion-title-showData">
                   <Image
