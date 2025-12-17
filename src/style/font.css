@@ -961,7 +961,7 @@
   color: var(--color-heading);
 }
 .card {
-  border: none;
+  border: none  ;
   border-radius: 12px;
 }
 .dashboard-progress-bar {
@@ -1345,7 +1345,7 @@
 }
 
 .camera-icon {
-  right: -10%;
+  right: 0%;
   top: 60%;
 }
 

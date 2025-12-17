@@ -168,7 +168,7 @@ export const getPatientPartnerFertilityAssessment = (id: string | number) => {
   return apiClient.get(`/patient/partner/fertilityAssessment/${id}`);
 };
 // update
-export const updatePatientPartnerFertilityAssessment = (
+export const updatePatientPartnerFertilityAssessment = (   
   data: object
 ) => {
   return apiClient.put("/patient/partner/fertilityAssessment", data);

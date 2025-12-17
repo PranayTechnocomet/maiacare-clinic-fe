@@ -15,12 +15,15 @@ import Camera from "../../assets/images/Camera.png";
 import { PhoneNumberInput } from "../ui/PhoneNumberInput";
 import "../../style/ui.css";
 import { TimePickerFieldGroup } from "../ui/CustomTimePicker";
+import { DoctorDetails } from "@/utlis/types/interfaces";
 
 export default function AddDoctorClinicdetails({
   onNext,
   onPrevious,
+  data,
 }: {
-  onNext: () => void;
+  data: DoctorDetails["clinicDetails"];
+  onNext: (data: DoctorDetails["clinicDetails"]) => void;
   onPrevious: () => void;
 }) {
   // Personal Details
@@ -144,14 +147,60 @@ export default function AddDoctorClinicdetails({
     }
     return errors;
   };
+
+  const buildClinicPayload = (): DoctorDetails["clinicDetails"] => {
+    return {
+      clinicLogo: selectedImage || "",
+      clinicName: formData.Name,
+      contactNumber: formData.Contact,
+      email: formData.Email,
+      address: formData.Address,
+      mapLink: formData.MapLink,
+      pincode: formData.Pincode,
+      city: formData.City,
+      state: formData.State,
+
+      operationalHours:
+        custome === 0
+          ? {
+              type: "COMMON",
+              common: {
+                mondayFriday: `${formData.MF} - ${formData.Time}`,
+                saturdaySunday: `${formData.SS} - ${formData.Timer}`,
+              },
+            }
+          : {
+              type: "CUSTOM",
+              custom: {
+                monday: formData.M || "",
+                tuesday: formData.T || "",
+                wednesday: formData.W || "",
+                thursday: formData.Th || "",
+                friday: formData.F || "",
+                saturday: formData.S || "",
+                sunday: formData.Sun || "",
+              },
+            },
+
+      contactPerson: {
+        name: formData.ContactName,
+        contactNumber: formData.ContactNo,
+        email: formData.ContactEmail,
+        aadharNumber: "",
+      },
+    };
+  };
+
   // nextpage
   const handleNextClick = () => {
     const errors = validateForm(formData);
     setFormError(errors);
     if (Object.keys(errors).length === 0) {
-      console.log("clinicdetails",formData);
-      
-      onNext();
+      console.log("clinicdetails", formData);
+      const payload = buildClinicPayload();
+      console.log("Clinicpayload", payload);
+
+      onNext(payload);
     } else {
       console.log("Form has errors:", errors);
     }

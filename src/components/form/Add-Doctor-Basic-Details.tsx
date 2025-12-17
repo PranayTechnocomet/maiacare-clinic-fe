@@ -18,13 +18,16 @@ import Camera from "../../assets/images/Camera.png";
 import { PhoneNumberInput } from "../ui/PhoneNumberInput";
 import cross from "../../assets/images/crossedit.png";
 import { InputSelect } from "../ui/InputSelect";
+import { DoctorDetails, Qualification } from "@/utlis/types/interfaces";
 export default function AddDoctorBasicDetails({
+  data,
   onNext,
-  onSaveDoctor,
-}: // onUpdate,
+}: // onSaveDoctor,
+// onUpdate,
 {
-  onNext: () => void;
-  onSaveDoctor: (doctorData: unknown) => void;
+  data: DoctorDetails;
+  onNext: (data: Partial<DoctorDetails>) => void;
+  // onSaveDoctor: (doctorData: unknown) => void;
   // onUpdate: (data: FormData) => void;
 }) {
   // Personal Details
@@ -44,8 +47,7 @@ export default function AddDoctorBasicDetails({
     Contact: string;
     Email: string;
     Fees: string;
-    // About: string;
-    // qualifications
+
     degree: string;
     field: string;
     university: string;
@@ -101,11 +103,11 @@ export default function AddDoctorBasicDetails({
     if (!data.gender.trim()) errors.gender = "Gender is required";
     if (!data.Fees?.trim()) errors.Fees = "Fees is required";
     if (!data.Experience?.trim()) errors.Experience = "Experience is required";
-    if (!data.university?.trim()) errors.university = "university is required";
-    if (!data.field?.trim()) errors.field = "Field is required";
-    if (!data.university?.trim()) errors.university = "university is required";
-    if (!data.startYear?.trim()) errors.startYear = "Start Year is required";
-    if (!data.endYear?.trim()) errors.endYear = "End Year is required";
+    // if (!data.university?.trim()) errors.university = "university is required";
+    // if (!data.field?.trim()) errors.field = "Field is required";
+    // if (!data.university?.trim()) errors.university = "university is required";
+    // if (!data.startYear?.trim()) errors.startYear = "Start Year is required";
+    // if (!data.endYear?.trim()) errors.endYear = "End Year is required";
     const contactRegex = /^[0-9]{10}$/;
     if (!data.Contact.trim()) {
       errors.Contact = "Contact number is required";
@@ -122,26 +124,103 @@ export default function AddDoctorBasicDetails({
     // if (!data.About.trim()) errors.About = "About is required";
     return errors;
   };
+  const validateQualifications = () => {
+  let isValid = true;
 
-  const handleNextClick = () => {
-    const errors = validateForm(formData); // single form errors All
-    setFormError(errors);
-    if (Object.keys(errors).length === 0) {
-      const newDoctor = {
-        name: formData.Name,
-        email: formData.Email,
-        specialization: formData.Speciality,
-        contact: formData.Contact,
-        image: selectedImage || "",
-      };
-      onSaveDoctor(newDoctor);
-      console.log(newDoctor);
+  const updatedErrors = qualifications.map((q) => {
+    const err = {
+      degree: "",
+      field: "",
+      university: "",
+      startYear: "",
+      endYear: "",
+    };
 
-      onNext();
-    } else {
-      console.log("Form has errors:", { errors });
+    if (!q.degree.trim()) {
+      err.degree = "Degree is required";
+      isValid = false;
     }
+    if (!q.field.trim()) {
+      err.field = "Field is required";
+      isValid = false;
+    }
+    if (!q.university.trim()) {
+      err.university = "University is required";
+      isValid = false;
+    }
+    if (!q.startYear) {
+      err.startYear = "Start Year is required";
+      isValid = false;
+    }
+    if (!q.endYear) {
+      err.endYear = "End Year is required";
+      isValid = false;
+    }
+
+    return err;
+  });
+
+  setFormErrors(updatedErrors);
+  return isValid;
+};
+
+  const buildDoctorPayload = (): Partial<DoctorDetails> => {
+    return {
+      profilePicture: selectedImage || "",
+      name: formData.Name,
+      specialty: formData.Speciality,
+      yearsOfExperience: Number(formData.Experience),
+      dob: formData.date,
+      gender: formData.gender,
+      fees: Number(formData.Fees),
+      servicesOffered: selectedServices.map((s) => s.service),
+      contactNumber: formData.Contact,
+      email: formData.Email,
+      qualifications: qualifications.map<Qualification>((q) => ({
+        degree: q.degree,
+        fieldOfStudy: q.field,
+        university: q.university,
+        startYear: Number(q.startYear), // ✅ FIX
+        endYear: Number(q.endYear),
+      })),
+    };
   };
+ const handleNextClick = () => {
+  const errors = validateForm(formData);
+  setFormError(errors);
+
+  const isQualificationValid = validateQualifications();
+
+  if (
+    Object.keys(errors).length === 0 &&
+    isQualificationValid
+  ) {
+    const payload = buildDoctorPayload();
+    console.log("Doctor Basic Payload:", payload);
+    onNext(payload);
+  }
+};
+
+
+  // const handleNextClick = () => {
+  //   const errors = validateForm(formData);
+  //   setFormError(errors);
+  //   if (Object.keys(errors).length === 0) {
+  //     const newDoctor = {
+  //       name: formData.Name,
+  //       email: formData.Email,
+  //       specialization: formData.Speciality,
+  //       contact: formData.Contact,
+  //       image: selectedImage || "",
+  //     };
+
+  //     console.log(newDoctor);
+
+  //     onNext();
+  //   } else {
+  //     console.log("Form has errors:", { errors });
+  //   }
+  // };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>

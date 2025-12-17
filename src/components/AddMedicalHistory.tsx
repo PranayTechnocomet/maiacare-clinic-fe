@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import Head from "next/head";
 import ProfileImage from "../assets/images/patient_profile.png";
 import { ProfileCard } from "../components/ui/custom/ProfileCard";
@@ -104,7 +104,7 @@ const AddMedicalHistory = () => {
   }, [patientId]);
   const tabOptions = [
     {
-      key: "basic",
+      key: "basic", 
       label: "Basic Details",
       content: (
         <div className="mt-4">

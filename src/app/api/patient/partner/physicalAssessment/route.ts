@@ -5,13 +5,10 @@ import { handleApiError } from "@/utlis/apis/errorHandler";
 
 // add
 export async function POST(req: Request) {
-  const API_BASE_URL = "patient/partner/physicalAssessment";
-
+  const API_BASE_URL = "/patient/partner/physicalAssessment";
   try {
     const body = await parseRequestBody(req);
-
     const response = await apiServer.post(API_BASE_URL, body);
-
     return new NextResponse(JSON.stringify(response.data), {
       headers: { "Content-Type": "application/json" },
     });

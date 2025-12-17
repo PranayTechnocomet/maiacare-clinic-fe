@@ -22,10 +22,10 @@ import Modal from "../ui/Modal";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 export default function AddDoctorKycDetails({
-  onNext,
+  // onNext,
   onPrevious,
 }: {
-  onNext: () => void;
+  // onNext: () => void;
   onPrevious: () => void;
 }) {
   interface FormError {

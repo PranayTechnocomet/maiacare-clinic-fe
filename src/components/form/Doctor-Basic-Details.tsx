@@ -462,7 +462,7 @@ const DoctorBasicDetails = () => {
                 <Modal
                   show={showModal}
                   onHide={handleClose}
-                  dialogClassName="custom-modal-width"
+                  // dialogClassName="custom-modal-width"
                   header="Qualification Details"
                   centered
                 >

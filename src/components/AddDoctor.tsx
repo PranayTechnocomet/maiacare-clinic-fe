@@ -7,6 +7,7 @@ import { AppDispatch } from "@/utlis/redux/store";
 import { useDispatch } from "react-redux";
 import { setHeaderData } from "@/utlis/redux/slices/headerSlice";
 import AddDoctorKycDetails from "./form/Add-Doctor-Kyc-Details";
+import { DoctorDetails } from "@/utlis/types/interfaces";
 
 const AddDoctor = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -21,14 +22,71 @@ const AddDoctor = () => {
   }, []);
   const [activeTab, setActiveTab] = useState<string>("basic");
 
-  const handlebasicNextClick = () => {
+  const [doctorDetails, setDoctorDetails] = useState<DoctorDetails>({
+    profilePicture: "",
+    name: "",
+    specialty: "",
+    yearsOfExperience: 0,
+    dob: "",
+    gender: "",
+    fees: 0,
+    servicesOffered: [],
+    contactNumber: "",
+    email: "",
+    clinicDetails: {
+      clinicLogo: "",
+      clinicName: "",
+      contactNumber: "",
+      email: "",
+      address: "",
+      mapLink: "",
+      pincode: "",
+      city: "",
+      state: "",
+      useCustomHours: false,
+      groupOperationalHours: {
+        weekdayOpen: "",
+        weekdayClose: "",
+        weekendOpen: "",
+        weekendClose: "",
+      },
+      contactPerson: {
+        name: "",
+        contactNumber: "",
+        email: "",
+        aadharNumber: "",
+      },
+    },
+    qualifications: [],
+    kycDetails: {
+      aadharNumber: "",
+      aadharFile: "",
+      panNumber: "",
+      panFile: "",
+      licenceNumber: "",
+      licenceFile: "",
+      otherDocuments: [],
+    },
+  });
+
+  const handlebasicNextClick = (basicData: Partial<DoctorDetails>) => {
+    setDoctorDetails((prev) => ({
+      ...prev,
+      ...basicData,
+    }));
     setActiveTab("Clinic");
-    // onUpdate={(data) => setBasicDetails(data)}
   };
-  const handleNextClick = () => {
+  // const handleNextClick = () => {
+  //   // setActiveTab("KYC");
+  // };
+  const handleNextClick = (clinicData: DoctorDetails["clinicDetails"]) => {
+    setDoctorDetails((prev) => ({
+      ...prev,
+      clinicDetails: clinicData,
+    }));
+
     setActiveTab("KYC");
   };
-
   const handlePrevious = () => {
     setActiveTab("basic");
   };
@@ -65,16 +123,15 @@ const AddDoctor = () => {
         tabOptions={tabOptions}
       />
       {activeTab === "basic" && (
-        <div>
-          <AddDoctorBasicDetails
-            onNext={handlebasicNextClick}
-            onSaveDoctor={handleAddDoctor}
-          />
-        </div>
+        <AddDoctorBasicDetails
+          data={doctorDetails}
+          onNext={handlebasicNextClick}
+        />
       )}
       {activeTab === "Clinic" && (
         <div>
           <AddDoctorClinicdetails
+            data={doctorDetails.clinicDetails}
             onNext={handleNextClick}
             onPrevious={handlePrevious}
           />
@@ -83,7 +140,7 @@ const AddDoctor = () => {
       {activeTab === "KYC" && (
         <div>
           <AddDoctorKycDetails
-            onNext={handleNextClick}
+            // onNext={handleNextClick}
             onPrevious={handlePrevious}
           />
         </div>

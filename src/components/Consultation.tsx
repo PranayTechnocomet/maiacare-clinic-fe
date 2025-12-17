@@ -559,8 +559,8 @@ export default function Consultation() {
             <PiSlidersDuotone />
           </Button>
 
-          <Button variant="default" onClick={handleAddPatient}>
-            <div className="d-flex justify-content-center align-items-center gap-2">
+          <Button variant="default" onClick={handleAddPatient} className="common-btn-blue">
+            <div className="d-flex justify-content-center  align-items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="19"

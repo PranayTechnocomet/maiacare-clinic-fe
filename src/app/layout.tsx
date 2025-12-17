@@ -3,10 +3,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../style/font.css";
 import "../style/ui.css";
 // import "../style/sitelayout.css";
 import "../style/globals.css";
+import "../style/font.css";
 import MasterHelper from "../utlis/MasterHelper";
 import { Toaster } from "react-hot-toast";
 import { DoctorProvider } from "@/components/DoctorContext";

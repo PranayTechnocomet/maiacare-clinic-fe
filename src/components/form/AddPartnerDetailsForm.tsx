@@ -115,7 +115,7 @@ export function BasicDetailsForm({
 
   const initialFormData: FormData = {
     basic_detail_name: "",
-    basic_detail_gender: "male",
+    basic_detail_gender: "Male",
     basic_detail_age: "",
     basic_detail_phone: "",
     basic_detail_email: "",
@@ -325,8 +325,8 @@ export function BasicDetailsForm({
               onChange={(e) => handleChange(e)}
               required
               options={[
-                { label: "Male", value: "male" },
-                { label: "Female", value: "female" },
+                { label: "Male", value: "Male" },
+                { label: "Female", value: "Female" },
               ]}
             />
           </Col>
@@ -676,17 +676,17 @@ export function MedicalHistoryForm({
             <RadioButtonGroup
               label="Are you currently taking any medications?"
               name="medication"
-              value={FormData.medication || "yes"}
+              value={FormData.medication || "Yes"}
               onChange={(e) => handleChange(e)}
               required={true}
               error={medicalHistoryFormError.medication}
               options={[
-                { label: "Yes", value: "yes" },
-                { label: "No", value: "no" },
+                { label: "Yes", value: "Yes" },
+                { label: "No", value: "No" },
               ]}
             />
 
-            {FormData.medication === "yes" && (
+            {FormData.medication === "Yes" && (
               <InputFieldGroup
                 type="text"
                 value={FormData.medicationcontent}
@@ -702,17 +702,17 @@ export function MedicalHistoryForm({
             <RadioButtonGroup
               label="Have you had any surgeries?"
               name="surgeries"
-              value={FormData.surgeries || "yes"}
+              value={FormData.surgeries || "Yes"}
               onChange={(e) => handleChange(e)}
               required={true}
               error={medicalHistoryFormError.surgeries}
               options={[
-                { label: "Yes", value: "yes" },
-                { label: "No", value: "no" },
+                { label: "Yes", value: "Yes" },
+                { label: "No", value: "No" },
               ]}
             />
 
-            {FormData.surgeries === "yes" && (
+            {FormData.surgeries === "Yes" && (
               <InputFieldGroup
                 type="text"
                 value={FormData.surgeriescontent}
@@ -834,9 +834,9 @@ export function MedicalHistoryForm({
               required={true}
               error={medicalHistoryFormError.exercise}
               options={[
-                { label: "Never", value: "never" },
-                { label: "Rarely", value: "rarely" },
-                { label: "Regularly", value: "regularly" },
+                { label: "Never", value: "Never" },
+                { label: "Rarely", value: "Rarely" },
+                { label: "Regularly", value: "Regularly" },
               ]}
             />
           </Col>
@@ -849,9 +849,9 @@ export function MedicalHistoryForm({
               required={true}
               error={medicalHistoryFormError.stress}
               options={[
-                { label: "Low", value: "low" },
-                { label: "Moderate", value: "moderate" },
-                { label: "High", value: "high" },
+                { label: "Low", value: "Low" },
+                { label: "Moderate", value: "Moderate" },
+                { label: "High", value: "High" },
               ]}
             />
           </Col>
@@ -1122,15 +1122,15 @@ export function FertilityAssessment({
               required={true}
               error={formError?.semenAnalysis}
               options={[
-                { label: "Yes", value: "yes" },
-                { label: "No", value: "no" },
+                { label: "Yes", value: "Yes" },
+                { label: "No", value: "No" },
               ]}
             />
 
-            {formData.semenAnalysis === "yes" && (
+            {formData.semenAnalysis === "Yes" && (
               <InputFieldGroup
                 type="text"
-                value={formData.semenAnalysisContent}
+                value={formData.semenAnalysisDetails}
                 name="semenAnalysisContent"
                 onChange={handleChange}
                 error={formError?.semenAnalysisContent}
@@ -1143,20 +1143,20 @@ export function FertilityAssessment({
             <RadioButtonGroup
               label="Have you experienced any fertility issues?"
               name="fertilityIssues"
-              value={formData.fertilityIssues || "yes"}
+              value={formData.fertilityIssues || "Yes"}
               onChange={(e) => handleChange(e)}
               required={true}
               error={formError?.fertilityIssues}
               options={[
-                { label: "Yes", value: "yes" },
-                { label: "No", value: "no" },
+                { label: "Yes", value: "Yes" },
+                { label: "No", value: "No" },
               ]}
             />
 
-            {formData.fertilityIssues === "yes" && (
+            {formData.fertilityIssues === "Yes" && (
               <InputFieldGroup
                 type="text"
-                value={formData.fertilityIssuesContent}
+                value={formData.fertilityIssuesDetails}
                 name="fertilityIssuesContent"
                 onChange={handleChange}
                 error={formError?.fertilityIssuesContent}
@@ -1169,20 +1169,20 @@ export function FertilityAssessment({
             <RadioButtonGroup
               label="Have you previously undergone fertility treatments?"
               name="fertilityTreatment"
-              value={formData.fertilityTreatment || "yes"}
+              value={formData.fertilityTreatment || "Yes"}
               onChange={(e) => handleChange(e)}
               required={true}
               error={formError?.fertilityTreatment}
               options={[
-                { label: "Yes", value: "yes" },
-                { label: "No", value: "no" },
+                { label: "Yes", value: "Yes" },
+                { label: "No", value: "No" },
               ]}
             />
 
-            {formData.fertilityTreatment === "yes" && (
+            {formData.fertilityTreatment === "Yes" && (
               <InputFieldGroup
                 type="text"
-                value={formData.fertilityTreatmentContent}
+                value={formData.fertilityTreatmentsDetails}
                 name="fertilityTreatmentContent"
                 onChange={handleChange}
                 error={formError?.fertilityTreatmentContent}
@@ -1195,20 +1195,20 @@ export function FertilityAssessment({
             <RadioButtonGroup
               label="Any history of surgeries?"
               name="surgeries"
-              value={formData.surgeries || "yes"}
+              value={formData.surgeries || "Yes"}
               onChange={(e) => handleChange(e)}
               required={true}
               error={formError?.surgeries}
               options={[
-                { label: "Yes", value: "yes" },
-                { label: "No", value: "no" },
+                { label: "Yes", value: "Yes" },
+                { label: "No", value: "No" },
               ]}
             />
 
-            {formData.surgeries === "yes" && (
+            {formData.surgeries === "Yes" && (
               <InputFieldGroup
                 type="text"
-                value={formData.surgeriesContent}
+                value={formData.surgeriesDetails}
                 name="surgeriesContent"
                 onChange={handleChange}
                 error={formError?.surgeriesContent}

@@ -390,13 +390,13 @@ export type FertilityAssessmentType = {
 
 export interface EditFertilityAssessment {
   semenAnalysis: string;
-  semenAnalysisContent: string;
+  semenAnalysisDetails: string;
   fertilityIssues: string;
-  fertilityIssuesContent: string;
+  fertilityIssuesDetails: string;
   fertilityTreatment: string;
-  fertilityTreatmentContent: string;
+  fertilityTreatmentsDetails: string;
   surgeries: string;
-  surgeriesContent: string;
+  surgeriesDetails: string;
 }
 
 export type OptionType = { value: string; label: string };
@@ -630,7 +630,26 @@ export interface GroupOperationalHours {
   weekendOpen: string;
   weekendClose: string;
 }
+export interface CommonOperationalHours {
+  type: "COMMON";
+  common: {
+    mondayFriday: string;
+    saturdaySunday: string;
+  };
+}
 
+export interface CustomOperationalHours {
+  type: "CUSTOM";
+  custom: {
+    monday: string;
+    tuesday: string;
+    wednesday: string;
+    thursday: string;
+    friday: string;
+    saturday: string;
+    sunday: string;
+  };
+}
 export interface ClinicDetails {
   clinicLogo: string;
   clinicName: string;
