@@ -64,6 +64,9 @@ export default function Consultation() {
   const [searchQuery, setSearchQuery] = useState("");
   const [timeFilter, setTimeFilter] = useState("All Time");
   const [showModal, setShowModal] = useState(false);
+  const [patientTotal, setPatientTotal] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [activePage, setActivePage] = useState<number>(1);
 
   const router = useRouter();
   // const [selectedPatient, setSelectedPatient] = useState<ConsultationInfo | null>(null);
@@ -360,7 +363,7 @@ export default function Consultation() {
       },
     },
     {
-           header: "Actions",
+      header: "Actions",
       cell: (info) => {
         const id = info.row.original._id; // <-- use id directly
         return (
@@ -387,10 +390,7 @@ export default function Consultation() {
                   View Profile
                 </Dropdown.Item>
                 <Dropdown.Item
-                  onClick={() =>
-                  router.push(`/patients/editPatient/${id}`)
-                }
-              
+                  onClick={() => router.push(`/patients/editPatient/${id}`)}
                 >
                   <Image
                     src={edit}
@@ -401,7 +401,7 @@ export default function Consultation() {
                   />
                   Edit Profile
                 </Dropdown.Item>
-                <Dropdown.Item 
+                <Dropdown.Item
                 // onClick={() => handleActive(info.row.original)}
                 >
                   <Image
@@ -435,40 +435,88 @@ export default function Consultation() {
               </Button>
             </div>
           </div>
-        );    
+        );
       },
     },
   ];
-  useEffect(() => {
+  // useEffect(() => {
+  //   setLoading(true); // start loader
+  //   getAll({ page: 1 })
+  //     .then((response) => {
+  //       console.log("response: ", response.data);
+  //       setGetAllPatients(response.data.data);
+  //       setPatientCoute(response.data.total);
+  //     })
+  //     .catch((err) => {
+  //       console.log("error", err?.response);
+
+  //       const apiError = err?.response?.data;
+
+  //       // extract dynamic error message
+  //       const fieldError = apiError?.details?.errors
+  //         ? Object.values(apiError.details.errors)[0] // pick first field error
+  //         : null;
+
+  //       const message =
+  //         fieldError ||
+  //         apiError?.details?.message ||
+  //         apiError?.message ||
+  //         "Something went wrong";
+
+  //       toast.error(message);
+  //     })
+  //     .finally(() => {
+  //       setLoading(false); // stop loader
+  //     });
+  // }, []);
+  const fetchallpatient = () => {
+    const tableobj = {
+      limit: 10,
+      page: activePage,
+    };
+
     setLoading(true); // start loader
-    getAll()
-      .then((response) => {
-        console.log("response: ", response.data);
-        setGetAllPatients(response.data.data);
-        setPatientCoute(response.data.total);
-      })
-      .catch((err) => {
-        console.log("error", err?.response);
+    setTimeout(() => {
+      getAll(tableobj)
+        .then((response) => {
+          if (response.data.status) {
+            // console.log("response: ", response.data);
+            setGetAllPatients(response.data.data);
+            setPatientTotal(response.data.total);
+            setTotalPages(response.data.pages);
+          } else {
+            console.log("Error...");
+          }
+        })
+        .catch((err) => {
+          console.log("error", err?.response);
 
-        const apiError = err?.response?.data;
+          const apiError = err?.response?.data;
 
-        // extract dynamic error message
-        const fieldError = apiError?.details?.errors
-          ? Object.values(apiError.details.errors)[0] // pick first field error
-          : null;
+          // extract dynamic error message
+          const fieldError = apiError?.details?.errors
+            ? Object.values(apiError.details.errors)[0] // pick first field error
+            : null;
 
-        const message =
-          fieldError ||
-          apiError?.details?.message ||
-          apiError?.message ||
-          "Something went wrong";
+          const message =
+            fieldError ||
+            apiError?.details?.message ||
+            apiError?.message ||
+            "Something went wrong";
 
-        toast.error(message);
-      })
-      .finally(() => {
-        setLoading(false); // stop loader
-      });
+          toast.error(message);
+        })
+        .finally(() => {
+          setLoading(false); // stop loader
+        });
+    }, 500);
+  };
+  useEffect(() => {
+    fetchallpatient();
   }, []);
+  useEffect(() => {
+    fetchallpatient();
+  }, [activePage]);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -537,7 +585,7 @@ export default function Consultation() {
           >
             <div className="consultations-image-book d-flex align-items-center">
               <Image src={patient} alt="patients" width={40} height={40} />
-              <div className="Consultations-book">98 Patients</div>
+              <div className="Consultations-book">{patientTotal} Patients</div>
             </div>
           </div>
         </div>
@@ -559,7 +607,11 @@ export default function Consultation() {
             <PiSlidersDuotone />
           </Button>
 
-          <Button variant="default" onClick={handleAddPatient} className="common-btn-blue">
+          <Button
+            variant="default"
+            onClick={handleAddPatient}
+            className="common-btn-blue"
+          >
             <div className="d-flex justify-content-center  align-items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -580,7 +632,15 @@ export default function Consultation() {
       </div>
 
       {/* Table */}
-      <CommonTable data={getAllPatients} columns={columns} />
+      <CommonTable
+        data={getAllPatients}
+        columns={columns}
+        tableTotal={patientTotal}
+        totalPages={totalPages}
+        loading={loading}
+        setActivePage={setActivePage}
+        activePage={activePage}
+      />
       <PatientAddedModal />
       {/* activate_deactivate_modal */}
       {showActivedeactive && (

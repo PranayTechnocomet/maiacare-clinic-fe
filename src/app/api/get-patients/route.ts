@@ -3,11 +3,11 @@ import { NextResponse } from "next/server";
 import apiServer from "@/utlis/apis/axiosBackendHelper";
 import { handleApiError } from "@/utlis/apis/errorHandler";
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   const API_BASE_URL = "/get-patients";
 
   try {
-    const response = await apiServer.get(API_BASE_URL);
+    const response = await apiServer.post(API_BASE_URL);
 
     return new NextResponse(JSON.stringify(response.data), {
       headers: { "Content-Type": "application/json" },

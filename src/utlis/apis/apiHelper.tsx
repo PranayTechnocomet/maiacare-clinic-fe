@@ -38,24 +38,20 @@ export const updateProfile = (data: object) => {
 // ====: Patient :====
 // add Patient //done
 export const addPatient = (data: AddPatientFormObjType) => {
-  return apiClient.post("/patient/add-patient", data);
+  return apiClient.post("/add-patient", data);
 };
 // getAll Patient //done
-export const getAll = () => {
-  const token = localStorage.getItem("token");
-  return apiClient.get("/patient/get-patient", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const getAll = (data: object) => {
+  return apiClient.post("/get-patients", data);
 };
+
 // get patient info //done
 export const getPatientInfo = (id: string | number) => {
-  return apiClient.get(`/patient/get-patient-info/${id}`);
+  return apiClient.get(`/get-patient/${id}`);
 };
 // update patient   //not done data is get but not updated
 export const updatePatient = (id: string | number, data: object) => {
-  return apiClient.put(`/patient/update-patient/${id}`, data);
+  return apiClient.put(`/update-patient/${id}`, data);
 };
 
 // done
@@ -177,17 +173,17 @@ export const updatePatientPartnerFertilityAssessment = (
 // ====: Doctor :====
 // add Doctor
 export const addDoctor = (data: object) => {
-  return apiClient.post("/doctor/add-doctor", data);
+  return apiClient.post("/add-doctor", data);
 };
 // edit doctor
 export const editDoctor = (data: object) => {
-  return apiClient.put("/doctor/update-doctor", data);
+  return apiClient.put("/update-doctor", data);
 };
 // get Doctor
 export const getDoctor = (id: string | number) => {
-  return apiClient.get(`/doctor/get-doctor/${id}`);
+  return apiClient.get(`/get-doctor/${id}`);
 };
-
+     
 // Qualifications....
 // add
 export const addQualifications = (data: Qualification, id: string | number) => {
