@@ -12,8 +12,13 @@ import { setHeaderData } from "@/utlis/redux/slices/headerSlice";
 import { AppDispatch } from "@/utlis/redux/store";
 import { useDispatch } from "react-redux";
 import DoctorAppointment from "./form/Doctor-Appointment";
+import { useParams } from "next/navigation";
 
 const ProfileTabes = () => {
+  const params = useParams<{ id?: string }>();
+  const DoctorId = "params?.id";
+  // 6943a7e6a55e888c3f9fa264
+  console.log("DoctorId",DoctorId);
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {

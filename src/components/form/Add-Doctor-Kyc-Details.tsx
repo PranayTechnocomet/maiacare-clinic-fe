@@ -21,11 +21,15 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Modal from "../ui/Modal";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { DoctorDetails } from "@/utlis/types/interfaces";
+import { addDoctor } from "@/utlis/apis/apiHelper";
 export default function AddDoctorKycDetails({
-  // onNext,
+  data,
+  onSave,
   onPrevious,
 }: {
-  // onNext: () => void;
+  data: DoctorDetails;
+  onSave: (kyc: DoctorDetails["kycDetails"]) => void;
   onPrevious: () => void;
 }) {
   interface FormError {
@@ -52,9 +56,9 @@ export default function AddDoctorKycDetails({
     LicNumber: string;
   };
   const initialFormData: FormData = {
-    Adcard: "",
-    Pancard: "",
-    LicNumber: "",
+    Adcard: data?.kycDetails?.aadharNumber || "",
+    Pancard: data?.kycDetails?.panNumber || "",
+    LicNumber: data?.kycDetails?.licenceNumber || "",
   };
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
@@ -109,25 +113,35 @@ export default function AddDoctorKycDetails({
     return errors;
   };
 
-  const handleSaveChange = () => {
-    const errors = validateForm(formData);
-    setFormError(errors);
-    if (Object.keys(errors).length === 0) {
-      console.log("✅ Form is valid, go to next step");
-
-      // Save flag before redirect
-      localStorage.setItem("doctorAddedSuccess", "true");
-      console.log("KYC",formData);
-      router.push("/doctors");
-    } else {
-      console.log("❌ Form has errors:", errors);
-    }
-  };
-
-
-
-
   // Aadhar Card image select //
+
+  // const handleSaveChange = () => {
+  //   const errors = validateForm(formData);
+  //   setFormError(errors);
+
+  //   if (Object.keys(errors).length !== 0) {
+  //     console.log("❌ Form has errors:", errors);
+  //     return;
+  //   }
+
+  //   const kycDetails: DoctorDetails["kycDetails"] = {
+  //     aadharNumber: formData.Adcard.replace(/\s/g, ""),
+  //     aadharFile: aadharFile?.name || "",
+  //     panNumber: formData.Pancard,
+  //     panFile: panFile?.name || "",
+  //     licenceNumber: formData.LicNumber,
+  //     licenceFile: licenceFile?.name || "",
+  //     otherDocuments: completedFiles.map((file) => ({
+  //       reportName: file.reportName,
+  //       originalName: file.name,
+  //       filePath: file.preview || "",
+  //     })),
+  //   };
+
+  //   console.log("✅ KYC Payload:", kycDetails);
+  //   onNext(kycDetails);
+  // };
+
   const handleAadharFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -423,7 +437,34 @@ export default function AddDoctorKycDetails({
     setShowModal(false);
     setFileError(""); // file upload error reset (jo use karto hoy to)
   };
+  const handleSaveChange = async () => {
+    const errors = validateForm(formData);
+    setFormError(errors);
+    if (Object.keys(errors).length) return;
 
+    const kycDetails: DoctorDetails["kycDetails"] = {
+      aadharNumber: formData.Adcard.replace(/\s/g, ""),
+      aadharFile: aadharFile?.name || "",
+      panNumber: formData.Pancard,
+      panFile: panFile?.name || "",
+      licenceNumber: formData.LicNumber,
+      licenceFile: licenceFile?.name || "",
+      otherDocuments: completedFiles.map((file) => ({
+        reportName: file.reportName,
+        originalName: file.name,
+        filePath: file.preview || "",
+        fileSize: Number(file.actualSize || file.size.replace(" KB", "")), // ✅ FIX
+      })),
+    };
+    const finalDoctorPayload: DoctorDetails = {
+      ...data,
+      kycDetails,
+    };
+    console.log("✅ FINAL PAYLOAD", finalDoctorPayload);
+    await addDoctor(finalDoctorPayload);
+    localStorage.setItem("doctorAddedSuccess", "true");
+    router.push("/doctors");
+  };
   return (
     <div>
       <ContentContainer className="mt-4">

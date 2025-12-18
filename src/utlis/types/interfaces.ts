@@ -623,6 +623,26 @@ export interface ClinicContactPerson {
   email: string;
   aadharNumber: string;
 }
+// export type GroupOperationalHours =
+//   | {
+//       type: "COMMON";
+//       common: {
+//         mondayFriday: string;
+//         saturdaySunday: string;
+//       };
+//     }
+//   | {
+//       type: "CUSTOM";
+//       custom: {
+//         monday: string;
+//         tuesday: string;
+//         wednesday: string;
+//         thursday: string;
+//         friday: string;
+//         saturday: string;
+//         sunday: string;
+//       };
+//     };
 
 export interface GroupOperationalHours {
   weekdayOpen: string;

@@ -90,7 +90,21 @@ const AddDoctor = () => {
   const handlePrevious = () => {
     setActiveTab("basic");
   };
+  const handleKycNextClick = (kycData: DoctorDetails["kycDetails"]) => {
+    setDoctorDetails((prev) => ({
+      ...prev,
+      kycDetails: kycData,
+    }));
 
+    // FINAL SUBMIT / API CALL CAN GO HERE
+    console.log("Final Doctor Payload 👉", {
+      ...doctorDetails,
+      kycDetails: kycData,
+    });
+
+    // optional: move to list or reset
+    // setCurrentStep("list");
+  };
   const tabOptions = [
     {
       key: "basic",
@@ -140,8 +154,14 @@ const AddDoctor = () => {
       {activeTab === "KYC" && (
         <div>
           <AddDoctorKycDetails
-            // onNext={handleNextClick}
-            onPrevious={handlePrevious}
+            data={doctorDetails} // ✅ pass FULL doctor object
+            onPrevious={() => setActiveTab("Clinic")}
+            onSave={(kycData) => {
+              setDoctorDetails((prev) => ({
+                ...prev,
+                kycDetails: kycData,
+              }));
+            }}
           />
         </div>
       )}
