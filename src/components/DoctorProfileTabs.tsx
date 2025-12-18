@@ -13,14 +13,15 @@ import { AppDispatch } from "@/utlis/redux/store";
 import { useDispatch } from "react-redux";
 import DoctorAppointment from "./form/Doctor-Appointment";
 import { useParams } from "next/navigation";
+import toast from "react-hot-toast";
+import { getDoctor } from "@/utlis/apis/apiHelper";
+import { DoctorDetails } from "@/utlis/types/interfaces";
 
 const ProfileTabes = () => {
   const params = useParams<{ id?: string }>();
-  const DoctorId = "params?.id";
-  // 6943a7e6a55e888c3f9fa264
-  console.log("DoctorId",DoctorId);
+  const DoctorId = "6943a7e6a55e888c3f9fa264";
+  console.log("DoctorId", DoctorId);
   const dispatch: AppDispatch = useDispatch();
-
   useEffect(() => {
     dispatch(
       setHeaderData({
@@ -30,6 +31,38 @@ const ProfileTabes = () => {
     );
   }, []);
   const [activeTab, setActiveTab] = useState<string>("basic");
+  const [loading, setLoading] = useState(false);
+  const [DoctorData, setDoctorData] = useState<DoctorDetails | null>(null);
+  const [doctorIdShow, setDoctorIdShow] = useState<string>("");
+
+  const fetchPatientData = () => {
+
+    if (!DoctorId) return; // guard undefined
+    setLoading(true); // start loader
+    getDoctor(DoctorId)
+      .then((response) => {
+        if (response.data.status) {
+          console.log("doctor data:", response.data.doctor);
+          setDoctorData(response.data.doctor);
+          setDoctorIdShow(response.data.doctor?._id);
+          // setModalFormPhisicalData(response.data.data?.physicalAssessment);
+          // setMedicalHistoryFormData(response.data.data?.medicalHistory);
+          // setModalFormFertilityData(response.data.data?.fertilityAssessment);
+          // setPartnerDetails(response.data.data?.partnerDetails);
+        } else {
+          toast.error("Failed to fetch patient data");
+        }
+      })
+      .catch((err) => {
+        console.log("error", err.response);
+      })
+      .finally(() => {
+        setLoading(false); // stop loader
+      });
+  };
+  useEffect(() => {
+    fetchPatientData();
+  }, [DoctorId]);
 
   const tabOptions = [
     {
@@ -37,7 +70,13 @@ const ProfileTabes = () => {
       label: "Basic Details",
       content: (
         <>
-          <DoctorBasicDetails />
+          <DoctorBasicDetails 
+           DoctorData={DoctorData}
+            // modalFormPhisicalData={modalFormPhisicalData}
+            // medicalHistoryFormData={medicalHistoryFormData}
+            // modalFormFertilityData={modalFormFertilityData}
+            fetchPatientData={fetchPatientData}
+          />
         </>
       ),
     },
@@ -60,7 +99,9 @@ const ProfileTabes = () => {
 
   return (
     <>
-      <DoctorDetailPageComponent />
+      <DoctorDetailPageComponent
+      DoctorData={DoctorData}
+      />
       <div className="mt-4">
         <CustomTabs
           activeKey={activeTab}

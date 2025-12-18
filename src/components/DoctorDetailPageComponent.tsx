@@ -27,8 +27,14 @@ import { InputFieldGroup } from "./ui/InputField";
 import activation from "../assets/images/activation.png";
 import deactivation from "../assets/images/deactivation.png";
 import { useDoctor } from "./DoctorContext";
+import { DoctorDetails } from "@/utlis/types/interfaces";
+import DummyPatientImage from '@/assets/images/Active Patients.png';
 // import { profile } from "console";
-const DoctorDetailPageComponent = () => {
+const DoctorDetailPageComponent = ({
+  DoctorData,
+}: {
+  DoctorData?: DoctorDetails | null;
+}) => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   type FormData = {
@@ -46,32 +52,32 @@ const DoctorDetailPageComponent = () => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [formError, setFormError] = useState<FormError>(initialFormError);
 
-  const doctorData = {
-    name: "Dr. Riya Dharang",
-    isVerified: true,
-    specialization: "Gynecologist",
-    experience: "11 Years",
-    dob: "7 Jan 1999",
-    gender: "Female",
-    phone: "+91 12345 67890",
-    email: "riyadharang@miacare.com",
-    memberSince: "02 March 23",
-    image: Profiledoctor,
-    fees: "₹800",
-    service: ["IVF","ICSI","IUI","Egg Freezing"],
-    about:
-      "I'm Dr. Riya Dharang, a fertility specialist with over 12 years of experience in reproductive medicine. I specialize in IVF, IUI, and fertility preservation, providing personalized, compassionate care to help individuals and couples achieve their parenthood dreams. Your well-being and trust are my top priorities.",
-    qualifications: [
-      {
-        field: "Gynecologist",
-        years: "3",
-        university: "Medical University",
-        degree: "MD",
-        endYear: "2020",
-        startYear: "2017",
-      },
-    ],
-  };
+  // const doctorData = {
+  //   name: "Dr. Riya Dharang",
+  //   isVerified: true,
+  //   specialization: "Gynecologist",
+  //   experience: "11 Years",
+  //   dob: "7 Jan 1999",
+  //   gender: "Female",
+  //   phone: "+91 12345 67890",
+  //   email: "riyadharang@miacare.com",
+  //   memberSince: "02 March 23",
+  //   image: Profiledoctor,
+  //   fees: "₹800",
+  //   service: ["IVF", "ICSI", "IUI", "Egg Freezing"],
+  //   about:
+  //     "I'm Dr. Riya Dharang, a fertility specialist with over 12 years of experience in reproductive medicine. I specialize in IVF, IUI, and fertility preservation, providing personalized, compassionate care to help individuals and couples achieve their parenthood dreams. Your well-being and trust are my top priorities.",
+  //   qualifications: [
+  //     {
+  //       field: "Gynecologist",
+  //       years: "3",
+  //       university: "Medical University",
+  //       degree: "MD",
+  //       endYear: "2020",
+  //       startYear: "2017",
+  //     },
+  //   ],
+  // };
   const { setDoctor } = useDoctor();
   const handleActive = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -126,7 +132,7 @@ const DoctorDetailPageComponent = () => {
     setShowResultModal(false);
   };
 
-  const DoctorProfileCard: React.FC<{ doctor: typeof doctorData }> = ({
+  const DoctorProfileCard: React.FC<{ doctor: typeof DoctorData}> = ({
     doctor,
   }) => (
     <ContentContainer>
@@ -137,21 +143,21 @@ const DoctorDetailPageComponent = () => {
           className="d-flex flex-md-row flex-column align-items-center"
         >
           <div className="col-4 col-md-3 col-lg-3  col-xl-2">
-            <Image src={doctor.image} alt="Profile" className="profile-img" />
+            <img src={doctor?.profilePicture || DummyPatientImage.src} alt="Profile" className="profile-img" onError={({ currentTarget }) => (currentTarget).src = DummyPatientImage.src} />
           </div>
 
           <div className="col-12 ms-4 mt-3 mt-md-0">
             <div>
               <div className="d-flex flex-md-row align-items-start align-items-md-center gap-1">
-                <div className="profile-name-font">{doctor.name}</div>
-                {doctor.isVerified && (
+                <div className="profile-name-font">{doctor?.name}</div>
+                {/* {doctor.isVerified && ( */}
                   <Image
                     src={MaiaVerify}
                     alt="verified"
                     width={18}
                     height={18}
                   />
-                )}
+                {/* )} */}
               </div>
 
               <div className="profile-details">
@@ -163,7 +169,7 @@ const DoctorDetailPageComponent = () => {
                       width={18}
                       height={18}
                     />
-                    {doctor.specialization}
+                    {doctor?.specialty}
                   </span>
                   <span className="d-flex align-items-center gap-1">
                     <Image
@@ -172,35 +178,39 @@ const DoctorDetailPageComponent = () => {
                       width={16}
                       height={15}
                     />
-                    {doctor.experience}
+                    {doctor?.yearsOfExperience} 
+                    <span className="me-2">{doctor?.yearsOfExperience ? "years" : "year"} </span>
+
                   </span>
                 </div>
 
                 <div className="profile-sub-title">
                   <span className="d-flex align-items-center gap-1">
                     <Image src={Bithdate} alt="dob" width={18} height={18} />
-                    {doctor.dob}
+                    {doctor?.dob}
                   </span>
                   <span className="d-flex align-items-center gap-1">
                     <Image src={Gender} alt="gender" width={18} height={18} />
-                    {doctor.gender}
+                    {doctor?.gender}
                   </span>
                 </div>
 
                 <div className="detail-row profile-sub-title">
                   <span className="d-flex align-items-center gap-1">
                     <Image src={Phone} alt="phone" width={18} height={18} />
-                    {doctor.phone}
+                    {doctor?.contactNumber}
                   </span>
                   <span className="d-flex align-items-center gap-1">
                     <Image src={Email} alt="email" width={18} height={18} />
-                    {doctor.email}
+                    {doctor?.email}
                   </span>
                 </div>
               </div>
 
               <div className="mt-3 profile-member-since profile-sub-title">
-                Member since {doctor.memberSince}
+                Member since {doctor?.yearsOfExperience} 
+                <span className="me-2">{doctor?.yearsOfExperience ? "years" : "year"}</span>
+                {/* membersince  */}
               </div>
             </div>
           </div>
@@ -223,7 +233,7 @@ const DoctorDetailPageComponent = () => {
             <Dropdown.Menu className="dropdown-menu-end">
               <Dropdown.Item
                 onClick={() => {
-                  setDoctor(doctorData);
+                  // setDoctor(DoctorData);
                   router.push("/editDoctor");
                 }}
               >
@@ -442,7 +452,7 @@ const DoctorDetailPageComponent = () => {
     </ContentContainer>
   );
 
-  return <DoctorProfileCard doctor={doctorData} />;
+  return <DoctorProfileCard doctor={DoctorData} />;
 };
 
 export default DoctorDetailPageComponent;

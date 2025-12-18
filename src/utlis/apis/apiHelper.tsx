@@ -17,7 +17,7 @@ import api from "./axiosInstance";
 
 // ====: Authentication :====
 export const login = (data: LoginRequest) => {
-  return apiClient.post("/auth/login", data);
+  return apiClient.post("/auth/clinic-login", data);
 };
 
 // ====: Profile :====

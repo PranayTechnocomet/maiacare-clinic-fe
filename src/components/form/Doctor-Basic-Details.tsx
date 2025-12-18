@@ -19,8 +19,16 @@ import Button from "../ui/Button";
 import toast from "react-hot-toast";
 import cliniccard from "../../assets/images/cliniccard.png";
 import Arrowup from "../../assets/images/ArrowUpRight.png";
+import { DoctorDetails } from "@/utlis/types/interfaces";
 
-const DoctorBasicDetails = () => {
+const DoctorBasicDetails = ({
+  DoctorData,
+  fetchPatientData,
+}: {
+  DoctorData?: DoctorDetails | null;
+  fetchPatientData?: () => void;
+ 
+}) => {
   interface FormError {
     [key: string]: string;
   }
@@ -302,12 +310,15 @@ const DoctorBasicDetails = () => {
   ];
   const [editIndex, setEditIndex] = useState<number | null>(null); // track current editing row
   const [navigateToEditClinic, setNavigateToEditClinic] = useState(false);
+  const [clinicData,setClinicData] = useState<DoctorDetails["clinicDetails"]>();
+  console.log("clinicData", clinicData);
   useEffect(() => {
     if (navigateToEditClinic) {
       router.push("/editDoctor?tab=Clinic"); // ✅ inner route path
       setNavigateToEditClinic(false); // reset state after navigation
     }
   }, [navigateToEditClinic, router]);
+
   return (
     // <Container fluid className="mt-3">
     <div>
@@ -327,7 +338,7 @@ const DoctorBasicDetails = () => {
               <div className="clinic_card">
                 <div className=" mb-2 mb-md-0">
                   <div className="d-flex align-items-center justify-content-between">
-                    <span className="clinic_card_title">Sunrise Fertility</span>
+                    <span className="clinic_card_title">{DoctorData?.clinicDetails?.clinicName}</span>
                     <Button
                       className="maiacare-button-large  profile-card-boeder  bg-transparent btn "
                       onClick={() => setNavigateToEditClinic(true)}
