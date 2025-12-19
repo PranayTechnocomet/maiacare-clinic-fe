@@ -650,27 +650,15 @@ export interface GroupOperationalHours {
   weekendOpen: string;
   weekendClose: string;
 }
-export interface CommonOperationalHours {
-  type: "COMMON";
-  common: {
-    mondayFriday: string;
-    saturdaySunday: string;
-  };
-}
-
-export interface CustomOperationalHours {
-  type: "CUSTOM";
-  custom: {
-    monday: string;
-    tuesday: string;
-    wednesday: string;
-    thursday: string;
-    friday: string;
-    saturday: string;
-    sunday: string;
-  };
+export interface OperationalHour {
+  _id: string;
+  day: string;
+  openTime: string;
+  closeTime: string;
 }
 export interface ClinicDetails {
+  _id?: string;
+  // groupOperationalHours: any;
   clinicLogo: string;
   clinicName: string;
   contactNumber: string;
@@ -681,11 +669,17 @@ export interface ClinicDetails {
   city: string;
   state: string;
   useCustomHours: boolean;
-  groupOperationalHours: GroupOperationalHours;
+  // API data
+  operationalHours?: OperationalHour[];
+
+  // Used elsewhere
+  groupOperationalHours?: GroupOperationalHours;
+
   contactPerson: ClinicContactPerson;
 }
 
 export interface Qualification {
+  _id?: string ;
   degree: string;
   fieldOfStudy: string;
   university: string;
@@ -700,6 +694,7 @@ export interface OtherDocument {
 }
 
 export interface KycDetails {
+  createdAt: any;
   aadharNumber: string;
   aadharFile: string;
   panNumber: string;
@@ -708,8 +703,19 @@ export interface KycDetails {
   licenceFile: string;
   otherDocuments: OtherDocument[];
 }
+export interface DoctorDocument {
+  aadharNumber?: string;
+  panNumber?: string;
+  licenceNumber?: string;
+  reportName?: string;
+  filePath?: string;
+  updatedAt?: string;
+}
+
 // addDoctor interface
 export interface DoctorDetails {
+  updatedAt: string | number | Date;
+  createdAt: string | number | Date;
   profilePicture: string;
   name: string;
   specialty: string;
@@ -718,9 +724,11 @@ export interface DoctorDetails {
   gender: string;
   fees: number;
   servicesOffered: string[];
+  memberSince?: string;
   contactNumber: string;
+  documents?: DoctorDocument[];
   email: string;
-  clinicDetails: ClinicDetails;
+  clinics: ClinicDetails[];
   qualifications: Qualification[];
   kycDetails: KycDetails;
 }

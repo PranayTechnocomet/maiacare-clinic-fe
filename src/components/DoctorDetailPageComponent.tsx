@@ -131,7 +131,8 @@ const DoctorDetailPageComponent = ({
   const handleresultclose = () => {
     setShowResultModal(false);
   };
-
+  console.log("DoctorData:",DoctorData);
+  
   const DoctorProfileCard: React.FC<{ doctor: typeof DoctorData}> = ({
     doctor,
   }) => (
@@ -178,8 +179,8 @@ const DoctorDetailPageComponent = ({
                       width={16}
                       height={15}
                     />
-                    {doctor?.yearsOfExperience} 
-                    <span className="me-2">{doctor?.yearsOfExperience ? "years" : "year"} </span>
+                    {doctor?.memberSince} 
+                    <span className="me-2">{doctor?.memberSince ? "years" : "year"} </span>
 
                   </span>
                 </div>

@@ -171,6 +171,7 @@ export const updatePatientPartnerFertilityAssessment = (
 };
 
 // ====: Doctor :====
+// /done add
 // add Doctor
 export const addDoctor = (data: object) => {
   return apiClient.post("/add-doctor", data);
@@ -179,14 +180,16 @@ export const addDoctor = (data: object) => {
 export const editDoctor = (data: object) => {
   return apiClient.put("/update-doctor", data);
 };
+// done get
 // get Doctor
 export const getDoctor = (id: string | number) => {
   return apiClient.get(`/get-doctor/${id}`);
 };
      
 // Qualifications....
+// done add
 // add
-export const addQualifications = (data: Qualification, id: string | number) => {
+export const addQualifications = (data: Qualification[], id: string | number) => {
   return apiClient.post(`/doctor/qualifications/${id}`, data);
 };
 // edit

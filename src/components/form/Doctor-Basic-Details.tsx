@@ -17,30 +17,60 @@ import { InputFieldGroup } from "../ui/InputField";
 import { InputSelect } from "../../components/ui/InputSelect";
 import Button from "../ui/Button";
 import toast from "react-hot-toast";
-import cliniccard from "../../assets/images/cliniccard.png";
+import DummyPatientImage from "../../assets/images/cliniccard.png";
 import Arrowup from "../../assets/images/ArrowUpRight.png";
-import { DoctorDetails } from "@/utlis/types/interfaces";
+import { ClinicDetails, DoctorDetails, Qualification } from "@/utlis/types/interfaces";
+import {
+  addQualifications,
+  deleteQualifications,
+  editQualifications,
+} from "@/utlis/apis/apiHelper";
+import DeleteConfirmModal from "../ui/DeleteConfirmModal";
+import { AxiosResponse } from "axios";
+type DocumentItem = {
+  name: string;
+  file: string;
+  date: string | number | Date;
+};
+export interface DoctorQualification {
+  _id?: string;
+  degree: string;
+  fieldOfStudy: string;
+  university: string;
+  startYear: number | string;
+  endYear: number | string;
+}
+export interface OperationalHour {
+  _id: string;
+  day: string;
+  openTime: string;
+  closeTime: string;
+}
+export interface QualificationUI {
+  _id?: string;
+  title: string;
+  university: string;
+  years: string;
+  degree: string;
+  fieldofstudy: string; // UI-only
+  startYear: string;
+  endYear: string;
+}
 
 const DoctorBasicDetails = ({
   DoctorData,
   fetchPatientData,
+  doctorIdShow,
 }: {
   DoctorData?: DoctorDetails | null;
   fetchPatientData?: () => void;
- 
+  doctorIdShow: string | number | undefined;
 }) => {
   interface FormError {
     [key: string]: string;
   }
-  interface Qualification {
-    degree: string;
-    field: string;
-    university: string;
-    startYear: string;
-    endYear: string;
-    title?: string;
-    years?: string;
-  }
+
+
   const router = useRouter();
 
   const initialFormError: FormError = {};
@@ -50,10 +80,19 @@ const DoctorBasicDetails = ({
   const [startTime, setStartTime] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [endTime, setEndTime] = useState("");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const [defaultQualifications, setDefaultQualifications] = useState<
-    Qualification[]
-  >([]);
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setSelectedId(null);
+  };
+  const openDeleteModal = (id: string) => {
+    setSelectedId(id);
+    setShowDeleteModal(true);
+  };
+ const [defaultQualifications, setDefaultQualifications] =
+  useState<QualificationUI[]>([]);
   const [showQualificationModal, setShowQualificationModal] = useState(false);
 
   type FormData = {
@@ -63,7 +102,7 @@ const DoctorBasicDetails = ({
     Timer: string;
 
     degree: string;
-    field: string;
+    fieldofstudy: string;
     university: string;
     startYear: string;
     endYear: string;
@@ -76,7 +115,7 @@ const DoctorBasicDetails = ({
     Timer: "",
 
     degree: "",
-    field: "",
+    fieldofstudy: "",
     university: "",
     startYear: "",
     endYear: "",
@@ -88,22 +127,24 @@ const DoctorBasicDetails = ({
     { ...initialFormData },
   ]);
   const [formErrors, setFormErrors] = useState([
-    { degree: "", field: "", university: "", startYear: "", endYear: "" },
+    { degree: "", fieldofstudy: "", university: "", startYear: "", endYear: "" },
   ]);
   const operationalHours = [
     { days: "Mon to Fri", time: "10 AM – 5 PM" },
     { days: "Sat & Sun", time: "10 AM – 2 PM" },
   ];
-  const documents = [
-    { name: "Certificate.pdf", date: "October 20, 2024" },
-    { name: "Aadhar Card.pdf", date: "October 20, 2024" },
-    { name: "License.pdf", date: "October 20, 2024" },
-    { name: "Certificate.pdf", date: "October 20, 2024" },
-  ];
 
-  const handleDelete = (index: number) => {
-    const updated = defaultQualifications.filter((_, i) => i !== index);
-    setDefaultQualifications(updated);
+  const handleDelete = async () => {
+    if (!selectedId) return;
+
+    try {
+      await deleteQualifications(selectedId);
+      toast.success("Qualification deleted");
+      fetchPatientData?.();
+      closeDeleteModal();
+    } catch {
+      toast.error("Delete failed");
+    }
   };
 
   const handleDownload = (url: string, name: string) => {
@@ -114,6 +155,24 @@ const DoctorBasicDetails = ({
     link.click();
     document.body.removeChild(link);
   };
+useEffect(() => {
+  if (DoctorData?.qualifications?.length) {
+    const mapped: QualificationUI[] =
+      DoctorData.qualifications.map((q) => ({
+        _id: q._id?.toString(),
+        title: `${q.degree} - ${q.fieldOfStudy}`,
+        university: q.university,
+        years: `${q.startYear} - ${q.endYear}`,
+        degree: q.degree,
+        fieldofstudy: q.fieldOfStudy, // UI name
+        startYear: q.startYear.toString(),
+        endYear: q.endYear.toString(),
+      }));
+
+    setDefaultQualifications(mapped);
+  }
+}, [DoctorData]);
+
 
   //================  + add  Modal all data below ============= //
 
@@ -155,7 +214,7 @@ const DoctorBasicDetails = ({
   const validateForm1 = (quals: typeof qualifications) => {
     const errors = quals.map((q) => ({
       degree: !q.degree ? "Degree is required" : "",
-      field: !q.field ? "Field is required" : "",
+      fieldofstudy: !q.fieldofstudy ? "Field is required" : "",
       university: !q.university ? "University is required" : "",
       startYear: !q.startYear ? "Start Year is required" : "",
       endYear: !q.endYear ? "End Year is required" : "",
@@ -169,7 +228,7 @@ const DoctorBasicDetails = ({
     // ADDD Qualifications validtation msg
     setFormErrors([
       ...formErrors,
-      { degree: "", field: "", university: "", startYear: "", endYear: "" },
+      { degree: "", fieldofstudy: "", university: "", startYear: "", endYear: "" },
     ]);
   };
 
@@ -178,65 +237,83 @@ const DoctorBasicDetails = ({
     updated.splice(index, 1);
     setQualifications(updated);
   };
+  const payload = {
+    qualifications: qualifications.map((q) => ({
+      degree: q.degree,
+      fieldOfStudy: q.fieldofstudy,
+      university: q.university,
+      startYear: Number(q.startYear),
+      endYear: Number(q.endYear),
+    })),
+  };
+  console.log("Qualifications:-", DoctorData?.qualifications[0]._id);
 
-  const handleSave = () => {
-    // 🔹 Run validations
-    const errors = validateForm(formData); // single form
-    const qualErrors = validateForm1(qualifications); // multi rows
+  // const handleSave = async () => {
+  //   const qualErrors = validateForm1(qualifications);
+  //   setFormErrors(qualErrors);
 
-    setFormError(errors);
-    setFormErrors(qualErrors); // ✅ set array
+  //   const hasError = qualErrors.some((err) => Object.values(err).some(Boolean));
+  //   if (hasError) return;
+  // }
 
-    const hasQualError = qualErrors.some((err) =>
-      Object.values(err).some((msg) => msg !== "")
-    );
+  const handleSave = async () => {
+    // 1️⃣ Validate all rows
+    const qualErrors = validateForm1(qualifications);
+    setFormErrors(qualErrors);
 
-    if (Object.keys(errors).length === 0 && !hasQualError) {
-      // 🔹 Convert filled qualifications into display format
-      const newItems = qualifications
-        .filter(
-          (q) => q.degree && q.field && q.university && q.startYear && q.endYear
-        )
-        .map((q) => ({
-          title: `${q.degree} - ${q.field}`,
-          university: q.university,
-          years: `${q.startYear} - ${q.endYear}`,
-          degree: q.degree,
-          field: q.field,
-          startYear: q.startYear,
-          endYear: q.endYear,
-        }));
+    const hasError = qualErrors.some((err) => Object.values(err).some(Boolean));
+    if (hasError) return;
 
-      // 🔹 Update default qualifications
-      setDefaultQualifications((prev) => [...prev, ...newItems]);
+    // 2️⃣ Prepare payload
+    const payload = qualifications.map((q) => ({
+      degree: q.degree.trim(),
+      fieldOfStudy: q.fieldofstudy.trim(),
+      university: q.university.trim(),
+      startYear: Number(q.startYear),
+      endYear: Number(q.endYear),
+    }));
 
-      console.log("Form submitted ✅", { formData, qualifications });
+    try {
+      if (!doctorIdShow) {
+        toast.error("Doctor ID not found");
+        return;
+      }
 
-      // 🔹 Success → close modal + reset data
+      // 3️⃣ API Call - note swapped args to (id, data)
+      const response = await addQualifications(payload, String(doctorIdShow));
+
+      // 4️⃣ Success
+      toast.success("Qualification added successfully");
+
       setShowModal(false);
       setFormData(initialFormData);
-      setFormError(initialFormError);
       setFormErrors([]);
-      setQualifications([{ ...initialFormData }]); // reset one row
-      toast.success("Data saved successfully!", {
-        position: "top-right",
-        // autoClose: 3000,
-      });
-    } else {
-      console.log("Form has errors ⚠️", { errors, qualErrors });
+      setQualifications([{ ...initialFormData }]);
+
+      fetchPatientData?.(); // refresh profile
+    } catch (error) {
+      console.error("Add qualification error:", error);
+      toast.error("Failed to add qualification");
     }
   };
 
   // + add Qualification button diable data show after unable
   const isQualificationComplete = (q: Qualification) => {
-    return q.degree && q.field && q.university && q.startYear && q.endYear;
+    return (
+      q.degree && q.fieldOfStudy && q.university && q.startYear && q.endYear
+    );
   };
 
   // ===== Edit button click in modal open ================
-  const openQualificationModal = (index: number) => {
+  const [selectedQualificationId, setSelectedQualificationId] = useState<
+    string | null
+  >(null);
+
+  const openQualificationModal = (index: number, _id: string | undefined) => {
     setEditIndex(index);
     setFormData(defaultQualifications[index] as unknown as FormData); // je data show thayu e prefill karo
     setShowQualificationModal(true); // modal open
+    setSelectedQualificationId(_id ?? null);
   };
 
   const closeQualificationModal = () => setShowQualificationModal(false);
@@ -253,7 +330,7 @@ const DoctorBasicDetails = ({
     const errors: FormError = {};
 
     if (!data.degree.trim()) errors.degree = "Degree is required";
-    if (!data.field.trim()) errors.field = "Field is required";
+    if (!data.fieldofstudy.trim()) errors.fieldofstudy = "Field is required";
     if (!data.university.trim()) errors.university = "University is required";
     if (!data.startYear.trim()) errors.startYear = "Start year is required";
     if (!data.endYear.trim()) errors.endYear = "End year is required";
@@ -261,31 +338,42 @@ const DoctorBasicDetails = ({
     return errors;
   };
 
-  const handleEditSave = () => {
-    const errors = EditValidtation(formData);
-    setFormError(errors);
+ const handleEditSave = () => {
+  const errors = EditValidtation(formData);
+  setFormError(errors);
 
-    if (Object.keys(errors).length > 0) return; 
+  if (Object.keys(errors).length > 0) return;
 
-    if (editIndex !== null) {
-      const updated = [...defaultQualifications];
-      updated[editIndex] = {
-        title: `${formData.degree} - ${formData.field}`,
-        university: formData.university,
-        years: `${formData.startYear} - ${formData.endYear}`,
-        degree: formData.degree,
-        field: formData.field,
-        startYear: formData.startYear,
-        endYear: formData.endYear,
-      };
-      setDefaultQualifications(updated);
-    }
+  if (!selectedQualificationId) {
+    toast.error("Qualification ID not found");
+    return;
+  }
 
-    console.log("Form updated:", formData);
-
-    closeQualificationModal();
-    setEditIndex(null);
+  const payload: Qualification = {
+    degree: formData.degree.trim(),
+    fieldOfStudy: formData.fieldofstudy.trim(),
+    university: formData.university.trim(),
+    startYear: Number(formData.startYear),
+    endYear: Number(formData.endYear),
   };
+
+  editQualifications(payload, selectedQualificationId)
+    .then((response) => {
+      if (response.status === 200) {
+        toast.success("Qualification updated");
+        fetchPatientData?.(); // ✅ correct refresh
+      }
+    })
+    .catch((err) => {
+      console.error("Qualification edit error", err);
+      toast.error("Update failed");
+    });
+
+  closeQualificationModal();
+  setEditIndex(null);
+};
+
+
   type Service = {
     id: number;
     service: string;
@@ -310,8 +398,6 @@ const DoctorBasicDetails = ({
   ];
   const [editIndex, setEditIndex] = useState<number | null>(null); // track current editing row
   const [navigateToEditClinic, setNavigateToEditClinic] = useState(false);
-  const [clinicData,setClinicData] = useState<DoctorDetails["clinicDetails"]>();
-  console.log("clinicData", clinicData);
   useEffect(() => {
     if (navigateToEditClinic) {
       router.push("/editDoctor?tab=Clinic"); // ✅ inner route path
@@ -319,6 +405,45 @@ const DoctorBasicDetails = ({
     }
   }, [navigateToEditClinic, router]);
 
+  const kyc = DoctorData?.kycDetails;
+
+  const documents: DocumentItem[] = [];
+
+  DoctorData?.documents?.forEach((doc) => {
+    const date = doc.updatedAt ?? DoctorData?.updatedAt; // fallback safety
+
+    if (doc.aadharNumber && doc.filePath) {
+      documents.push({
+        name: "Aadhar Card",
+        file: doc.filePath,
+        date,
+      });
+    }
+
+    if (doc.panNumber && doc.filePath) {
+      documents.push({
+        name: "PAN Card",
+        file: doc.filePath,
+        date,
+      });
+    }
+
+    if (doc.licenceNumber && doc.filePath) {
+      documents.push({
+        name: "Medical Licence",
+        file: doc.filePath,
+        date,
+      });
+    }
+
+    if (doc.reportName && doc.filePath) {
+      documents.push({
+        name: doc.reportName,
+        file: doc.filePath,
+        date,
+      });
+    }
+  });
   return (
     // <Container fluid className="mt-3">
     <div>
@@ -335,115 +460,88 @@ const DoctorBasicDetails = ({
                   Clinic Details
                 </h5>
               </div>
-              <div className="clinic_card">
-                <div className=" mb-2 mb-md-0">
-                  <div className="d-flex align-items-center justify-content-between">
-                    <span className="clinic_card_title">{DoctorData?.clinicDetails?.clinicName}</span>
-                    <Button
-                      className="maiacare-button-large  profile-card-boeder  bg-transparent btn "
-                      onClick={() => setNavigateToEditClinic(true)}
-                      variant="dark"
-                    >
-                      <Image
-                        src={editprofile}
-                        alt="Edittime"
-                        width={17}
-                        height={17}
-                      />
-                    </Button>
-                  </div>
-                  <div className="d-flex align-items-center gap-1">
-                    <Image src={phone} alt="phone" width={15} height={15} />
-                    <span style={{ color: "#8A8D93", fontWeight: "400" }}>
-                      +91 8987656874
-                    </span>
-                  </div>
-                </div>
-                <div className="d-flex  mt-3 flex-column flex-sm-row">
-                  {/* Address */}
-                  <div className="w-50">
-                    <div className="profiledetails_heading">Address</div>
-                    <div
-                      style={{ width: "70%" }}
-                      className="profiledetails_text"
-                    >
-                      2nd Floor, Lakeview Complex, Hiranandani Gardens, Powai,
-                      400072 Mumbai
+              {DoctorData?.clinics?.map((clinic: ClinicDetails) => (
+                <div className="clinic_second_card" key={clinic._id}>
+                  <div className=" mb-2 mb-md-0">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <div className=" mb-2 mb-md-0 d-flex align-items-center gap-3">
+                        <div>
+                          <img
+                            src={clinic?.clinicLogo || DummyPatientImage.src}
+                            alt="Profile"
+                            width={58}
+                            height={58}
+                            // className="profile-img"
+                            onError={({ currentTarget }) =>
+                              (currentTarget.src = DummyPatientImage.src)
+                            }
+                          />
+                        </div>
+                        <div>
+                          <span className="clinic_card_title">
+                            Sunrise Fertility
+                          </span>
+                          <span className="clinic_card_name">Self</span>
+                          <div className="d-flex align-items-center gap-1">
+                            <Image
+                              src={phone}
+                              alt="phone"
+                              width={15}
+                              height={15}
+                            />
+                            <span
+                              style={{ color: "#8A8D93", fontWeight: "400" }}
+                            >
+                              {clinic.contactNumber}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        className="maiacare-button-large   profile-card-boeder  bg-transparent btn btn-primary"
+                        onClick={() => router.push("/profile")}
+                        variant="dark"
+                      >
+                        <Image
+                          src={Arrowup}
+                          alt="Arrow"
+                          width={17}
+                          height={17}
+                        />
+                      </Button>
                     </div>
                   </div>
-                  {/* Availability */}
-                  <div>
-                    <div className="profiledetails_heading">Availability</div>
-                    {operationalHours.map((item, idx) => (
-                      <p key={idx} className="mb-0">
-                        <span className=" maiacare-radio-label me-1">
-                          {item.days} :
-                        </span>
-                        <span style={{ fontSize: "14px" }}> {item.time}</span>
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4 clinic_second_card ">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div className=" mb-2 mb-md-0 d-flex align-items-center gap-3">
-                    <div>
-                      <Image
-                        src={cliniccard}
-                        alt="cliniccard"
-                        width={58}
-                        height={58}
-                        className="rounded-circle"
-                      />
-                    </div>
-                    <div>
-                      <span className="clinic_card_title">
-                        Sunrise Fertility
-                      </span>
-                      <span className="clinic_card_name">Self</span>
-                      <div className="d-flex align-items-center gap-1">
-                        <Image src={phone} alt="phone" width={15} height={15} />
-                        <span style={{ color: "#8A8D93", fontWeight: "400" }}>
-                          +91 8987656874
-                        </span>
+                  <div className="d-flex  mt-3 flex-column flex-sm-row">
+                    {/* Address */}
+                    <div className="w-50">
+                      <div className="profiledetails_heading">Address</div>
+                      <div
+                        style={{ width: "70%" }}
+                        className="profiledetails_text"
+                      >
+                        {clinic.address}
                       </div>
                     </div>
-                  </div>
-                  <Button
-                    className="maiacare-button-large   profile-card-boeder  bg-transparent btn btn-primary"
-                    onClick={() => router.push("/profile")}
-                    variant="dark"
-                  >
-                    <Image src={Arrowup} alt="Arrow" width={17} height={17} />
-                  </Button>
-                </div>
-                <div className="d-flex  mt-3 flex-column flex-sm-row">
-                  {/* Address */}
-                  <div className="w-50">
-                    <div className="profiledetails_heading">Address</div>
-                    <div
-                      style={{ width: "70%" }}
-                      className="profiledetails_text"
-                    >
-                      2nd Floor, Lakeview Complex, Hiranandani Gardens, Powai,
-                      400072 Mumbai
+                    {/* Availability */}
+                    <div>
+                      <div className="profiledetails_heading">Availability</div>
+                      {clinic.operationalHours?.map((item: OperationalHour) => (
+                        <p key={item._id} className="mb-0">
+                          <span
+                            className="maiacare-radio-label me-1"
+                            style={{ fontSize: "14px" }}
+                          >
+                            {item.day} :
+                          </span>
+                          <span style={{ fontSize: "13px" }}>
+                            {item.openTime} – {item.closeTime}
+                          </span>
+                        </p>
+                      ))}
                     </div>
                   </div>
-                  {/* Availability */}
-                  <div>
-                    <div className="profiledetails_heading">Availability</div>
-                    {operationalHours.map((item, idx) => (
-                      <p key={idx} className="mb-0">
-                        <span className=" maiacare-radio-label me-1">
-                          {item.days} :
-                        </span>
-                        <span style={{ fontSize: "14px" }}> {item.time}</span>
-                      </p>
-                    ))}
-                  </div>
                 </div>
-              </div>
+              ))}
             </ContentContainer>
           </div>
           {/* Qualification */}
@@ -477,6 +575,8 @@ const DoctorBasicDetails = ({
                   header="Qualification Details"
                   centered
                 >
+                  {/* delete modal  */}
+
                   <div>
                     {/* 🔁 Loop through all qualifications */}
                     <Accordion defaultActiveKey="0" alwaysOpen>
@@ -529,23 +629,23 @@ const DoctorBasicDetails = ({
                                   <Col md={6} className="mt-3">
                                     <InputFieldGroup
                                       label="Field of study"
-                                      name="field"
+                                      name="fieldofstudy"
                                       type="text"
-                                      value={q.field}
+                                      value={q.fieldofstudy}
                                       onChange={(e) => {
                                         const updated = [...qualifications];
-                                        updated[index].field = e.target.value;
+                                        updated[index].fieldofstudy = e.target.value;
                                         setQualifications(updated);
 
                                         const updatedErrors = [...formErrors];
                                         if (updatedErrors[index]) {
-                                          updatedErrors[index].field = "";
+                                          updatedErrors[index].fieldofstudy = "";
                                         }
                                         setFormErrors(updatedErrors);
                                       }}
                                       placeholder="Select Field"
                                       required={true}
-                                      error={formErrors[index]?.field}
+                                      error={formErrors[index]?.fieldofstudy}
                                     />
                                   </Col>
 
@@ -637,12 +737,13 @@ const DoctorBasicDetails = ({
                     <Button
                       onClick={handleAddQualification}
                       variant="default"
-                      disabled={
-                        qualifications.length > 0 &&
-                        !isQualificationComplete(
-                          qualifications[qualifications.length - 1]
-                        )
-                      }
+                      // disabled={
+                      //   qualifications.length > 0 &&
+                      //   !isQualificationComplete(
+                      //     qualifications[qualifications.length - 1]
+                      //   )
+                      // }
+
                     >
                       + Add Qualification
                     </Button>
@@ -654,10 +755,16 @@ const DoctorBasicDetails = ({
                   </div>
                 </Modal>
               </div>
-
+              <DeleteConfirmModal
+                show={showDeleteModal}
+                onClose={closeDeleteModal}
+                onDelete={handleDelete}
+                title="Delete"
+                message="Are you sure you want to delete this qualification?"
+              />
               {defaultQualifications.length === 0 ? (
                 <div className="text-center text-muted p-4 border rounded-4">
-                 Data not found. Please Add Data
+                  Data not found. Please Add Data
                 </div>
               ) : (
                 defaultQualifications.map((item, idx) => (
@@ -675,7 +782,7 @@ const DoctorBasicDetails = ({
 
                     <div className="d-flex gap-2">
                       <Button
-                        onClick={() => openQualificationModal(idx)}
+                        onClick={() => openQualificationModal(idx, item._id)}
                         className="border p-2 rounded-3 edit-del-btn  bg-transparent"
                       >
                         <Image
@@ -720,9 +827,9 @@ const DoctorBasicDetails = ({
                             <Col md={6} className="mt-3">
                               <InputFieldGroup
                                 label="Field of study"
-                                name="field"
+                                name="fieldofstudy"
                                 type="text"
-                                value={formData.field}
+                                value={formData.fieldofstudy}
                                 onChange={(
                                   e: React.ChangeEvent<HTMLInputElement>
                                 ) => {
@@ -735,7 +842,7 @@ const DoctorBasicDetails = ({
                                 required={true}
                                 disabled={false}
                                 readOnly={false} // ✅ remove or set false
-                                error={formError.field}
+                                error={formError.fieldofstudy}
                               />
                             </Col>
 
@@ -811,14 +918,16 @@ const DoctorBasicDetails = ({
                           </Button>
                         </div>
                       </Modal>
+                      {/* deletebutton */}
 
                       <Button
-                        className="border p-2 rounded-2 edit-del-btn  bg-transparent"
-                        onClick={() => handleDelete(idx)} // 👈 click par delete
+                        className="border p-2 rounded-2 edit-del-btn bg-transparent"
+                        variant="outline"
+                        onClick={() => openDeleteModal(item._id!)}
                       >
                         <Image
                           src={Delete}
-                          alt="Specialization"
+                          alt="delete"
                           width={18}
                           height={18}
                         />
@@ -840,9 +949,9 @@ const DoctorBasicDetails = ({
             <ContentContainer className="mt-4">
               <h5 className="profile-card-main-titile">About</h5>
               <p className="mb-0 about-text">
-                I{"'"}m Dr. Riya Dharang, a fertility specialist with over 12 years
-                of experience in reproductive medicine. I specialize in IVF,
-                IUI, and fertility preservation, providing personalized,
+                I{"'"}m Dr. Riya Dharang, a fertility specialist with over 12
+                years of experience in reproductive medicine. I specialize in
+                IVF, IUI, and fertility preservation, providing personalized,
                 compassionate care to help individuals and couples achieve their
                 parenthood dreams. Your well-being and trust are my top
                 priorities.
@@ -859,16 +968,21 @@ const DoctorBasicDetails = ({
                 <div>
                   <span className="service_text">Services</span>
                   <div className="d-flex gap-2 flex-wrap mt-1">
-                    {services.map((servicename: Service) => (
-                      <div key={servicename.id} className="servicename">
-                        {servicename.service}
-                      </div>
-                    ))}
+                    {DoctorData?.servicesOffered.map(
+                      (serviceName: string, index: number) => (
+                        <div key={index} className="servicename">
+                          {serviceName}
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
                 <div className="mt-3">
                   <span className="service_text">Fees</span>
-                  <p className="mb-0 fw-semibold fs-5">₹800</p>
+                  <p className="mb-0 fw-semibold fs-5">
+                    {DoctorData?.fees ? "₹" : ""}
+                    {DoctorData?.fees}
+                  </p>
                 </div>
               </div>
             </ContentContainer>
@@ -888,24 +1002,26 @@ const DoctorBasicDetails = ({
                       <Image
                         src={Pdfimg}
                         alt="pdf"
-                        width="40"
+                        width={40}
                         className="me-3"
                       />
                       <div>
                         <div className="card-feild">{doc.name}</div>
-                        <div className="card-year">{doc.date}</div>
+                        <div className="card-year">
+                          {new Date(doc.date).toLocaleDateString()}
+                        </div>
                       </div>
                     </div>
 
                     <button
-                      className="d-flex  bg-white justify-content-center align-items-center border profile-card-boeder rounded Download-border"
+                      className="d-flex bg-white justify-content-center align-items-center border profile-card-boeder rounded Download-border"
                       onClick={() =>
-                        handleDownload(`/files/${doc.name}.pdf`, doc.name)
+                        handleDownload(`/uploads/${doc.file}`, doc.name)
                       }
                     >
                       <Image
                         src={Download}
-                        alt="experience"
+                        alt="download"
                         width={25}
                         height={25}
                       />

@@ -30,6 +30,7 @@ import {
   BookAppointment,
   SuccessModalBookAppointment,
 } from "./BookAppointment";
+import DeleteConfirmModal from "../ui/DeleteConfirmModal";
 export type ConsultationStatus =
   | "Confirmed"
   | "Completed"
@@ -72,15 +73,28 @@ export default function DoctorAppointment() {
   const [showModal, setShowModal] = useState(false);
   const [appointments, setAppointments] = useState<AppointmentData[]>([]);
   const [editData, setEditData] = useState<AppointmentData | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   const [editingAppointment, setEditingAppointment] =
     useState<AppointmentData | null>(null);
 
   // delete function
-  const handleDelete = (id: number) => {
-    const updated = filteredData.filter((item) => item.id !== id);
-    setFilteredData(updated);
-  };
+  // const handleDelete = () => {
+  //   if (!selectedId) return;
 
+  //   const updated = filteredData.filter((item) => item.id !== selectedId);
+  //   setFilteredData(updated);
+  // };
+  const handleDelete = () => {
+    if (selectedId === null) return;
+
+    setFilteredData((prev) => prev.filter((item) => item.id !== selectedId));
+
+    // close modal after delete
+    setShowDeleteModal(false);
+    setSelectedId(null);
+  };
   useEffect(() => {
     // First filter on raw appointement array
     let data = appointement;
@@ -153,7 +167,11 @@ export default function DoctorAppointment() {
 
     setFilteredData(mappedData);
   }, [filter, searchQuery, timeFilter]);
-
+  const openDeleteModal = (id: number) => {
+    console.log("DELETE CLICKED", id);
+    setSelectedId(id);
+    setShowDeleteModal(true);
+  };
   const columns: ColumnDef<AppointmentData>[] = [
     {
       header: "#",
@@ -267,7 +285,8 @@ export default function DoctorAppointment() {
             </Button>
             <Button
               className="btn profile-card-boeder border bg-white"
-              onClick={() => handleDelete(id)} // <-- pass id
+              // onClick={() => handleDelete(id)} // <-- pass id
+              onClick={() => openDeleteModal(id)}
             >
               <Image src={trash} alt="trash" width={20} height={20} />
             </Button>
@@ -282,6 +301,10 @@ export default function DoctorAppointment() {
     setShowModal(false);
   };
 
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setSelectedId(null);
+  };
   const handleAddAppointment = (newAppointment: AppointmentData) => {
     setAppointments((prev) => [...prev, newAppointment]);
   };
@@ -369,7 +392,6 @@ export default function DoctorAppointment() {
       <CommonTable<AppointmentData> data={filteredData} columns={columns} />
       {/* <CommonTable data={filteredData} columns={columns} /> */}
       {/* Pagination */}
-      
 
       {/* book appointment modal */}
       <>
@@ -405,6 +427,14 @@ export default function DoctorAppointment() {
           setShowSuccessModalBook={setShowSuccessModalBook}
         />
       </>
+      {/* Delete Modal */}
+      <DeleteConfirmModal
+        show={showDeleteModal}
+        onClose={closeDeleteModal}
+        onDelete={handleDelete}
+        title="Delete"
+        message="Are you sure you want to delete this qualification?"
+      />
     </div>
   );
 }

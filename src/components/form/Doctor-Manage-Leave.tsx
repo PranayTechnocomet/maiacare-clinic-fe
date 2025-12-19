@@ -23,6 +23,7 @@ import { InputFieldGroup } from "../ui/InputField";
 import { DatePickerFieldGroup } from "../ui/CustomDatePicker";
 import leavesubmit from "../../assets/images/leavesubmit.png";
 import { PiSlidersDuotone } from "react-icons/pi";
+import DeleteConfirmModal from "../ui/DeleteConfirmModal";
 
 // ✅ formatDate helper — converts "2025-10-31" → "31/10/25"
 const formatDate = (dateString: string): string => {
@@ -45,7 +46,16 @@ const convertToISODate = (dateString: string): string => {
 };
 const DoctorManageLeave = () => {
   const [leaveData, setLeaveData] = useState<LeaveEntry[]>(defaultLeaveData);
-
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setSelectedId(null);
+  };
+  const openDeleteModal = (id: string) => {
+    setSelectedId(id);
+    setShowDeleteModal(true);
+  };
   interface FormError {
     [key: string]: string;
   }
@@ -170,11 +180,13 @@ const DoctorManageLeave = () => {
     setShowEdit(true);
   };
 
-  const handleDelete = (id: string) => {
-    const updated = leaveData.filter((item) => item.id !== id);
-    setLeaveData(updated);
-  };
+ const handleDelete = () => {
+  if (!selectedId) return;
 
+  const updated = leaveData.filter((item) => item.id !== selectedId);
+  setLeaveData(updated);
+  closeDeleteModal();
+};
   //  handle update with formatted date
   const handleUpdate = () => {
     if (!editLeave) return;
@@ -311,7 +323,7 @@ const DoctorManageLeave = () => {
           </button>
           <button
             className="btn profile-card-boeder rounded-2"
-            onClick={() => handleDelete(row.original.id)}
+            onClick={() => openDeleteModal(row.original.id)}
           >
             <Image src={Trash} alt="Delete" width={18} height={20} />
           </button>
@@ -709,6 +721,14 @@ const DoctorManageLeave = () => {
           </Row>
         </div>
       </Modal>
+        {/* Delete Modal */}
+      <DeleteConfirmModal
+        show={showDeleteModal}
+        onClose={closeDeleteModal}
+        onDelete={handleDelete}
+        title="Delete"
+        message="Are you sure you want to delete this qualification?"
+      />
     </>
   );
 };

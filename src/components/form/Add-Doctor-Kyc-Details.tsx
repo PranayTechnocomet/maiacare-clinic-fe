@@ -433,6 +433,7 @@ export default function AddDoctorKycDetails({
     });
   };
 
+
   const handleClose = () => {
     setShowModal(false);
     setFileError(""); // file upload error reset (jo use karto hoy to)
@@ -455,6 +456,7 @@ export default function AddDoctorKycDetails({
         filePath: file.preview || "",
         fileSize: Number(file.actualSize || file.size.replace(" KB", "")), // ✅ FIX
       })),
+      createdAt: undefined
     };
     const finalDoctorPayload: DoctorDetails = {
       ...data,

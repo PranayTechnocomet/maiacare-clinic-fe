@@ -33,7 +33,7 @@ const AddDoctor = () => {
     servicesOffered: [],
     contactNumber: "",
     email: "",
-    clinicDetails: {
+    clinics: {
       clinicLogo: "",
       clinicName: "",
       contactNumber: "",
@@ -66,6 +66,7 @@ const AddDoctor = () => {
       licenceNumber: "",
       licenceFile: "",
       otherDocuments: [],
+      createdAt: ""
     },
   });
 
@@ -79,7 +80,7 @@ const AddDoctor = () => {
   // const handleNextClick = () => {
   //   // setActiveTab("KYC");
   // };
-  const handleNextClick = (clinicData: DoctorDetails["clinicDetails"]) => {
+  const handleNextClick = (clinicData: DoctorDetails["clinics"]) => {
     setDoctorDetails((prev) => ({
       ...prev,
       clinicDetails: clinicData,
@@ -145,7 +146,7 @@ const AddDoctor = () => {
       {activeTab === "Clinic" && (
         <div>
           <AddDoctorClinicdetails
-            data={doctorDetails.clinicDetails}
+            data={doctorDetails.clinics}
             onNext={handleNextClick}
             onPrevious={handlePrevious}
           />

@@ -1,0 +1,52 @@
+.delete-modal .modal-content {
+  border-radius: 12px;
+  border: none;
+  padding: 0;
+  overflow: hidden;
+}
+
+.delete-content {
+  padding: 2rem;
+}
+
+.delete-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-icon {
+  width: 40px;
+  height: 40px;
+  fill: #ff4d4d;
+}
+
+.delete-title {
+  font-weight: 600;
+  font-size: 20px !important;
+  margin-bottom: 0.5rem;
+}
+
+.delete-message {
+  color: #6c757d;
+  font-size: 16px !important;
+  margin-bottom: 1.5rem;
+}
+
+.delete-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.cancel-btn
+.cancel-btn:hover {
+  border-radius: 8px;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid #dee2e6;
+}
+
+.maiacare-button {
+  border-radius: 8px;
+  padding: 0.5rem 1.5rem;
+}

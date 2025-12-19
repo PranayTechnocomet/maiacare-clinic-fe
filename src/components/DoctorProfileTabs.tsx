@@ -72,6 +72,7 @@ const ProfileTabes = () => {
         <>
           <DoctorBasicDetails 
            DoctorData={DoctorData}
+           doctorIdShow={doctorIdShow}
             // modalFormPhisicalData={modalFormPhisicalData}
             // medicalHistoryFormData={medicalHistoryFormData}
             // modalFormFertilityData={modalFormFertilityData}
