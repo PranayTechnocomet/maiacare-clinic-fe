@@ -71,9 +71,7 @@ const ProfileTabes = () => {
           <DoctorBasicDetails
             DoctorData={DoctorData}
             doctorIdShow={doctorIdShow}
-            // modalFormPhisicalData={modalFormPhisicalData}
-            // medicalHistoryFormData={medicalHistoryFormData}
-            // modalFormFertilityData={modalFormFertilityData}
+           
             fetchPatientData={fetchPatientData}
           />
         </>
@@ -87,7 +85,10 @@ const ProfileTabes = () => {
     {
       key: "assignedpatients",
       label: "Assigned Patients",
-      content: <>{<DoctorAssignedPatients />}</>,
+      content: <>{<DoctorAssignedPatients  
+          doctorIdShow={doctorIdShow}
+        
+        />}</>,
     },
     {
       key: "appointments",

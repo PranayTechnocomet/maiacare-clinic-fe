@@ -60,12 +60,28 @@ export function formatDateTime(isoDate: string | Date): string {
   if (!isoDate) return "";
 
   const date = typeof isoDate === "string" ? new Date(isoDate) : isoDate;
-
+  
   if (isNaN(date.getTime())) return ""; // invalid date safeguard
-
+  
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
 
   return `${day}-${month}-${year}`;
+}
+export function parseDateDDMMYYYY(dateStr: string): Date | null {
+  if (!dateStr) return null;
+
+  // Accept both "-" or "/" as separators
+  const parts = dateStr.includes('-') ? dateStr.split('-') : dateStr.split('/');
+
+  if (parts.length !== 3) return null;
+
+  const day = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10) - 1; // JS months are 0-based
+  const year = parseInt(parts[2], 10);
+
+  if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+
+  return new Date(year, month, day);
 }

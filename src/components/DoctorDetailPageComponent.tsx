@@ -28,14 +28,24 @@ import activation from "../assets/images/activation.png";
 import deactivation from "../assets/images/deactivation.png";
 import { useDoctor } from "./DoctorContext";
 import { DoctorDetails } from "@/utlis/types/interfaces";
-import DummyPatientImage from '@/assets/images/Active Patients.png';
+import DummyPatientImage from "@/assets/images/Active Patients.png";
+import toast from "react-hot-toast";
+import { getProfileStatus } from "@/utlis/apis/apiHelper";
 // import { profile } from "console";
+interface ProfileStatusForm {
+  profile: "Active" | "Deactive";
+  reason: string;
+  note: string;
+  notifyAdmin: boolean;
+}
 const DoctorDetailPageComponent = ({
   DoctorData,
 }: {
   DoctorData?: DoctorDetails | null;
 }) => {
   const router = useRouter();
+
+  const doctorIdShow = DoctorData?._id;
   const [showModal, setShowModal] = useState(false);
   type FormData = {
     profile: string; // default will be "female"
@@ -48,37 +58,14 @@ const DoctorDetailPageComponent = ({
     [key: string]: string;
   }
   const initialFormError: FormError = {};
-
-  const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [formData, setFormData] = useState<ProfileStatusForm>({
+    profile: "Active",
+    reason: "",
+    note: "",
+    notifyAdmin: false,
+  });
   const [formError, setFormError] = useState<FormError>(initialFormError);
 
-  // const doctorData = {
-  //   name: "Dr. Riya Dharang",
-  //   isVerified: true,
-  //   specialization: "Gynecologist",
-  //   experience: "11 Years",
-  //   dob: "7 Jan 1999",
-  //   gender: "Female",
-  //   phone: "+91 12345 67890",
-  //   email: "riyadharang@miacare.com",
-  //   memberSince: "02 March 23",
-  //   image: Profiledoctor,
-  //   fees: "₹800",
-  //   service: ["IVF", "ICSI", "IUI", "Egg Freezing"],
-  //   about:
-  //     "I'm Dr. Riya Dharang, a fertility specialist with over 12 years of experience in reproductive medicine. I specialize in IVF, IUI, and fertility preservation, providing personalized, compassionate care to help individuals and couples achieve their parenthood dreams. Your well-being and trust are my top priorities.",
-  //   qualifications: [
-  //     {
-  //       field: "Gynecologist",
-  //       years: "3",
-  //       university: "Medical University",
-  //       degree: "MD",
-  //       endYear: "2020",
-  //       startYear: "2017",
-  //     },
-  //   ],
-  // };
-  const { setDoctor } = useDoctor();
   const handleActive = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
 
@@ -123,17 +110,78 @@ const DoctorDetailPageComponent = ({
 
   const [showResultModal, setShowResultModal] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setShowModal(false);
-    setShowResultModal(true);
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setShowModal(false);
+  //   setShowResultModal(true);
+  // };
+  const validateForm = (data: ProfileStatusForm) => {
+    const errors: FormError = {};
+
+    if (!data.profile) {
+      errors.profile = "Action is required";
+    }
+
+    if (!data.reason) {
+      errors.reason = "Reason is required";
+    }
+
+    // note is optional → no validation required
+
+    return errors;
   };
+
+  const handleSubmit = async () => {
+    // e.preventDefault();
+    console.log("Submit clicked", formData);
+    const errors = validateForm(formData);
+    setFormError(errors);
+
+    if (Object.keys(errors).length !== 0) return;
+
+    try {
+      const payload = {
+        doctorId: String(doctorIdShow),
+        status: formData.profile, // activate | deactivate
+        reason: formData.reason,
+        notes: formData.note,
+        notifyAdmin: formData.notifyAdmin,
+      };
+
+      await getProfileStatus(payload);
+
+      toast.success(
+        formData.profile === "Active"
+          ? "Profile activated successfully!"
+          : "Profile deactivated successfully!"
+      );
+
+      setShowModal(false);
+      setShowResultModal(true);
+
+      setFormError({});
+      setFormData({
+        profile: "Active",
+        reason: "",
+        note: "",
+        notifyAdmin: false,
+      });
+    } catch (error: unknown) {
+      console.error("Profile status error:", error);
+
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+  };
+
   const handleresultclose = () => {
     setShowResultModal(false);
   };
-  
-  
-  const DoctorProfileCard: React.FC<{ doctor: typeof DoctorData}> = ({
+
+  const DoctorProfileCard: React.FC<{ doctor: typeof DoctorData }> = ({
     doctor,
   }) => (
     <ContentContainer>
@@ -144,7 +192,14 @@ const DoctorDetailPageComponent = ({
           className="d-flex flex-md-row flex-column align-items-center"
         >
           <div className="col-4 col-md-3 col-lg-3  col-xl-2">
-            <img src={doctor?.profilePicture || DummyPatientImage.src} alt="Profile" className="profile-img" onError={({ currentTarget }) => (currentTarget).src = DummyPatientImage.src} />
+            <img
+              src={doctor?.profilePicture || DummyPatientImage.src}
+              alt="Profile"
+              className="profile-img"
+              onError={({ currentTarget }) =>
+                (currentTarget.src = DummyPatientImage.src)
+              }
+            />
           </div>
 
           <div className="col-12 ms-4 mt-3 mt-md-0">
@@ -152,12 +207,7 @@ const DoctorDetailPageComponent = ({
               <div className="d-flex flex-md-row align-items-start align-items-md-center gap-1">
                 <div className="profile-name-font">{doctor?.name}</div>
                 {/* {doctor.isVerified && ( */}
-                  <Image
-                    src={MaiaVerify}
-                    alt="verified"
-                    width={18}
-                    height={18}
-                  />
+                <Image src={MaiaVerify} alt="verified" width={18} height={18} />
                 {/* )} */}
               </div>
 
@@ -179,9 +229,10 @@ const DoctorDetailPageComponent = ({
                       width={16}
                       height={15}
                     />
-                    {doctor?.memberSince} 
-                    <span className="me-2">{doctor?.memberSince ? "years" : "year"} </span>
-
+                    {doctor?.memberSince}
+                    <span className="me-2">
+                      {doctor?.memberSince ? "years" : "year"}{" "}
+                    </span>
                   </span>
                 </div>
 
@@ -209,8 +260,10 @@ const DoctorDetailPageComponent = ({
               </div>
 
               <div className="mt-3 profile-member-since profile-sub-title">
-                Member since {doctor?.yearsOfExperience} 
-                <span className="me-2">{doctor?.yearsOfExperience ? "years" : "year"}</span>
+                Member since {doctor?.yearsOfExperience}
+                <span className="me-2">
+                  {doctor?.yearsOfExperience ? "years" : "year"}
+                </span>
                 {/* membersince  */}
               </div>
             </div>
@@ -262,12 +315,11 @@ const DoctorDetailPageComponent = ({
         </Col>
       </Row>
 
-      {/* ✅ Modal placed outside Dropdown */}
       <Modal
         show={showModal}
         onHide={handleClose}
         header={
-          formData.profile === "activate"
+          formData.profile === "Active"
             ? "Activate Profile Request"
             : "Deactivate Profile Request"
         }
@@ -343,46 +395,58 @@ const DoctorDetailPageComponent = ({
               error={formError.profile}
               required
               options={[
-                { label: "Activate", value: "activate" },
-                { label: "Deactivate", value: "deactivate" },
+                { label: "Activate", value: "Active" },
+                { label: "Deactivate", value: "Deactive" },
               ]}
             />
           </Col>
         </div>
         <div className="mt-3">
           <label className="maiacare-input-field-label">Reason</label>
-          <Form.Select defaultValue="" className="radio_options form-select">
+          <Form.Select
+            name="reason"
+            value={formData.reason}
+            onChange={(e) =>
+              setFormData({ ...formData, reason: e.target.value })
+            }
+            className="radio_options form-select"
+          >
             <option value="" disabled>
               Select
             </option>
+
             {reason.map((r) => (
-              <option key={r.id} value={r.id}>
+              <option key={r.id} value={r.reason}>
                 {r.reason}
               </option>
             ))}
           </Form.Select>
+
+          {formError.reason && (
+            <div className="text-danger small">{formError.reason}</div>
+          )}
         </div>
         <div className="mt-3">
           <Form.Check
             type="checkbox"
             label="Notify admin via email"
+            checked={formData.notifyAdmin}
+            onChange={(e) =>
+              setFormData({ ...formData, notifyAdmin: e.target.checked })
+            }
             className="text-nowrap check-box input "
             style={{ fontSize: "13px", color: "#3E4A57" }}
           />
         </div>
         <div>
           <InputFieldGroup
-            label=" Any additional note"
-            name=" Any additional note"
+            name="note"
             type="text"
-            // value={formData.Name}
-            // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            //   setFormData({ ...formData, Name: e.target.value });
-            //   if (formError.Name) {
-            //     // typing in hide error
-            //     setFormError({ ...formError, Name: "" });
-            //   }
-            // }}
+            label="Any additional note"
+            value={formData.note}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFormData({ ...formData, note: e.target.value })
+            }
             onBlur={(e: React.FocusEvent<HTMLInputElement>) => {}}
             placeholder="Placeholder Text"
             required={true}
@@ -425,13 +489,13 @@ const DoctorDetailPageComponent = ({
       >
         <div className="text-center ">
           <Image
-            src={formData.profile === "activate" ? activation : deactivation}
+            src={formData.profile === "Active" ? activation : deactivation}
             alt="Result Image"
             width={200}
             height={150}
           />
           <h6 className="mt-3 modal-custom-header">
-            {formData.profile === "activate"
+            {formData.profile === "Active"
               ? "Activation Request Sent!"
               : "Deactivation Request Sent!"}
           </h6>

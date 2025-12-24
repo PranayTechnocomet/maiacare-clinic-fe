@@ -100,7 +100,7 @@ export const getMedicalHistory = (id: string | number) => {
 export const updateMedicalHistory = (data: object) => {
   return apiClient.put("/patient/medical-history", data);
 };
-
+// done
 // ====: Patient Partner :====
 // Partner Basic Details
 // add
@@ -117,7 +117,7 @@ export const getPatientPartnerBasicDetails = (id: string | number) => {
 export const updatePatientPartnerBasicDetails = (data: object) => {
   return apiClient.put("/patient/partner/basicDetails", data);
 };
-
+// done
 // Partner Medical History
 // add
 export const addPatientPartnerMedicalHistory = (data: object) => {
@@ -133,7 +133,7 @@ export const getPatientPartnerMedicalHistory = (id: string | number) => {
 export const updatePatientPartnerMedicalHistory = (data: object) => {
   return apiClient.put("/patient/partner/medicalHistory", data);
 };
-
+// done
 // Partner Physical Assessment
 // add
 export const addPatientPartnerPhysicalAssessment = (data: object) => {
@@ -147,7 +147,7 @@ export const getPatientPartnerPhysicalAssessment = () => {
 export const updatePatientPartnerPhysicalAssessment = (data: object) => {
   return apiClient.put("/patient/partner/physicalAssessment", data);
 };
-
+// done
 // Partner Fertility Assessment
 // add
 export const addPatientPartnerFertilityAssessment = (data: object) => {
@@ -163,7 +163,7 @@ export const updatePatientPartnerFertilityAssessment = (data: object) => {
 };
 
 // ====: Doctor :====
-// /done add
+// done add
 // add Doctor
 export const addDoctor = (data: object) => {
   return apiClient.post("/add-doctor", data);
@@ -181,6 +181,7 @@ export const getDoctor = (id: string | number) => {
 export const getDoctorsList = (data: object) => {
   return apiClient.get("/get-doctors-list", data);
 };
+// done qualifications
 // Qualifications....
 // done add
 // add
@@ -198,6 +199,7 @@ export const editQualifications = (
 ) => {
   return apiClient.put(`/doctor/qualifications/${id}`, data);
 };
+// done delete
 // delete
 export const deleteQualifications = ({
   qualificationId,
@@ -217,14 +219,13 @@ export const deleteQualifications = ({
 export const createleave = (data: object) => {
   return apiClient.post("/doctor/create-leave", data);
 };
+// done get leave
 // get leave
 export const getLeave = (data: object) => {
   return apiClient.post(`/doctor/get-leaves`, data);
 };
+// done delete
 // delete leave
-// export const deleteLeave = (id: string | number) => {
-//   return apiClient.delete(`/doctor/delete-leave/${id}`);
-// };
 export const deleteLeave = (
   leaveId: string | number,
   doctorId: string | number
@@ -235,13 +236,31 @@ export const deleteLeave = (
     },
   });
 };
-
-
+// done update
 // update leave
-export const updateLeave = (data: object) => {
-  return apiClient.post("/doctor/update-leave", data);
+export const updateLeave = (payload: object) => {
+  return apiClient.post(
+    "/doctor/update-leave",
+    payload, // ✅ BODY
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 };
-
+// ====: Get Assigned Patients :====
+// done
+// get assigned patients
+export const getAssigned = (data: object) => {
+  return apiClient.post("/get-assigned-patients", data);
+};
+// ====:doctor-profile-status :====
+// done
+// get assigned patients
+export const getProfileStatus = (data: object) => {
+  return apiClient.post("/doctor-profile-status", data);
+};
 // ====: Appointments :====
 // add Appointment
 export const addAppointment = (data: Appointment) => {

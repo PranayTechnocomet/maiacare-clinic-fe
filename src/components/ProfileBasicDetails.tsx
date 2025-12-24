@@ -40,6 +40,7 @@ import {
   PhysicalAssessmentDataModel,
 } from "../utlis/types/interfaces";
 import { PhysicalAssessment } from "@/utlis/types/interfaces";
+import { formatDateTime } from "@/utlis/Helper";
 
 const contactData = {
   phone: "+91 12345 67890",
@@ -529,7 +530,7 @@ const ProfileBasicDetail = ({
                       <Accordion.Header>
                         <div className="d-flex align-items-center gap-2">
                           <h6 className="phisical-assessment-accordion-title-showData m-0">
-                            {item.createdAt}
+                            {formatDateTime(item.createdAt || "")}
                           </h6>
                           <div
                             className="phisical-assessment-accordion-item-edit"

@@ -77,8 +77,7 @@ const DoctorBasicDetails = ({
   }
 
   const router = useRouter();
- 
-  
+
   const initialFormError: FormError = {};
 
   const [formError, setFormError] = useState<FormError>(initialFormError);
@@ -154,18 +153,21 @@ const DoctorBasicDetails = ({
   const handleDelete = () => {
     if (!selectedId) return;
 
-    deleteQualifications({qualificationId: selectedId, doctorId: DoctorData._id})
+    deleteQualifications({
+      qualificationId: selectedId,
+      doctorId: DoctorData?._id!,
+    })
       .then((response) => {
         if (response.status === 200) {
-          console.log("Qualification deleted");
+          toast.success("Qualification deleted");
 
           closeDeleteModal();
-        } else {
-          console.log("Delete failed");
+          fetchPatientData?.(); 
         }
       })
       .catch((err) => {
         console.log("Qualification deleting error", err);
+        toast.error("Delete failed");
       });
   };
 
@@ -572,7 +574,7 @@ const DoctorBasicDetails = ({
                 <h5 className="profile-card-main-titile">Qualification</h5>
                 <Button
                   onClick={handleOpen}
-                  className="profile-card-boeder profile-card-button bg-transparent"
+                  className="profile-card-boeder bg-transparent"
                   variant="dark"
                 >
                   <LuPlus color="#2B4360" />

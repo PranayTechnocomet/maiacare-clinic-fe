@@ -21,24 +21,55 @@ import patient from "../../assets/images/patient.png";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import edit from "../../assets/images/edit.png";
 import trash from "../../assets/images/Delete.png";
+import { getAssigned } from "@/utlis/apis/apiHelper";
+import toast from "react-hot-toast";
 export type ConsultationStatus = "Active" | "Inactive" | "On Leave";
 
-export default function DoctorAssignedPatients() {
+export default function DoctorAssignedPatients({
+  doctorIdShow,
+}: {
+  doctorIdShow: string | number | undefined;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter");
-  const [filteredData, setFilteredData] = useState(AssignedPatients);
+  const [filteredData, setFilteredData] = useState<AssignedPatients[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [timeFilter, setTimeFilter] = useState("All Time");
+  const [activePage, setActivePage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [allPatients, setAllPatients] = useState<AssignedPatients[]>([]);
+
 
   // delete function
   const handleDelete = (id: number) => {
     const updated = filteredData.filter((item) => item.id !== id);
     setFilteredData(updated);
   };
+  const fetchallLeave = () => {
+  if (!doctorIdShow) return;
 
+  setLoading(true);
+
+  getAssigned({
+    doctorId: doctorIdShow,
+    limit: 10,
+    page: activePage,
+  })
+    .then((response) => {
+      if (response.data.status) {
+        setAllPatients(response.data.data);   // ✅ SOURCE DATA
+        setTotalPages(response.data.pages);
+      }
+    })
+    .catch((err) => {
+      toast.error(err?.response?.data?.message || "Something went wrong");
+    })
+    .finally(() => setLoading(false));
+};
   useEffect(() => {
-    let data = AssignedPatients;
+    let data = [...allPatients]; 
 
     // 🔹 filter by status (query param)
     if (filter === "active") {
@@ -96,6 +127,17 @@ export default function DoctorAssignedPatients() {
     setFilteredData(data);
   }, [filter, searchQuery, timeFilter]);
 
+
+
+  useEffect(() => {
+    if (
+      doctorIdShow !== undefined &&
+      doctorIdShow !== null &&
+      doctorIdShow !== ""
+    ) {
+      fetchallLeave();
+    }
+  }, [doctorIdShow, activePage]);
   const columns: ColumnDef<AssignedPatients>[] = [
     {
       header: "#",
@@ -158,7 +200,6 @@ export default function DoctorAssignedPatients() {
       accessorKey: "email",
       cell: (info) => (
         <span className="text-decoration-underline">
-         
           {info.getValue() as string}
         </span>
       ),
@@ -312,23 +353,7 @@ export default function DoctorAssignedPatients() {
 
       {/* Table */}
       <CommonTable data={filteredData} columns={columns} />
-      {/* Pagination */}
-      <div className="d-flex justify-content-between align-items-center mt-3 flex-wrap">
-        <small className="text-muted">
-          Showing {filteredData.length} of {AssignedPatients.length} results
-        </small>
-        <Pagination size="sm" className="mb-0">
-          <Pagination.Prev disabled />
-          {[1, 2, 3, 4, 5].map((p) => (
-            <Pagination.Item key={p} active={p === 1}>
-              {p}
-            </Pagination.Item>
-          ))}
-          <Pagination.Ellipsis disabled />
-          <Pagination.Item>99</Pagination.Item>
-          <Pagination.Next />
-        </Pagination>
-      </div>
+      
     </div>
   );
 }

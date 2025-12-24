@@ -224,16 +224,16 @@ export default function DoctorAppointment() {
 
     {
       header: "Mobile No.",
-      accessorKey: "mobile",
+      accessorKey: "phone",
     },
     {
       header: "Date",
-      accessorKey: "date",
+      accessorKey: "appointmentDate",
     },
 
     {
       header: "Time",
-      accessorKey: "time",
+      accessorKey: "appointmentTime",
     },
     {
       header: "Reason for visit",

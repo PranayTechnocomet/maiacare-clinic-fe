@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 import Image from "next/image";
 import {
-  leaveData as defaultLeaveData,
+  // leaveData as defaultLeaveData,
   leaveColumns as defaultLeaveColumns,
   LeaveEntry,
 } from "../../utlis/StaticData";
@@ -31,6 +31,8 @@ import {
   updateLeave,
 } from "@/utlis/apis/apiHelper";
 import toast from "react-hot-toast";
+import { ColumnDef } from "@tanstack/react-table";
+import { parseDateDDMMYYYY } from "@/utlis/Helper";
 
 // ✅ formatDate helper — converts "2025-10-31" → "31/10/25"
 const formatDate = (dateString: string): string => {
@@ -51,12 +53,19 @@ const convertToISODate = (dateString: string): string => {
   const fullYear = parseInt(year) < 50 ? `20${year}` : `19${year}`;
   return `${fullYear}-${month}-${day}`;
 };
+interface Leave {
+  _id: string;
+  leaveStartDate?: string;
+  leaveEndDate?: string;
+  days?: number;
+  reason?: string;
+}
 const DoctorManageLeave = ({
   doctorIdShow,
 }: {
   doctorIdShow: string | number | undefined;
 }) => {
-  const [leaveData, setLeaveData] = useState<LeaveEntry[]>(defaultLeaveData);
+  const [leaveData, setLeaveData] = useState<LeaveEntry[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const closeDeleteModal = () => {
@@ -64,8 +73,7 @@ const DoctorManageLeave = ({
     setSelectedId(null);
   };
   const openDeleteModal = (id: string) => {
-    console.log("LeaveID:-", id);
-    setSelectedId("69493675fd6316a5dcae3c09");
+    setSelectedId(id);
     setShowDeleteModal(true);
   };
   interface FormError {
@@ -79,7 +87,11 @@ const DoctorManageLeave = ({
   const [totalPages, setTotalPages] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const handleopen = () => setShowModal(true);
+  const handleopen = () => {
+    setFormData(initialFormData); // reset form fields
+    setFormError({});
+    setShowModal(true);
+  };
   const handleClose = () => {
     setShowModal(false);
     setShowEdit(false);
@@ -170,63 +182,79 @@ const DoctorManageLeave = ({
         };
 
         const response = await createleave(payload);
-        console.log("Leave created successfully:", response.data.leave._id);
+
         toast.success("Leave created successfully!");
         setFormError({});
         setShowModal(false);
-      } catch (error: any) {
+        setFormData({
+          id: "",
+          startDate: "",
+          endDate: "",
+          days: "",
+          reason: "",
+          note: "",
+        });
+        fetchallLeave();
+      } catch (error:unknown) {
         console.error("Error creating leave:", error);
-        toast.error(error?.response?.data?.message || "Something went wrong");
+        // toast.error(error?.response?.data?.message || "Something went wrong");
       }
     }
   };
   const [editLeave, setEditLeave] = useState<LeaveEntry | null>(null);
-  // const fetchallLeave = () => {
-  //   const tableobj = {
-  //     doctorId: String(doctorIdShow),
-  //     limit: 10,
-  //     page: activePage,
-  //   };
+  const [filteredData, setFilteredData] = useState(leaveData);
 
-  //   setLoading(true); // start loader
-  //   setTimeout(() => {
-  //     getLeave(tableobj)
-  //       .then((response) => {
-  //         if (response.data.status) {
-  //           console.log("response: ", response.data);
-  //           // setGetAllPatients(response.data.data);
-  //           // setPatientTotal(response.data.total);
-  //           setTotalPages(response.data.pages);
-  //         } else {
-  //           console.log("Error...");
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         console.log("error", err?.response);
+  const fetchallLeave = () => {
+    if (!doctorIdShow) {
+      console.warn("Doctor ID missing or empty");
+      return;
+    }
 
-  //         const apiError = err?.response?.data;
+    const tableobj = {
+      doctorId: doctorIdShow,
+      limit: 10,
+      page: activePage,
+    };
 
-  //         // extract dynamic error message
-  //         const fieldError = apiError?.details?.errors
-  //           ? Object.values(apiError.details.errors)[0] // pick first field error
-  //           : null;
+    setLoading(true);
 
-  //         const message =
-  //           fieldError ||
-  //           apiError?.details?.message ||
-  //           apiError?.message ||
-  //           "Something went wrong";
+    getLeave(tableobj)
+      .then((response) => {
+        if (response.data.status) {
+          const formattedLeaves = (response.data.leaves ?? []).map(
+            (leave:Leave) => ({
+              id: leave._id,
+              startDate: leave.leaveStartDate
+                ? formatDate(leave.leaveStartDate)
+                : "",
+              endDate: leave.leaveEndDate ? formatDate(leave.leaveEndDate) : "",
+              days: leave.days
+                ? `${leave.days} day${leave.days > 1 ? "s" : ""}`
+                : "",
+              reason: leave.reason || "",
+            })
+          );
+          setFilteredData(formattedLeaves);
+          setLeaveData(formattedLeaves);
+          setTotalPages(response.data.pages);
+        }
+      })
+      .catch((err) => {
+        toast.error(err?.response?.data?.message || "Something went wrong");
+      })
+      .finally(() => setLoading(false));
+  };
 
-  //         toast.error(message);
-  //       })
-  //       .finally(() => {
-  //         setLoading(false); // stop loader
-  //       });
-  //   }, 500);
-  // };
-  // useEffect(() => {
-  //   fetchallLeave();
-  // }, [activePage]);
+  useEffect(() => {
+    if (
+      doctorIdShow !== undefined &&
+      doctorIdShow !== null &&
+      doctorIdShow !== ""
+    ) {
+      fetchallLeave();
+    }
+  }, [doctorIdShow, activePage]);
+
   const handleDateChange = (name: "startDate" | "endDate", value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -274,8 +302,8 @@ const DoctorManageLeave = ({
     const payload = {
       leaveId: editLeave.id,
       doctorId: String(doctorIdShow),
-      leaveStartDate: formData.startDate,
-      leaveEndDate: formData.endDate,
+      leaveStartDate: convertToISODate(formData.startDate),
+      leaveEndDate: convertToISODate(formData.endDate),
       days: Number(formData.days),
       reason: formData.reason,
       note: formData.note,
@@ -291,7 +319,6 @@ const DoctorManageLeave = ({
       }
 
       toast.success("Leave updated successfully");
-      console.log("leaveEdit:-", payload);
 
       // ✅ Update UI
       setLeaveData((prev) =>
@@ -304,6 +331,7 @@ const DoctorManageLeave = ({
                 days: formData.days === "1" ? "1 day" : `${formData.days} days`,
                 reason: formData.reason,
                 note: formData.note,
+                notifyClinic: true,
               }
             : item
         )
@@ -311,13 +339,11 @@ const DoctorManageLeave = ({
 
       setShowEdit(false);
       setEditLeave(null);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Edit leave error", error);
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      // toast.error(error?.response?.data?.message || "Something went wrong");
     }
   };
-
-  // import { deleteLeave } from "@/services/leaveService"; // adjust path if needed
 
   const handleDelete = async () => {
     if (!selectedId || !doctorIdShow) {
@@ -337,50 +363,43 @@ const DoctorManageLeave = ({
       setLeaveData((prev) => prev.filter((item) => item.id !== selectedId));
 
       toast.success("Leave deleted successfully");
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error deleting leave:", error);
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      // toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
       closeDeleteModal();
     }
   };
 
-  // const handleDelete = () => {
-  //   if (!selectedId) return;
+  // //  handle update with formatted date
+  // const handleUpdate = () => {
+  //   if (!editLeave) return;
 
-  //   const updated = leaveData.filter((item) => item.id !== selectedId);
-  //   setLeaveData(updated);
-  //   closeDeleteModal();
+  //   const errors = validateForm(formData);
+  //   setFormError(errors);
+
+  //   if (Object.keys(errors).length === 0) {
+  //     const updatedLeaves = leaveData.map((leave) =>
+  //       leave.id === editLeave.id
+  //         ? {
+  //             ...leave,
+  //             ...formData,
+  //             startDate: formatDate(formData.startDate),
+  //             endDate: formatDate(formData.endDate),
+  //             days: formData.days === "1" ? "1 day" : `${formData.days} days`,
+  //           }
+  //         : leave
+  //     );
+  //     setLeaveData(updatedLeaves);
+  //     setShowEdit(false);
+  //     setEditLeave(null);
+  //   }
   // };
-  //  handle update with formatted date
-  const handleUpdate = () => {
-    if (!editLeave) return;
-
-    const errors = validateForm(formData);
-    setFormError(errors);
-
-    if (Object.keys(errors).length === 0) {
-      const updatedLeaves = leaveData.map((leave) =>
-        leave.id === editLeave.id
-          ? {
-              ...leave,
-              ...formData,
-              startDate: formatDate(formData.startDate),
-              endDate: formatDate(formData.endDate),
-              days: formData.days === "1" ? "1 day" : `${formData.days} days`,
-            }
-          : leave
-      );
-      setLeaveData(updatedLeaves);
-      setShowEdit(false);
-      setEditLeave(null);
-    }
-  };
   // search and filter
   const searchParams = useSearchParams();
 
   const filter = searchParams.get("filter");
-  const [filteredData, setFilteredData] = useState(leaveData);
+
   const [searchQuery, setSearchQuery] = useState("");
   // const [timeFilter, setTimeFilter] = useState("All Time");
   // 🔹 Time filter options
@@ -473,9 +492,62 @@ const DoctorManageLeave = ({
 
     setFilteredData(data);
   }, [filter, searchQuery, timeFilter, leaveData]);
+  useEffect(() => {
+    const { startDate, endDate } = formData;
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
 
-  const leaveColumns = [
-    ...defaultLeaveColumns,
+      if (end >= start) {
+        const diffTime = end.getTime() - start.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Including both start and end days
+        setFormData((prev) => ({ ...prev, days: diffDays.toString() }));
+      } else {
+        setFormData((prev) => ({ ...prev, days: "" })); // reset if invalid range
+      }
+    }
+  }, [formData.startDate, formData.endDate]);
+  const columns: ColumnDef<LeaveEntry>[] = [
+    {
+      header: "#",
+      cell: (info) => {
+        const index = info.row.index + 1; // row number start from 1
+        return index < 10 ? `0${index}` : index; // format 01,02,03
+      },
+    },
+    {
+      header: "Start Date",
+      accessorKey: "startDate",
+    },
+    {
+      header: "End Date",
+      accessorKey: "endDate",
+    },
+    // {
+    //   header: "Days",
+    //   accessorKey: "days",
+    // },
+    {
+      header: "Days",
+      cell: ({ row }) => {
+        const startDateStr = row.original.startDate;
+        const endDateStr = row.original.endDate;
+
+        const startDate = parseDateDDMMYYYY(startDateStr);
+        const endDate = parseDateDDMMYYYY(endDateStr);
+
+        if (!startDate || !endDate) return "-";
+
+        const diffTime = endDate.getTime() - startDate.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // add 1 for inclusive count
+
+        return diffDays > 0 ? diffDays : "-";
+      },
+    },
+    {
+      header: "Reason",
+      accessorKey: "reason",
+    },
     {
       header: "Action",
       cell: ({ row }: { row: { original: LeaveEntry } }) => (
@@ -544,7 +616,7 @@ const DoctorManageLeave = ({
         </div>
 
         <div className="mt-4">
-          <BaseTable data={filteredData} columns={leaveColumns} />
+          <BaseTable data={filteredData ?? []} columns={columns} />
         </div>
       </div>
 
@@ -601,6 +673,7 @@ const DoctorManageLeave = ({
           <Row className="gap-3">
             <Col md={4} className="pe-0">
               <DatePickerFieldGroup
+                name="startDate"
                 label="Starting From Date"
                 value={formData.startDate}
                 onChange={(e) =>
@@ -790,7 +863,7 @@ const DoctorManageLeave = ({
         <div className="mt-3">
           <Row className="gap-3">
             <Col md={4} className="pe-0">
-              <DatePickerFieldGroup
+              {/* <DatePickerFieldGroup
                 label="Starting From Date"
                 name="startDate"
                 placeholder="Select Start Date"
@@ -798,6 +871,14 @@ const DoctorManageLeave = ({
                 onChange={handleChange}
                 required
                 error={formError.startDate}
+              /> */}
+              <DatePickerFieldGroup
+                label="Starting From Date"
+                name="startDate"
+                value={formData.startDate}
+                onChange={handleChange}
+                error={formError.startDate}
+                required
               />
             </Col>
             <Col md={4} className="p-0">
@@ -836,7 +917,6 @@ const DoctorManageLeave = ({
             </Col>
           </Row>
         </div>
-
         <div className="mt-3">
           <label className="maiacare-input-field-label mb-2">Reason</label>
           <Form.Select
