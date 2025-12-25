@@ -43,10 +43,7 @@ const ProfileTabes = () => {
         if (response.data.status) {
           setDoctorData(response.data.doctor);
           setDoctorIdShow(response.data.doctor?._id);
-          // setModalFormPhisicalData(response.data.data?.physicalAssessment);
-          // setMedicalHistoryFormData(response.data.data?.medicalHistory);
-          // setModalFormFertilityData(response.data.data?.fertilityAssessment);
-          // setPartnerDetails(response.data.data?.partnerDetails);
+        
         } else {
           toast.error("Failed to fetch patient data");
         }

@@ -42,9 +42,31 @@ export default function EditOperationalHours({
     S: "",
     Sun: "",
   };
-
+  const days = [
+    { key: "M", label: "Monday" },
+    { key: "T", label: "Tuesday" },
+    { key: "W", label: "Wednesday" },
+    { key: "Th", label: "Thursday" },
+    { key: "F", label: "Friday" },
+    { key: "S", label: "Saturday" },
+    { key: "Sun", label: "Sunday" },
+  ];
   const [formData, setFormData] = useState<FormData>(initialFormData);
-
+  const [selectedDays, setSelectedDays] = useState({
+    M: true,
+    T: true,
+    W: true,
+    Th: true,
+    F: true,
+    S: true,
+    Sun: true,
+  });
+  const toggleDay = (day: keyof typeof selectedDays) => {
+    setSelectedDays((prev) => ({
+      ...prev,
+      [day]: !prev[day],
+    }));
+  };
   const [custome, setCustome] = useState(0);
   const handleSelect = () => {
     setCustome(custome === 0 ? 1 : 0);
@@ -122,196 +144,53 @@ export default function EditOperationalHours({
           </>
         ) : (
           <>
-            <Row className="mb-3">
-              <Col md={6}>
-                {/* <Form.Check
+            {days.map((day) => (
+              <div key={day.key} className="mb-3">
+                {/* Checkbox + Day Name */}
+                <div className="d-flex align-items-center gap-2 ">
+                  <Form.Check
                     type="checkbox"
-                    className="text-nowrap check-box input"
-                  /> */}
+                    checked={selectedDays[day.key as keyof typeof selectedDays]}
+                    onChange={() =>
+                      toggleDay(day.key as keyof typeof selectedDays)
+                    }
+                  />
+                  <div className="maiacare-input-field-label">{day.label}</div>
+                </div>
 
-                <TimePickerFieldGroup
-                  label="Monday"
-                  name="M"
-                  value={formData.M}
-                  onChange={(e: { target: { value: string } }) => {
-                    setFormData({ ...formData, M: e.target.value });
-                  }}
-                  style={{ margintop: "8px" }}
-                />
-              </Col>
+                {/* Time fields */}
+                <Row>
+                  <Col md={6}>
+                    <TimePickerFieldGroup
+                      placeholder="Start Time"
+                      value={formData[day.key as keyof FormData]}
+                      disabled={
+                        !selectedDays[day.key as keyof typeof selectedDays]
+                      }
+                      onChange={(e: { target: { value: string } }) =>
+                        setFormData({
+                          ...formData,
+                          [day.key]: e.target.value,
+                        })
+                      }
+                    />
+                  </Col>
 
-              <Col md={6} className="mt-2">
-                <TimePickerFieldGroup
-                  name="Time"
-                  value={formData.Time}
-                  onChange={(e) => {
-                    setFormData({ ...formData, Time: e.target.value });
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Col md={6}>
-                {/* <Form.Check
-              type="checkbox"
-              className="text-nowrap check-box input"
-            /> */}
-
-                <TimePickerFieldGroup
-                  label="Tuesday"
-                  name="T"
-                  value={formData.T}
-                  onChange={(e: { target: { value: string } }) => {
-                    setFormData({ ...formData, T: e.target.value });
-                  }}
-                />
-              </Col>
-
-              <Col md={6} className="mt-2">
-                <TimePickerFieldGroup
-                  name="Time"
-                  value={formData.Time}
-                  onChange={(e) => {
-                    setFormData({ ...formData, Time: e.target.value });
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Col md={6}>
-                {/* <Form.Check
-              type="checkbox"
-              className="text-nowrap check-box input"
-            /> */}
-
-                <TimePickerFieldGroup
-                  label="Wednesday"
-                  name="W"
-                  value={formData.W}
-                  onChange={(e: { target: { value: string } }) => {
-                    setFormData({ ...formData, W: e.target.value });
-                  }}
-                />
-              </Col>
-
-              <Col md={6} className="mt-2">
-                <TimePickerFieldGroup
-                  name="Time"
-                  value={formData.Time}
-                  onChange={(e) => {
-                    setFormData({ ...formData, Time: e.target.value });
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Col md={6}>
-                {/* <Form.Check
-              type="checkbox"
-              className="text-nowrap check-box input"
-            /> */}
-
-                <TimePickerFieldGroup
-                  label="Thursday"
-                  name="Th"
-                  value={formData.Th}
-                  onChange={(e: { target: { value: string } }) => {
-                    setFormData({ ...formData, Th: e.target.value });
-                  }}
-                />
-              </Col>
-
-              <Col md={6} className="mt-2">
-                <TimePickerFieldGroup
-                  name="Time"
-                  value={formData.Time}
-                  onChange={(e) => {
-                    setFormData({ ...formData, Time: e.target.value });
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Col md={6}>
-                {/* <Form.Check
-              type="checkbox"
-              className="text-nowrap check-box input"
-            /> */}
-
-                <TimePickerFieldGroup
-                  label="Friday"
-                  name="F"
-                  value={formData.F}
-                  onChange={(e: { target: { value: string } }) => {
-                    setFormData({ ...formData, F: e.target.value });
-                  }}
-                />
-              </Col>
-
-              <Col md={6} className="mt-2">
-                <TimePickerFieldGroup
-                  name="Time"
-                  value={formData.Time}
-                  onChange={(e) => {
-                    setFormData({ ...formData, Time: e.target.value });
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Col md={6}>
-                {/* <Form.Check
-              type="checkbox"
-              className="text-nowrap check-box input"
-            /> */}
-
-                <TimePickerFieldGroup
-                  label="Saturday"
-                  name="S"
-                  value={formData.S}
-                  onChange={(e: { target: { value: string } }) => {
-                    setFormData({ ...formData, S: e.target.value });
-                  }}
-                />
-              </Col>
-
-              <Col md={6} className="mt-2">
-                <TimePickerFieldGroup
-                  name="Time"
-                  value={formData.Time}
-                  onChange={(e) => {
-                    setFormData({ ...formData, Time: e.target.value });
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Col md={6}>
-                {/* <Form.Check
-              type="checkbox"
-              className="text-nowrap check-box input"
-            /> */}
-
-                <TimePickerFieldGroup
-                  label="Sunday"
-                  name="Sun"
-                  value={formData.Sun}
-                  onChange={(e: { target: { value: string } }) => {
-                    setFormData({ ...formData, Sun: e.target.value });
-                  }}
-                />
-              </Col>
-
-              <Col md={6} className="mt-2">
-                <TimePickerFieldGroup
-                  name="Time"
-                  value={formData.Time}
-                  onChange={(e) => {
-                    setFormData({ ...formData, Time: e.target.value });
-                  }}
-                />
-              </Col>
-            </Row>
+                  <Col md={6}>
+                    <TimePickerFieldGroup
+                      placeholder="End Time"
+                      value={formData.Time}
+                      disabled={
+                        !selectedDays[day.key as keyof typeof selectedDays]
+                      }
+                      onChange={(e) =>
+                        setFormData({ ...formData, Time: e.target.value })
+                      }
+                    />
+                  </Col>
+                </Row>
+              </div>
+            ))}
           </>
         )}
 

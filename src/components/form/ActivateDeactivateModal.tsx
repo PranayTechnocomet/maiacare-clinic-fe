@@ -19,20 +19,16 @@ import Arrowup from "../../assets/images/ArrowUpRight.png";
 import patient from "../../assets/images/patient.png";
 import temppatientImg1 from "../../assets/images/patient1.png";
 import { RadioButtonGroup } from "../ui/RadioField";
+import toast from "react-hot-toast";
+import { getProfileStatus } from "@/utlis/apis/apiHelper";
 
-// pass props
-// interface ActivateDeactivateProfileProps {
-//   show: boolean;
-//   onClose: () => void;
-//   setShowSuccessModal: React.Dispatch<React.SetStateAction<boolean>>;
-//   title?: string;
-// }
 interface ActivateDeactivateProfileProps {
   show: boolean;
   onClose: () => void;
   setShowSuccessModal: React.Dispatch<React.SetStateAction<boolean>>;
   title?: string;
   initialStatus?: "deactivate" | "activate";
+  doctorIdShow?: string | number;
 }
 // doctor details interface
 interface DoctorInfo {
@@ -45,11 +41,11 @@ interface DoctorInfo {
 }
 
 // form
-interface FormData {
-  profile: string;
-  actionType: string;
+interface ProfileStatusForm {
+  profile: "Active" | "Deactive";
   reason: string;
-  additionalNote: string;
+  note: string;
+  notifyAdmin: boolean;
 }
 
 interface FormError {
@@ -63,15 +59,16 @@ export function ActivateDeactivateProfile({
   show,
   onClose,
   setShowSuccessModal,
+  doctorIdShow,
   title = "Profile Activation/Deactivation",
 }: ActivateDeactivateProfileProps) {
-  const [formData, setFormData] = useState<FormData>({
-    profile: "",
-    actionType: "",
+  const [formData, setFormData] = useState<ProfileStatusForm>({
+    profile: "Active",
     reason: "",
-    additionalNote: "",
+    note: "",
+    notifyAdmin: false,
   });
-
+ 
   const [formError, setFormError] = useState<FormError>({});
   type Reason = {
     id: number;
@@ -96,14 +93,7 @@ export function ActivateDeactivateProfile({
     },
   ];
   // doctor sample data
-  const doctorInfo: DoctorInfo = {
-    name: "Dr. Riya Sharma",
-    image: temppatientImg1,
-    phone: "+91 90920 38491",
-    email: "riya.sharma@example.com",
-    specialization: "Fertility Specialist",
-    patients: 22,
-  };
+
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -124,41 +114,72 @@ export function ActivateDeactivateProfile({
   };
 
   // validation
-  const validate = (): boolean => {
+
+  const validateForm = (data: ProfileStatusForm) => {
     const errors: FormError = {};
 
-    if (!formData.profile.trim()) {
-      errors.profile = "Please select profile action.";
+    if (!data.profile) {
+      errors.profile = "Action is required";
     }
 
-    if (!formData.reason.trim()) {
-      errors.reason = "Please select a reason.";
+    if (!data.reason) {
+      errors.reason = "Reason is required";
     }
 
-    if (
-      formData.additionalNote.trim().length > 0 &&
-      formData.additionalNote.trim().length < 5
-    ) {
-      errors.additionalNote = "Note must be minimum 5 characters.";
-    }
+    // note is optional → no validation required
 
-    setFormError(errors);
-    return Object.keys(errors).length === 0;
+    return errors;
   };
 
-  // final submit
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // prevent default form submit
-    if (!validate()) return; // stop if validation fails
+  const handleSubmit = async () => {
+    // e.preventDefault();
+    console.log("Submit clicked", formData);
+    const errors = validateForm(formData);
+    setFormError(errors);
 
-    setShowSuccessModal(true);
-    onClose(); // close modal only on successful validation
-    // Optionally reset form if needed
+    if (Object.keys(errors).length !== 0) return;
+
+    try {
+      const payload = {
+        doctorId: String(doctorIdShow),
+        status: formData.profile, // activate | deactivate
+        reason: formData.reason,
+        notes: formData.note,
+        notifyAdmin: formData.notifyAdmin,
+      };
+
+      await getProfileStatus(payload);
+
+      toast.success(
+        formData.profile === "Active"
+          ? "Profile activated successfully!"
+          : "Profile deactivated successfully!"
+      );
+
+      // setShowModal(false);
+      setShowSuccessModal(true);
+      onClose();
+      setFormError({});
+      setFormData({
+        profile: "Active",
+        reason: "",
+        note: "",
+        notifyAdmin: false,
+      });
+    } catch (error: unknown) {
+      console.error("Profile status error:", error);
+
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
   };
 
   return (
     <Modal show={show} onHide={onClose} header={title} closeButton>
-      <Form onSubmit={handleSubmit}>
+      <Form >
         <div className="kycmodal_info">
           <div className="d-flex align-items-center justify-content-between">
             <div className="kycmodal_profile">
@@ -233,53 +254,58 @@ export function ActivateDeactivateProfile({
               error={formError.profile}
               required
               options={[
-                { label: "Activate", value: "activate" },
-                { label: "Deactivate", value: "deactivate" },
+                { label: "Activate", value: "Active" },
+                { label: "Deactivate", value: "Deactive" },
               ]}
             />
           </Col>
         </div>
         <div className="mt-3">
           <label className="maiacare-input-field-label">Reason</label>
-          <Form.Select defaultValue="" className="radio_options form-select">
+          <Form.Select
+            name="reason"
+            value={formData.reason}
+            onChange={handleChange}
+            className="radio_options form-select"
+          >
             <option value="" disabled>
               Select
             </option>
             {reason.map((r) => (
-              <option key={r.id} value={r.id}>
+              <option key={r.id} value={r.reason}>
                 {r.reason}
               </option>
             ))}
           </Form.Select>
+          {formError.reason && (
+            <div className="text-danger small">{formError.reason}</div>
+          )}
         </div>
         <div className="mt-3">
           <Form.Check
             type="checkbox"
             label="Notify admin via email"
-            className="text-nowrap check-box input "
+            checked={formData.notifyAdmin}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                notifyAdmin: e.target.checked,
+              }))
+            }
+            className="text-nowrap check-box input"
             style={{ fontSize: "13px", color: "#3E4A57" }}
           />
         </div>
         <div>
           <InputFieldGroup
-            label=" Any additional note"
-            name=" Any additional note"
+            label="Any additional note"
+            name="note"
             type="text"
-            // value={formData.Name}
-            // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            //   setFormData({ ...formData, Name: e.target.value });
-            //   if (formError.Name) {
-            //     // typing in hide error
-            //     setFormError({ ...formError, Name: "" });
-            //   }
-            // }}
-            onBlur={(e: React.FocusEvent<HTMLInputElement>) => {}}
+            value={formData.note}
+            onChange={handleChange}
             placeholder="Placeholder Text"
-            required={true}
             disabled={false}
             readOnly={false}
-            // error={formError.Name}
-            className="position-relative "
           ></InputFieldGroup>
         </div>
         <div className="mt-3">
@@ -298,6 +324,7 @@ export function ActivateDeactivateProfile({
                 variant="dark"
                 className="maiacare-button common-btn-blue w-100 fw-semibold"
                 onClick={handleSubmit}
+                type="button"
               >
                 Submit
               </Button>

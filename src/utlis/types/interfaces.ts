@@ -723,17 +723,35 @@ export interface DoctorDetails {
   yearsOfExperience: number;
   dob: string;
   gender: string;
+  about?: string;
   fees: number;
   servicesOffered: string[];
   memberSince?: string;
   contactNumber: string;
   documents?: DoctorDocument[];
   email: string;
-  clinics: ClinicDetails[];
+  clinicDetails?: ClinicDetails;
+
+  clinics?: ClinicDetails[];
   qualifications: Qualification[];
   kycDetails: KycDetails;
   _id?: string;
 }
+// export interface DoctorDetails {
+//   profilePicture: string;
+//   name: string;
+//   specialty: string;
+//   yearsOfExperience: number;
+//   dob: string;
+//   gender: string;
+//   fees: number;
+//   servicesOffered: string[];
+//   contactNumber: string;
+//   email: string;
+//   clinicDetails?: ClinicDetails;
+//   qualifications: Qualification[];
+//   kycDetails: KycDetails;
+// }
 export interface personalDetails {
   profileImage: string;
   name: string;
@@ -768,6 +786,7 @@ export interface Doctor {
   profilePicture: string; // URL string
 }
 export interface GetAllPatient {
+  status: string;
   _id: string;
   verified: boolean;
   profileImage: string;
@@ -838,4 +857,68 @@ export interface ReassignDoctor {
 export interface CancelAppointment {
   appointmentId: string;
   reason: string;
+}
+
+export interface clinicData {
+  _id: string;
+
+  clinicLogo: string;
+  clinicName: string;
+  clinicType: string;
+  verified: boolean;
+
+  contactNumber: string;
+  email: string;
+
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
+
+  mapLink: string;
+
+  useCustomHours: boolean;
+  operationalHours: OperationalHour[];
+
+  contactPerson: ContactPerson;
+
+  documents: any[]; // Update when structure is known
+
+  reviews: Review[];
+  reviewCount: number;
+  averageRating: number;
+
+  photos: any[];
+  servicesOffered: any[];
+
+  emergencyDoctorsAvailable_24_7: boolean;
+  doctorOnboard: number;
+  beds: number;
+
+  __v: number;
+}
+
+/* ---------------- Sub Interfaces ---------------- */
+
+export interface ContactPerson {
+  name: string;
+  contactNumber: string;
+  email: string;
+  aadharNumber: string;
+}
+
+export interface OperationalHour {
+  _id: string;
+  day: string;
+  openTime: string;
+  closeTime: string;
+}
+
+export interface Review {
+  _id: string;
+  rating: number;
+  reason: string;
+  comment: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

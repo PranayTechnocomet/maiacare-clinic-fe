@@ -59,7 +59,7 @@ export default function Consultation() {
   }, []);
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter");
-
+  const doctorIdShow = "6943a7e6a55e888c3f9fa264";
   const [filteredData, setFilteredData] = useState(consultationData);
   const [searchQuery, setSearchQuery] = useState("");
   const [timeFilter, setTimeFilter] = useState("All Time");
@@ -70,8 +70,9 @@ export default function Consultation() {
 
   const router = useRouter();
   // const [selectedPatient, setSelectedPatient] = useState<ConsultationInfo | null>(null);
-  const [selectedPatient, setSelectedPatient] =
-    useState<ConsultationInfo | null>(null);
+  const [selectedPatient, setSelectedPatient] = useState<GetAllPatient | null>(
+    null
+  );
   // derive default activate/deactivate status
   interface FormData {
     profile: string;
@@ -166,22 +167,16 @@ export default function Consultation() {
     setFilteredData(data);
   }, [filter, searchQuery, timeFilter]);
   // delete function
-  const handleDelete = (id: number) => {
-    const updated = filteredData.filter((item) => item.id !== id);
-    setFilteredData(updated);
-  };
+
   const handleClose = () => setShowModal(false);
   const handleresultclose = () => {
     setShowResultModal(false);
   };
   const handleRescheduleClose = () => setShowRescheduleModal(false);
-  const handleActive = (consultation: ConsultationInfo) => {
-    setSelectedPatient(consultation);
-
+  const handleActive = (patient: GetAllPatient) => {
+    setSelectedPatient(patient);
     const newProfileState: "activate" | "deactivate" =
-      consultation.status.toLowerCase() === "activate"
-        ? "deactivate"
-        : "activate";
+      patient.status === "Active" ? "deactivate" : "activate";
 
     setFormData({
       profile: newProfileState,
@@ -190,34 +185,9 @@ export default function Consultation() {
       additionalNote: "",
     });
 
-    setActivedeactive(true);
+    setActivedeactive(true); // 🔥 opens modal
   };
 
-  const handleCancel = () => {
-    setShowModal(false);
-  };
-  type Reason = {
-    id: number;
-    reason: string;
-  };
-  const reason: Reason[] = [
-    {
-      id: 1,
-      reason: "Resignation/Termination",
-    },
-    {
-      id: 2,
-      reason: "Retirement",
-    },
-    {
-      id: 3,
-      reason: "Decseased",
-    },
-    {
-      id: 4,
-      reason: "Change in specialisation",
-    },
-  ];
   const columns: ColumnDef<GetAllPatient>[] = [
     {
       header: "#",
@@ -304,58 +274,52 @@ export default function Consultation() {
       header: "Treatment Plan",
       cell: (info) => <span> - </span>,
     },
-
     {
       header: "Doctor",
       cell: (info) => {
         const imgSrc = info.row.original.doctor?.profilePicture;
-        const name = info.row.original.doctor?.name;
+        const name = info.row.original.doctor?.name || "—";
         const verified = info.row.original.doctor?.verified;
 
         return (
           <div className="d-flex align-items-center gap-2">
-            {typeof imgSrc === "string" ? (
-              <img
-                src={imgSrc}
-                alt={name}
-                className="rounded-circle border"
-                width="36"
-                height="36"
-              />
+            {imgSrc ? (
+              typeof imgSrc === "string" ? (
+                <img
+                  src={imgSrc}
+                  alt={name}
+                  className="rounded-circle border"
+                  width={36}
+                  height={36}
+                />
+              ) : (
+                <Image
+                  src={imgSrc}
+                  alt={name}
+                  width={36}
+                  height={36}
+                  className="rounded-circle border"
+                />
+              )
             ) : (
-              <Image
-                src={imgSrc}
-                alt={name}
-                width={36}
-                height={36}
-                className="rounded"
+              /* ✅ fallback avatar */
+              <div
+                className="rounded-circle border bg-secondary"
+                style={{ width: 36, height: 36 }}
               />
             )}
-            {name}
+
+            <span>{name}</span>
 
             {verified && (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
-                fill="none"
-              >
-                <path
-                  d="M16.6167 6.91806C16.346 6.76072 16.1028 6.56032 15.8967 6.32473C15.9175 5.99674 15.9956 5.67494 16.1275 5.3739C16.37 4.68973 16.6442 3.91473 16.2042 3.31223C15.7642 2.70973 14.9333 2.7289 14.2042 2.74556C13.882 2.77872 13.5565 2.75673 13.2417 2.68056C13.0739 2.40765 12.9542 2.10805 12.8875 1.79473C12.6808 1.09056 12.445 0.294731 11.7208 0.0563974C11.0225 -0.168603 10.3758 0.326397 9.80417 0.761397C9.55749 0.986663 9.27167 1.16488 8.96083 1.28723C8.64674 1.16587 8.35774 0.987613 8.10833 0.761397C7.53833 0.328897 6.89417 -0.171103 6.1925 0.0572308C5.47 0.292231 5.23417 1.09056 5.02583 1.79473C4.95928 2.10703 4.84068 2.40592 4.675 2.6789C4.3596 2.75486 4.03369 2.7774 3.71083 2.74556C2.97917 2.72556 2.155 2.7039 1.71083 3.31223C1.26667 3.92056 1.54417 4.68973 1.7875 5.37306C1.9212 5.67366 2.00049 5.99559 2.02167 6.3239C1.8159 6.55979 1.57298 6.76049 1.3025 6.91806C0.6925 7.33473 0 7.8089 0 8.5789C0 9.3489 0.6925 9.8214 1.3025 10.2397C1.57292 10.3971 1.81583 10.5975 2.02167 10.8331C2.00271 11.1612 1.92569 11.4835 1.79417 11.7847C1.5525 12.4681 1.27917 13.2431 1.71833 13.8456C2.1575 14.4481 2.98583 14.4289 3.71833 14.4122C4.04081 14.3791 4.36657 14.401 4.68167 14.4772C4.84865 14.7504 4.96812 15.0499 5.035 15.3631C5.24167 16.0672 5.4775 16.8631 6.20167 17.1014C6.31777 17.1386 6.43891 17.1577 6.56083 17.1581C7.14684 17.074 7.69149 16.8075 8.1175 16.3964C8.36417 16.1711 8.64999 15.9929 8.96083 15.8706C9.27492 15.9919 9.56392 16.1702 9.81333 16.3964C10.3842 16.8322 11.0308 17.3297 11.73 17.1006C12.4525 16.8656 12.6883 16.0672 12.8967 15.3639C12.9634 15.051 13.0829 14.7517 13.25 14.4789C13.5642 14.4024 13.8891 14.3799 14.2108 14.4122C14.9425 14.4297 15.7667 14.4539 16.2108 13.8456C16.655 13.2372 16.3775 12.4681 16.1342 11.7839C16.0014 11.4836 15.9221 11.1624 15.9 10.8347C16.1059 10.5986 16.3491 10.3979 16.62 10.2406C17.23 9.8239 17.9225 9.3489 17.9225 8.5789C17.9225 7.8089 17.2275 7.33556 16.6167 6.91806Z"
-                  fill="#E29578"
-                />
-                <path
-                  d="M8.12752 10.8711C8.04543 10.8713 7.96414 10.8551 7.88832 10.8237C7.81251 10.7922 7.74369 10.746 7.68585 10.6878L6.01918 9.0211C5.90878 8.90262 5.84868 8.74591 5.85154 8.58399C5.85439 8.42208 5.91999 8.26759 6.0345 8.15308C6.14901 8.03857 6.3035 7.97297 6.46542 7.97012C6.62733 7.96726 6.78404 8.02736 6.90252 8.13776L8.18585 9.4211L11.0859 7.2461C11.2185 7.14664 11.3851 7.10394 11.5492 7.12738C11.7133 7.15082 11.8614 7.23849 11.9609 7.3711C12.0603 7.5037 12.103 7.67039 12.0796 7.83448C12.0561 7.99858 11.9685 8.14664 11.8359 8.2461L8.50252 10.7461C8.3943 10.8272 8.26274 10.871 8.12752 10.8711Z"
-                  fill="white"
-                />
+              <svg width="18" height="18" viewBox="0 0 18 18">
+                {/* verified icon */}
               </svg>
             )}
           </div>
         );
       },
     },
-
     {
       header: "Status",
       cell: (info) => {
@@ -401,9 +365,7 @@ export default function Consultation() {
                   />
                   Edit Profile
                 </Dropdown.Item>
-                <Dropdown.Item
-                // onClick={() => handleActive(info.row.original)}
-                >
+                <Dropdown.Item onClick={() => handleActive(info.row.original)}>
                   <Image
                     src={active_deactive}
                     alt="Poweractivate"
@@ -439,49 +401,6 @@ export default function Consultation() {
       },
     },
   ];
-
-  // const fetchallpatient = () => {
-  //   const tableobj = {
-  //     limit: 10,
-  //     page: activePage,
-  //   };
-
-  //   setLoading(true); // start loader
-  //   setTimeout(() => {
-  //     getAll(tableobj)
-  //       .then((response) => {
-  //         if (response.data.status) {
-  //           // console.log("response: ", response.data);
-  //           setGetAllPatients(response.data.data);
-  //           setPatientTotal(response.data.total);
-  //           setTotalPages(response.data.pages);
-  //         } else {
-  //           console.log("Error...");
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         console.log("error", err?.response);
-
-  //         const apiError = err?.response?.data;
-
-  //         // extract dynamic error message
-  //         const fieldError = apiError?.details?.errors
-  //           ? Object.values(apiError.details.errors)[0] // pick first field error
-  //           : null;
-
-  //         const message =
-  //           fieldError ||
-  //           apiError?.details?.message ||
-  //           apiError?.message ||
-  //           "Something went wrong";
-
-  //         toast.error(message);
-  //       })
-  //       .finally(() => {
-  //         setLoading(false); // stop loader
-  //       });
-  //   }, 500);
-  // };
 
   const fetchallpatient = () => {
     const tableobj = {
@@ -531,39 +450,7 @@ export default function Consultation() {
   useEffect(() => {
     fetchallpatient();
   }, [activePage]);
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
 
-    if (!selectedPatient) return;
-    const updatedData = filteredData.map((doc) =>
-      doc.id === selectedPatient.id
-        ? {
-            ...doc,
-            status: (formData.profile === "active"
-              ? "Active"
-              : "Inactive") as ConsultationStatus,
-          }
-        : doc
-    );
-    setFilteredData(updatedData);
-    setShowModal(false);
-  };
-
-  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleReschedule = (data: {
-    date: string;
-    time: string;
-    reason: string;
-  }) => {
-    setShowRescheduleModal(false); // close reschedule modal
-    setShowSuccessModalBook(true); // open success modal
-    console.log("Doctor reschedule data:", data);
-  };
   return (
     <div className="">
       {/* Summary Cards */}
@@ -670,6 +557,7 @@ export default function Consultation() {
               ? "activate"
               : "activate"
           }
+          doctorIdShow={selectedPatient?.doctor?._id}
         />
       )}
 

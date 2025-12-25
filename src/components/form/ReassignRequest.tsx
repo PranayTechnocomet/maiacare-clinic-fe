@@ -106,7 +106,6 @@ export function ReassignRequest({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  // const validateForm1 = () => {};
 
   const validateForm = (step: number): boolean => {
     const errors: FormError = {};
@@ -131,15 +130,15 @@ export function ReassignRequest({
     setFormError(errors);
     return Object.keys(errors).length === 0;
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm(0)) {
       setFormError({});
       setStep(1);
     }
-    // setStep(1);
   };
-  const handleData = () => {
+  const handleSaveData = () => {
     if (validateForm(1)) {
       setShowSuccessModalBook(true);
       setFormData({ name: "", type: "", additionalNote: "", reason: "" });
@@ -436,7 +435,7 @@ export function ReassignRequest({
                 variant="dark"
                 className="px-4 maiacare-button common-btn-blue w-50"
                 type="submit"
-                onClick={handleData}
+                onClick={handleSaveData}
               >
                 Save
               </Button>

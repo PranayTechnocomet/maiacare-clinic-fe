@@ -21,8 +21,9 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Modal from "../ui/Modal";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { DoctorDetails } from "@/utlis/types/interfaces";
+import { ClinicDetails, DoctorDetails } from "@/utlis/types/interfaces";
 import { addDoctor } from "@/utlis/apis/apiHelper";
+
 export default function AddDoctorKycDetails({
   data,
   onSave,
@@ -433,7 +434,6 @@ export default function AddDoctorKycDetails({
     });
   };
 
-
   const handleClose = () => {
     setShowModal(false);
     setFileError(""); // file upload error reset (jo use karto hoy to)
@@ -456,10 +456,12 @@ export default function AddDoctorKycDetails({
         filePath: file.preview || "",
         fileSize: Number(file.actualSize || file.size.replace(" KB", "")), // ✅ FIX
       })),
-      createdAt: undefined
+      createdAt: undefined,
     };
+   
     const finalDoctorPayload: DoctorDetails = {
       ...data,
+     
       kycDetails,
     };
     console.log("✅ FINAL PAYLOAD", finalDoctorPayload);

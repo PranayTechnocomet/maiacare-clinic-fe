@@ -28,17 +28,32 @@ import reviewimg from "../../assets/images/reviewimg.png";
 
 import verifiedreviewcard from "../../assets/images/verifiedreview.png";
 import reviewcardimg from "../../assets/images/reviewcardimg.png";
+import { clinicData } from "@/utlis/types/interfaces";
+import { profile } from "console";
 // import Button from "../ui/Button";
-const ProfileBasicDetails = () => {
+import DummyPatientImage from "@/assets/images/Active Patients.png";
+
+const ProfileBasicDetails = ({
+  profileData,
+}: {
+  profileData?: clinicData | null;
+}) => {
   type Service = {
     id: number;
     service: string;
   };
+  interface OperationalHour {
+    _id: string;
+    day: string;
+    openTime: string;
+    closeTime: string;
+  }
   type Detail_card = {
     id: number;
     img: string | StaticImageData;
     name: string;
   };
+  console.log("profileData:--", profileData);
 
   const documents = [
     { name: "Certificate.pdf", date: "October 20, 2024" },
@@ -234,22 +249,28 @@ const ProfileBasicDetails = () => {
               <div>
                 <div className="profiledetails_heading">Address</div>
                 <div style={{ width: "70%" }} className="profiledetails_text">
-                  2nd Floor, Lakeview Complex, Hiranandani Gardens, Powai,
-                  400072 Mumbai
+                  {profileData?.address}
                 </div>
               </div>
               <div className="d-flex justify-content-between mt-3 flex-column flex-sm-row">
                 {/* Availability */}
                 <div>
                   <div className="profiledetails_heading">Availability</div>
-                  {operationalHours.map((item, idx) => (
-                    <p key={idx} className="mb-0">
-                      <span className=" maiacare-radio-label me-1">
-                        {item.days} :
-                      </span>
-                      <span style={{ fontSize: "14px" }}> {item.time}</span>
-                    </p>
-                  ))}
+                  {profileData?.operationalHours?.map(
+                    (item: OperationalHour) => (
+                      <p key={item._id} className="mb-0">
+                        <span
+                          className="maiacare-radio-label me-1"
+                          style={{ fontSize: "14px" }}
+                        >
+                          {item.day} :
+                        </span>
+                        <span style={{ fontSize: "13px" }}>
+                          {item.openTime} – {item.closeTime}
+                        </span>
+                      </p>
+                    )
+                  )}
                 </div>
                 {/* Emergency Services */}
                 <div>
@@ -260,7 +281,9 @@ const ProfileBasicDetails = () => {
                     style={{ width: "95%" }}
                     className="profiledetails_text "
                   >
-                    Emergency doctors are available 24/7
+                    {profileData?.emergencyDoctorsAvailable_24_7
+                      ? "Emergency doctors are available 24/7"
+                      : "Emergency doctors are not available 24/7"}
                   </div>
                 </div>
               </div>
@@ -274,11 +297,15 @@ const ProfileBasicDetails = () => {
                 Services Offered
               </h5>
               <div className="d-flex gap-3 flex-wrap mt-4">
-                {services.map((servicename: Service) => (
-                  <div key={servicename.id} className="servicename">
-                    {servicename.service}
-                  </div>
-                ))}
+                {profileData?.servicesOffered?.length ? (
+                  profileData.servicesOffered.map((service, idx) => (
+                    <div key={idx} className="servicename">
+                      {service}
+                    </div>
+                  ))
+                ) : (
+                  <div>No services listed</div>
+                )}
               </div>
             </ContentContainer>
           </div>
@@ -287,40 +314,34 @@ const ProfileBasicDetails = () => {
             <ContentContainer className="mt-4">
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h5 className="profile-card-main-titile">Photos</h5>
-                {/* <Button
-                  onClick={handleOpenModal}
-                  className="profile-card-boeder profile-card-button bg-transparent"
-                >
-                  <Image src={Add} alt="Add" />
-                </Button> */}
-                {/* Edit Profile click in Modal */}
               </div>
               <div className="d-flex gap-3 flex-wrap">
-                <Image
-                  src={photo1}
-                  alt="1"
-                  style={{ width: "100px", height: "100px" }}
-                />
-                <Image
-                  src={photo2}
-                  alt="2"
-                  style={{ width: "100px", height: "100px" }}
-                />
-                <Image
-                  src={photo3}
-                  alt="3"
-                  style={{ width: "100px", height: "100px" }}
-                />
-                <Image
-                  src={photo4}
-                  alt="4"
-                  style={{ width: "100px", height: "100px" }}
-                />
-                <Image
-                  src={photo5}
-                  alt="5"
-                  style={{ width: "100px", height: "100px" }}
-                />
+                {profileData?.photos?.length ? (
+                  profileData.photos.map((photo, idx) =>
+                    photo?.url ? (
+                      <img
+                        src={photo.src || DummyPatientImage.src}
+                        alt="Profile"
+                        width={100}
+                        height={100}
+                        className="rounded"
+                        onError={({ currentTarget }) =>
+                          (currentTarget.src = DummyPatientImage.src)
+                        }
+                      />
+                    ) : // <Image
+                    //   key={idx}
+                    //   src={photo}
+                    //   alt="Clinic Photo"
+                    //   width={100}
+                    //   height={100}
+                    //   className="rounded"
+                    // />
+                    null
+                  )
+                ) : (
+                  <div>No photos uploaded</div>
+                )}
               </div>
             </ContentContainer>
           </div>
@@ -339,60 +360,36 @@ const ProfileBasicDetails = () => {
                 className="overflow-y-auto my-scrollable-div"
                 style={{ height: "162px" }}
               >
-                {detail_card.map((card) => (
-                  <div
-                    key={card.id}
-                    className="contact_person_detail_cards mb-3"
-                  >
-                    <div className="d-flex align-items-center justify-content-between ">
-                      <div className="d-flex align-items-center gap-3">
-                        <Image
-                          src={card.img}
-                          alt="Profile Image"
-                          style={{ width: "60px", height: "60px" }}
-                        />
-                        <div>
-                          <div className=" fw-semibold detail_card">
-                            {card.name}
-                          </div>
-                          <div className="card_admin">Super Admin</div>
-                        </div>
+                <div className="contact_person_detail_cards mb-3">
+                  <div className="d-flex align-items-center gap-3">
+                    <Image src={img1} alt="Profile" width={60} height={60} />
+                    <div>
+                      <div className="fw-semibold detail_card">
+                        {profileData?.contactPerson?.name || "—"}
                       </div>
-                      <div className=" card_arrow ">
-                        <Image
-                          src={arrowup}
-                          alt="arrowup"
-                          style={{ width: "16px", height: "16px" }}
-                        />
-                      </div>
-                    </div>
-                    {/* call & email */}
-                    <div className="d-flex justify-content-between mt-3 flex-wrap">
-                      <div>
-                        <div className="d-flex align-items-center">
-                          <Image
-                            src={phone}
-                            alt="phone"
-                            style={{ width: "20px", height: "20px" }}
-                          />
-                          <span className="card_text">Phone</span>
-                        </div>
-                        <div>+91 8987656874</div>
-                      </div>
-                      <div>
-                        <div className="d-flex align-items-center">
-                          <Image
-                            src={email}
-                            alt="phone"
-                            style={{ width: "20px", height: "20px" }}
-                          />
-                          <span className="card_text">Email</span>
-                        </div>
-                        <div>rani.desai@gmail.com</div>
-                      </div>
+                      <div className="card_admin">Super Admin</div>
                     </div>
                   </div>
-                ))}
+                  <div className="d-flex justify-content-between mt-3">
+                    <div>
+                      <div className="d-flex align-items-center">
+                        <Image src={phone} alt="phone" width={20} height={20} />
+                        <span className="card_text">Phone</span>
+                      </div>
+                      <div>
+                        {profileData?.contactPerson?.contactNumber || "—"}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="d-flex align-items-center">
+                        <Image src={email} alt="email" width={20} height={20} />
+                        <span className="card_text">Email</span>
+                      </div>
+                      <div>{profileData?.contactPerson?.email || "—"}</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </ContentContainer>
           </div>
@@ -402,13 +399,9 @@ const ProfileBasicDetails = () => {
             <ContentContainer className="mt-4">
               <div>
                 <h5 className="mb-4 profile-card-main-titile">Documents</h5>
-
-                {documents.map((doc, index) => (
+                {profileData?.documents?.length ? (
                   <div
-                    key={index}
-                    className={`d-flex justify-content-between align-items-center border profile-card-boeder document-main-border ${
-                      index !== documents.length - 1 ? "mb-3" : ""
-                    }`}
+                    className="d-flex justify-content-between align-items-center border profile-card-boeder document-main-border mb-3"
                     style={{ padding: "11px" }}
                   >
                     <div className="d-flex align-items-center">
@@ -419,26 +412,18 @@ const ProfileBasicDetails = () => {
                         className="me-3"
                       />
                       <div>
-                        <div className="card-feild">{doc.name}</div>
-                        <div className="card-year">{doc.date}</div>
+                        <div className="card-feild">
+                          {profileData.documents[0].name}
+                        </div>
+                        <div className="card-year">
+                          {profileData.documents[0].date}
+                        </div>
                       </div>
                     </div>
-
-                    <button
-                      className="d-flex  bg-white justify-content-center align-items-center border profile-card-boeder rounded Download-border"
-                      onClick={() =>
-                        handleDownload(`/files/${doc.name}.pdf`, doc.name)
-                      }
-                    >
-                      <Image
-                        src={Download}
-                        alt="experience"
-                        width={25}
-                        height={25}
-                      />
-                    </button>
                   </div>
-                ))}
+                ) : (
+                  <div>No documents uploaded</div>
+                )}
               </div>
             </ContentContainer>
           </div>

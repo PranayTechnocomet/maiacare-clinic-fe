@@ -16,6 +16,7 @@ import apiClient from "./axiosInstance";
 import api from "./axiosInstance";
 
 // ====: Authentication :====
+// done
 export const login = (data: LoginRequest) => {
   return apiClient.post("/auth/clinic-login", data);
 };
@@ -24,11 +25,7 @@ export const login = (data: LoginRequest) => {
 // get profile
 export const getProfile = () => {
   const token = localStorage.getItem("token");
-  return apiClient.get("/clinic-info", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  return apiClient.get("/clinic-info");
 };
 
 // update profile
@@ -257,7 +254,7 @@ export const getAssigned = (data: object) => {
 };
 // ====:doctor-profile-status :====
 // done
-// get assigned patients
+// get Profile Status
 export const getProfileStatus = (data: object) => {
   return apiClient.post("/doctor-profile-status", data);
 };

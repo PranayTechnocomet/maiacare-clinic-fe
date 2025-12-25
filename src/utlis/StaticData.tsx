@@ -714,6 +714,7 @@ import { StaticImport } from "next/dist/shared/lib/get-img-props";
 // import { Patient, SelectPatientType } from "./types/interfaces";
 
 export type LeaveEntry = {
+  notifyClinic: boolean;
   id: string;
   reason: string;
   startDate: string;

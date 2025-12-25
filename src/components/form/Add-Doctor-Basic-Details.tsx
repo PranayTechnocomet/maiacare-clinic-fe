@@ -47,7 +47,7 @@ export default function AddDoctorBasicDetails({
     Contact: string;
     Email: string;
     Fees: string;
-
+    About: string;
     degree: string;
     field: string;
     university: string;
@@ -64,7 +64,7 @@ export default function AddDoctorBasicDetails({
     Contact: "",
     Email: "",
     Fees: "",
-    // About: "",
+    About: "",
     // qualifications
     degree: "",
     field: "",
@@ -103,11 +103,7 @@ export default function AddDoctorBasicDetails({
     if (!data.gender.trim()) errors.gender = "Gender is required";
     if (!data.Fees?.trim()) errors.Fees = "Fees is required";
     if (!data.Experience?.trim()) errors.Experience = "Experience is required";
-    // if (!data.university?.trim()) errors.university = "university is required";
-    // if (!data.field?.trim()) errors.field = "Field is required";
-    // if (!data.university?.trim()) errors.university = "university is required";
-    // if (!data.startYear?.trim()) errors.startYear = "Start Year is required";
-    // if (!data.endYear?.trim()) errors.endYear = "End Year is required";
+    if (!data.About?.trim()) errors.About = "About is required";
     const contactRegex = /^[0-9]{10}$/;
     if (!data.Contact.trim()) {
       errors.Contact = "Contact number is required";
@@ -121,48 +117,48 @@ export default function AddDoctorBasicDetails({
     } else if (!emailRegex.test(data.Email)) {
       errors.Email = "Enter a valid email address";
     }
-    // if (!data.About.trim()) errors.About = "About is required";
+
     return errors;
   };
   const validateQualifications = () => {
-  let isValid = true;
+    let isValid = true;
 
-  const updatedErrors = qualifications.map((q) => {
-    const err = {
-      degree: "",
-      field: "",
-      university: "",
-      startYear: "",
-      endYear: "",
-    };
+    const updatedErrors = qualifications.map((q) => {
+      const err = {
+        degree: "",
+        field: "",
+        university: "",
+        startYear: "",
+        endYear: "",
+      };
 
-    if (!q.degree.trim()) {
-      err.degree = "Degree is required";
-      isValid = false;
-    }
-    if (!q.field.trim()) {
-      err.field = "Field is required";
-      isValid = false;
-    }
-    if (!q.university.trim()) {
-      err.university = "University is required";
-      isValid = false;
-    }
-    if (!q.startYear) {
-      err.startYear = "Start Year is required";
-      isValid = false;
-    }
-    if (!q.endYear) {
-      err.endYear = "End Year is required";
-      isValid = false;
-    }
+      if (!q.degree.trim()) {
+        err.degree = "Degree is required";
+        isValid = false;
+      }
+      if (!q.field.trim()) {
+        err.field = "Field is required";
+        isValid = false;
+      }
+      if (!q.university.trim()) {
+        err.university = "University is required";
+        isValid = false;
+      }
+      if (!q.startYear) {
+        err.startYear = "Start Year is required";
+        isValid = false;
+      }
+      if (!q.endYear) {
+        err.endYear = "End Year is required";
+        isValid = false;
+      }
 
-    return err;
-  });
+      return err;
+    });
 
-  setFormErrors(updatedErrors);
-  return isValid;
-};
+    setFormErrors(updatedErrors);
+    return isValid;
+  };
 
   const buildDoctorPayload = (): Partial<DoctorDetails> => {
     return {
@@ -173,6 +169,7 @@ export default function AddDoctorBasicDetails({
       dob: formData.date,
       gender: formData.gender,
       fees: Number(formData.Fees),
+      about: formData.About,
       servicesOffered: selectedServices.map((s) => s.service),
       contactNumber: formData.Contact,
       email: formData.Email,
@@ -185,22 +182,18 @@ export default function AddDoctorBasicDetails({
       })),
     };
   };
- const handleNextClick = () => {
-  const errors = validateForm(formData);
-  setFormError(errors);
+  const handleNextClick = () => {
+    const errors = validateForm(formData);
+    setFormError(errors);
 
-  const isQualificationValid = validateQualifications();
+    const isQualificationValid = validateQualifications();
 
-  if (
-    Object.keys(errors).length === 0 &&
-    isQualificationValid
-  ) {
-    const payload = buildDoctorPayload();
-    console.log("Doctor Basic Payload:", payload);
-    onNext(payload);
-  }
-};
-
+    if (Object.keys(errors).length === 0 && isQualificationValid) {
+      const payload = buildDoctorPayload();
+      console.log("Doctor Basic Payload:", payload);
+      onNext(payload);
+    }
+  };
 
   // const handleNextClick = () => {
   //   const errors = validateForm(formData);
@@ -704,6 +697,28 @@ export default function AddDoctorBasicDetails({
                 error={formError.Email}
                 className="position-relative"
               ></InputFieldGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="mt-3">
+              <Textarea
+                label="About"
+                name="About"
+                value={formData.About}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                  handleChange(e);
+                  if (formError.About) {
+                    // typing in hide error
+                    setFormError({ ...formError, About: "" });
+                  }
+                }}
+                onBlur={(e: React.FocusEvent<HTMLTextAreaElement>) => {}}
+                // placeholder="About"
+                required={true}
+                disabled={false}
+                error={formError.About}
+                maxLength={500}
+              />
             </Col>
           </Row>
         </div>

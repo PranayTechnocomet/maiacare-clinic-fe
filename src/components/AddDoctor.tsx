@@ -21,54 +21,6 @@ const AddDoctor = () => {
     );
   }, []);
   const [activeTab, setActiveTab] = useState<string>("basic");
-
-  // const [doctorDetails, setDoctorDetails] = useState<DoctorDetails>({
-  //   profilePicture: "",
-  //   name: "",
-  //   specialty: "",
-  //   yearsOfExperience: 0,
-  //   dob: "",
-  //   gender: "",
-  //   fees: 0,
-  //   servicesOffered: [],
-  //   contactNumber: "",
-  //   email: "",
-  //   clinics: {
-  //     clinicLogo: "",
-  //     clinicName: "",
-  //     contactNumber: "",
-  //     email: "",
-  //     address: "",
-  //     mapLink: "",
-  //     pincode: "",
-  //     city: "",
-  //     state: "",
-  //     useCustomHours: false,
-  //     groupOperationalHours: {
-  //       weekdayOpen: "",
-  //       weekdayClose: "",
-  //       weekendOpen: "",
-  //       weekendClose: "",
-  //     },
-  //     contactPerson: {
-  //       name: "",
-  //       contactNumber: "",
-  //       email: "",
-  //       aadharNumber: "",
-  //     },
-  //   },
-  //   qualifications: [],
-  //   kycDetails: {
-  //     aadharNumber: "",
-  //     aadharFile: "",
-  //     panNumber: "",
-  //     panFile: "",
-  //     licenceNumber: "",
-  //     licenceFile: "",
-  //     otherDocuments: [],
-  //     createdAt: ""
-  //   },
-  // });
   const [doctorDetails, setDoctorDetails] = useState<DoctorDetails>({
     profilePicture: "",
     name: "",
@@ -81,34 +33,30 @@ const AddDoctor = () => {
     contactNumber: "",
     email: "",
 
-    clinics: [
-      {
-        clinicLogo: "",
-        clinicName: "",
+    clinicDetails: {
+      clinicLogo: "",
+      clinicName: "",
+      contactNumber: "",
+      email: "",
+      address: "",
+      mapLink: "",
+      pincode: "",
+      city: "",
+      state: "",
+      useCustomHours: false,
+      groupOperationalHours: {
+        weekdayOpen: "",
+        weekdayClose: "",
+        weekendOpen: "",
+        weekendClose: "",
+      },
+      contactPerson: {
+        name: "",
         contactNumber: "",
         email: "",
-        address: "",
-        mapLink: "",
-        pincode: "",
-        city: "",
-        state: "",
-        useCustomHours: false,
-
-        groupOperationalHours: {
-          weekdayOpen: "",
-          weekdayClose: "",
-          weekendOpen: "",
-          weekendClose: "",
-        },
-
-        contactPerson: {
-          name: "",
-          contactNumber: "",
-          email: "",
-          aadharNumber: "",
-        },
+        aadharNumber: "",
       },
-    ],
+    },
 
     qualifications: [],
 
@@ -123,8 +71,8 @@ const AddDoctor = () => {
       createdAt: "",
     },
 
-    createdAt: "",
-    updatedAt: "",
+    createdAt: "", // ✅ ADD THIS
+    updatedAt: "", // ✅ ADD THIS
   });
 
   const handlebasicNextClick = (basicData: Partial<DoctorDetails>) => {
@@ -135,10 +83,10 @@ const AddDoctor = () => {
     setActiveTab("Clinic");
   };
 
-  const handleNextClick = (clinicData: DoctorDetails["clinics"]) => {
+  const handleNextClick = (clinicData: DoctorDetails["clinicDetails"]) => {
     setDoctorDetails((prev) => ({
       ...prev,
-      clinics: clinicData,
+      clinicDetails: clinicData,
     }));
 
     setActiveTab("KYC");
@@ -201,7 +149,7 @@ const AddDoctor = () => {
       {activeTab === "Clinic" && (
         <div>
           <AddDoctorClinicdetails
-            data={doctorDetails.clinics}
+            data={doctorDetails.clinicDetails}
             onNext={handleNextClick}
             onPrevious={handlePrevious}
           />

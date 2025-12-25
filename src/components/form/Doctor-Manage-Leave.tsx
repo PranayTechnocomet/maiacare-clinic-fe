@@ -22,7 +22,6 @@ import email from "../../assets/images/Email.png";
 import { InputFieldGroup } from "../ui/InputField";
 import { DatePickerFieldGroup } from "../ui/CustomDatePicker";
 import leavesubmit from "../../assets/images/leavesubmit.png";
-import { PiSlidersDuotone } from "react-icons/pi";
 import DeleteConfirmModal from "../ui/DeleteConfirmModal";
 import {
   createleave,
@@ -134,6 +133,7 @@ const DoctorManageLeave = ({
     days: string;
     reason: string;
     note: string;
+    notifyClinic: boolean;
   };
 
   const initialFormData: FormData = {
@@ -143,6 +143,7 @@ const DoctorManageLeave = ({
     days: "",
     reason: "",
     note: "",
+    notifyClinic: false,
   };
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
@@ -178,7 +179,7 @@ const DoctorManageLeave = ({
           leaveEndDate: formData.endDate,
           reason: formData.reason,
           note: formData.note,
-          notifyClinic: true,
+          notifyClinic: formData.notifyClinic,
         };
 
         const response = await createleave(payload);
@@ -193,9 +194,10 @@ const DoctorManageLeave = ({
           days: "",
           reason: "",
           note: "",
+          notifyClinic: false,
         });
         fetchallLeave();
-      } catch (error:unknown) {
+      } catch (error: unknown) {
         console.error("Error creating leave:", error);
         // toast.error(error?.response?.data?.message || "Something went wrong");
       }
@@ -222,7 +224,7 @@ const DoctorManageLeave = ({
       .then((response) => {
         if (response.data.status) {
           const formattedLeaves = (response.data.leaves ?? []).map(
-            (leave:Leave) => ({
+            (leave: Leave) => ({
               id: leave._id,
               startDate: leave.leaveStartDate
                 ? formatDate(leave.leaveStartDate)
@@ -278,6 +280,7 @@ const DoctorManageLeave = ({
       days: leave.days?.toString() || "",
       reason: leave.reason || "",
       note: leave.note || "",
+      notifyClinic: leave.notifyClinic || false,
     });
 
     setShowEdit(true);
@@ -307,7 +310,7 @@ const DoctorManageLeave = ({
       days: Number(formData.days),
       reason: formData.reason,
       note: formData.note,
-      notifyClinic: true,
+      notifyClinic: formData.notifyClinic,
     };
 
     try {
@@ -748,7 +751,21 @@ const DoctorManageLeave = ({
             ))}
           </Form.Select>
         </div>
-
+        <div className="mt-3">
+          <Form.Check
+            type="checkbox"
+            label="Notify admin via email"
+            checked={formData.notifyClinic}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                notifyClinic: e.target.checked,
+              }))
+            }
+            className="text-nowrap check-box input"
+            style={{ fontSize: "13px", color: "#3E4A57" }}
+          />
+        </div>
         <div className="mt-3">
           <label className="maiacare-input-field-label mb-2">
             Any additional note
@@ -863,15 +880,6 @@ const DoctorManageLeave = ({
         <div className="mt-3">
           <Row className="gap-3">
             <Col md={4} className="pe-0">
-              {/* <DatePickerFieldGroup
-                label="Starting From Date"
-                name="startDate"
-                placeholder="Select Start Date"
-                value={formData.startDate}
-                onChange={handleChange}
-                required
-                error={formError.startDate}
-              /> */}
               <DatePickerFieldGroup
                 label="Starting From Date"
                 name="startDate"
@@ -936,7 +944,21 @@ const DoctorManageLeave = ({
             ))}
           </Form.Select>
         </div>
-
+        <div className="mt-3">
+          <Form.Check
+            type="checkbox"
+            label="Notify admin via email"
+            checked={formData.notifyClinic}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                notifyClinic: e.target.checked,
+              }))
+            }
+            className="text-nowrap check-box input"
+            style={{ fontSize: "13px", color: "#3E4A57" }}
+          />
+        </div>
         <div className="mt-3">
           <label className="maiacare-input-field-label mb-2">
             Any additional note

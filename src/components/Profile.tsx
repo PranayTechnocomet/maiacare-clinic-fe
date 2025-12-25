@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ContentContainer from "./ui/ContentContainer";
 import cliniclogo from "../assets/images/clinic logo.png";
 import Image from "next/image";
@@ -18,32 +18,53 @@ import verified from "../assets/images/verified.png";
 import { setHeaderData } from "@/utlis/redux/slices/headerSlice";
 import { AppDispatch } from "@/utlis/redux/store";
 import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
+import { getProfile } from "@/utlis/apis/apiHelper";
+import { AxiosError } from "axios";
+import { clinicData } from "@/utlis/types/interfaces";
+
 const Profile: React.FC = () => {
-   const dispatch: AppDispatch = useDispatch();
-    useEffect(() => {
-      dispatch(setHeaderData({ title: "Profile", subtitle: "Profile" }));
-    }, []);
+  const dispatch: AppDispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setHeaderData({ title: "Profile", subtitle: "Profile" }));
+  }, []);
   const router = useRouter();
 
   const handleEditProfile = () => {
     router.push("/edit-profile"); // Route to your Edit Profile screen
   };
 
-  const clinicData = {
-    name: "Medicare Fertility Clinic",
-    isVerified: true,
-    Stethoscope: "26",
-    bed: "34 Beds",
-    review: "4.5/5 (1085 Reviews)",
-    gender: "Female",
-    phone: "+91 12345 67890",
-    email: "medicare@gmail.com",
-    location: "https://www.google.com/maps/place/Mumbai,+India",
-    image: cliniclogo,
-  };
+  const Clinic: React.FC = () => {
+    const [clinicData, setClinicData] = useState<clinicData | null>(null);
+    const [profileData, setProfileData] = useState<clinicData | null>(null);
+    const fetchProfile = () => {
+      getProfile()
+        .then((response) => {
+          if (response.status) {
+            console.log("USER DATA FROM API:", response.data.data);
+            setClinicData(response.data.data);
+            setProfileData(response.data.data);
+          } else {
+            toast.error(response.data?.message || "Something went wrong!");
+            console.error("Error fetching profile");
+          }
+        })
+        .catch((err: unknown) => {
+          console.error("API call failed", err);
 
-  // Define your inner component (optional)
-  const Clinic: React.FC<{ clinic: typeof clinicData }> = ({ clinic }) => {
+          if (err && typeof err === "object" && "response" in err) {
+            const error = err as any;
+            toast.error(
+              error.response?.data?.message || "Something went wrong!"
+            );
+          }
+        });
+    };
+
+    useEffect(() => {
+      fetchProfile();
+    }, []);
+
     return (
       <>
         <ContentContainer>
@@ -54,16 +75,21 @@ const Profile: React.FC = () => {
               className="d-flex flex-md-row flex-column align-items-center"
             >
               <div className="col-4 col-md-3 col-lg-3  col-xl-2 position-relative">
-                <Image
-                  src={clinic.image}
-                  alt="ClinicProfile"
+                <img
+                  src={clinicData?.clinicLogo || cliniclogo.src}
+                  alt="Profile"
                   className="profile-img"
+                  onError={({ currentTarget }) =>
+                    (currentTarget.src = cliniclogo.src)
+                  }
                 />
-                <Image
-                  src={verified}
-                  alt="verified"
-                  className="position-absolute  verified-container"
-                />
+                {clinicData?.verified === true && (
+                  <Image
+                    src={verified}
+                    alt="verified"
+                    className="position-absolute  verified-container"
+                  />
+                )}
               </div>
 
               <div className="col-12 ms-4 mt-3 mt-md-0">
@@ -71,8 +97,7 @@ const Profile: React.FC = () => {
                 <div>
                   <div className="d-flex flex-md-row align-items-start align-items-md-center gap-1 ">
                     <div className="fw-semibold profile-headings">
-                     
-                      {clinic.name}
+                      {clinicData?.clinicName}
                     </div>
                   </div>
 
@@ -80,11 +105,11 @@ const Profile: React.FC = () => {
                     <div className="detail-row profile-sub-title">
                       <span className="d-flex align-items-center gap-2">
                         <Image src={star} alt="star" width={17} height={16} />
-                        {clinic.review}
+                        {clinicData?.__v}
                       </span>
                       <span className="d-flex align-items-center gap-1">
                         <Image src={Bed} alt="Bed" width={18} height={18} />
-                        {clinic.bed}
+                        {clinicData?.beds}
                       </span>
                       <span className="d-flex align-items-center gap-1">
                         <Image
@@ -93,14 +118,14 @@ const Profile: React.FC = () => {
                           width={18}
                           height={18}
                         />
-                        {clinic.Stethoscope}
+                        {clinicData?.doctorOnboard}
                       </span>
                     </div>
 
                     <div className="detail-row profile-sub-title">
                       <span className="d-flex align-items-center gap-2">
                         <Image src={Phone} alt="phone" width={21} height={21} />
-                        {clinic.phone}
+                        {clinicData?.contactNumber}
                       </span>
                       <span>
                         <Image
@@ -110,7 +135,7 @@ const Profile: React.FC = () => {
                           width={21}
                           height={21}
                         />
-                        {clinic.email}
+                        {clinicData?.email}
                       </span>
                     </div>
 
@@ -124,7 +149,7 @@ const Profile: React.FC = () => {
                         width={16}
                         height={20}
                       />
-                      {clinic.location}
+                      {clinicData?.address}
                     </div>
                   </div>
                 </div>
@@ -149,12 +174,12 @@ const Profile: React.FC = () => {
             </Col>
           </Row>
         </ContentContainer>
-        <ProfileBasicDetails />
+        <ProfileBasicDetails profileData={profileData} />
       </>
     );
   };
 
-  return <Clinic clinic={clinicData} />;
+  return <Clinic />;
 };
 
 export default Profile;
